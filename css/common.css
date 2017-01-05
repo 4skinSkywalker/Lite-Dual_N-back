@@ -144,7 +144,7 @@ input[type=range].slider:focus::-webkit-slider-runnable-track {
 	background: #0e3e22!important; /*#27ae60*/
 }
 .missed {
-	background: radial-gradient(rgba(255, 165, 0, .15) 1%, rgba(0, 0, 0, 0) 99%)!important;
+	background: radial-gradient(rgba(255, 165, 0, .20) 1%, rgba(0, 0, 0, 0) 99%)!important;
 }
 .wrong {
 	background: #3e130e!important; /*#c0392b*/
