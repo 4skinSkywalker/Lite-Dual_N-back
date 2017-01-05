@@ -355,7 +355,7 @@ DNB.prototype.playBlock = function() {
 		function isRightVisual(el) {
 			if(enable[0] != 1 && _this.running) {
 				enable[0] = 1;
-				if(blockCounter + 1 > _this.engine.n["value"] && currentBlock[blockCounter]) {
+				if(blockCounter + 1 > _this.engine.n["value"] && currentBlock[blockCounter][0]) {
 					if(currentBlock[blockCounter][0] == currentBlock[blockCounter - _this.engine.n["value"]][0]) {
 						console.log('%c right visual', 'color: blue');
 						
@@ -375,7 +375,7 @@ DNB.prototype.playBlock = function() {
 		function isRightAudio(el) {
 			if(enable[1] != 1 && _this.running) {
 				enable[1] = 1;
-				if(blockCounter + 1 > _this.engine.n["value"] && currentBlock[blockCounter]) {
+				if(blockCounter + 1 > _this.engine.n["value"] && currentBlock[blockCounter][1]) {
 					if(currentBlock[blockCounter][1] == currentBlock[blockCounter - _this.engine.n["value"]][1]) {
 						console.log('%c right audio', 'color: blue');
 						
