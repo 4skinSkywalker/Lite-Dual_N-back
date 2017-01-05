@@ -184,6 +184,7 @@ DNB.prototype.init = function() {
 
 	this.name = this.getVarName();
 	
+	// START PATCH: ENTER KEY
 	$(document).keydown(function(e) {
 		var keyCode = e.keyCode || e.which;
 		if(keyCode == 13) { 
@@ -191,6 +192,7 @@ DNB.prototype.init = function() {
 			return false;
 		}
 	});
+	// END PATCH: ENTER KEY
 	
 	$("body").append(this.getLayoutHTML());
 	this.populateTrainerHTML();
@@ -245,6 +247,7 @@ DNB.prototype.prepareBlock = function(n, left, blocks) {
 	var blockLength = thisBlock.length,
 		vis = 0,
 		aud = 0;
+
 	while(vis < blocks) {
 		var visTarg = Math.floor(Math.random() * blockLength);
 		if(thisBlock[visTarg + n]) {
@@ -348,6 +351,10 @@ DNB.prototype.playBlock = function() {
 		blockEval = this.evaluateBlock(currentBlock, this.engine.n["value"]);
 	}
 	
+	if(blockEval[0] != this.engine.blocks["value"] || blockEval[1] != this.engine.blocks["value"]) {
+		alert("Error 998: 'blockEval != this.engine.blocks[\"value\"]', PLEASE contact stopchemtrailsfred@gmail.com notifying this error code.");
+	}
+	
 	console.log(currentBlock);
 	console.log('%c matching blocks: ' + blockEval, 'color: blue');
 	
@@ -357,7 +364,11 @@ DNB.prototype.playBlock = function() {
 		enable = [0, 0];
 	
 	(function playValue() {
-
+		
+		if(enable != [0, 0]) {
+			alert("Error 999: 'enable != [0, 0]', PLEASE contact stopchemtrailsfred@gmail.com notifying this error code.");
+		}
+		
 		function isRight(cue) {
 
 			var pointer = (cue == "visual") ? 0 : 1,
@@ -461,9 +472,13 @@ DNB.prototype.playBlock = function() {
 		}
 		else {
 			
-			// START PATCH: MISSED COUNT
+			// START OLD PATCH: MISSED COUNT
 			this.userScoreTemp[1] = this.engine.blocks["value"] - this.userScoreTemp[0];
 			this.userScoreTemp[4] = this.engine.blocks["value"] - this.userScoreTemp[3];
+			
+			if(this.userScoreTemp[0] + this.userScoreTemp[1] > this.engine.blocks["value"] || this.userScoreTemp[3] + this.userScoreTemp[4] > this.engine.blocks["value"]) {
+				alert("Error 1000: 'this.userScoreTemp[0] + this.userScoreTemp[1] > this.engine.blocks[\"value\"] || this.userScoreTemp[3] + this.userScoreTemp[4] > this.engine.blocks[\"value\"]', PLEASE contact stopchemtrailsfred@gmail.com notifying this error code.");
+			}
 			
 			/*if(this.userScoreTemp[1] < 0) {
 				var visError = Math.abs(this.userScoreTemp[1]);
@@ -475,7 +490,7 @@ DNB.prototype.playBlock = function() {
 				this.userScoreTemp[3] -= audError;
 				this.userScoreTemp[4] += audError;
 			}*/
-			// END PATCH: MISSED COUNT
+			// END OLD PATCH: MISSED COUNT
 			
 			var s = "";
 			s += '<table class="results-icons">';
@@ -487,16 +502,17 @@ DNB.prototype.playBlock = function() {
 			
 			$("#" + this.resultTrg).html(s);
 			
-			var incorrect = this.userScoreTemp[1] + this.userScoreTemp[2],
-				threshold = this.engine.blocks["value"]*(1-this.engine.threshold["value"]),
+			var incorrectVis = this.userScoreTemp[1] + this.userScoreTemp[2],
+				incorrectAud = this.userScoreTemp[4] + this.userScoreTemp[5],
+				threshold = this.engine.blocks["value"]*(1 - this.engine.threshold["value"]),
 				upperThreshold = Math.ceil(threshold),
 				lowerThreshold = Math.floor(threshold);
 			
-			if(incorrect <= lowerThreshold) {
+			if(incorrectVis <= lowerThreshold && incorrectAud <= lowerThreshold) {
 
 				$("#" + this.resultTrg).append('<p class="results-text">N is now:<br>' + ++this.engine.n["value"] + '</p>');
 				
-			} else if(incorrect > upperThreshold) {
+			} else if(incorrectVis > upperThreshold || incorrectAud > upperThreshold) {
 				
 				if(this.engine.n["value"] != 1) {
 					
