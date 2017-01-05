@@ -20,6 +20,9 @@
     line-height: 100%;
     font-size: 10vh;
 }
+#level {
+	font-size: 6vh;
+}
 #left {
     bottom: 4vh;
     right: 4vh;
@@ -37,17 +40,17 @@
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    padding: 20vh 5vw;
+    padding: 20vh 4vw;
 }
 #eye {
 	left: 0;
-	border-top-right-radius: 2vh;
-	border-bottom-right-radius: 2vh;
+	border-top-right-radius: 4px;
+	border-bottom-right-radius: 4px;
 }
 #ear {
 	right: 0;
-	border-top-left-radius: 2vh;
-	border-bottom-left-radius: 2vh;
+	border-top-left-radius: 4px;
+	border-bottom-left-radius: 4px;
 }
 #eye:before {
   content: "A";
