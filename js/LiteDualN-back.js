@@ -363,11 +363,11 @@ DNB.prototype.playBlock = function() {
 		keyAllowed = {},
 		enable = [0, 0];
 	
+	if(enable[0] != 0 || enable[1] != 0) {
+		alert("Error 999: 'enable != [0, 0]', PLEASE contact stopchemtrailsfred@gmail.com notifying this error code.");
+	}
+
 	(function playValue() {
-		
-		if(enable != [0, 0]) {
-			alert("Error 999: 'enable != [0, 0]', PLEASE contact stopchemtrailsfred@gmail.com notifying this error code.");
-		}
 		
 		function isRight(cue) {
 
