@@ -16,7 +16,7 @@ function DNB() {
 	
 	this.engine 			= {};
 	this.engine.left 		= { "target":"left", "value":0};
-	this.engine.time 		= { "type":"range", "target":"stimulus-time", "text":"Stimulus:", "value":3000, "min":1500, "step":100, "MAX":6000, "char":"s"};
+	this.engine.time 		= { "type":"range", "target":"stimulus-time", "text":"Stimulus:", "value":3000, "min":1000, "step":100, "MAX":5000, "char":"s"};
 	this.engine.blocks 		= { "type":"range", "target":"matching-blocks", "text":"Matching:", "value":6, "min":3, "step":1, "MAX":9};
 	this.engine.n 			= { "type":"range", "target":"n-back", "text":"N-back", "value":2, "min":1, "step":1, "MAX":9, "char":""};
 	this.engine.threshold 	= { "type":"range", "target":"success-threshold", "text":"Threshold:", "value":0.8, "min":0.7, "step":0.05, "MAX":1.0, "char":"%", "change":function(x) {return x*100}};
