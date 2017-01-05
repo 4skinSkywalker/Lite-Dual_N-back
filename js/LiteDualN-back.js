@@ -88,7 +88,7 @@ DNB.prototype.populateTrainerHTML = function() {
 	s += '<div id="status-bar">';
 	s += 	'<div id="' + this.engine.left["target"] + '">' + this.engine.left["value"] + '</div>';
 	s += '</div>';	
-	s += '<button id="' + this.playStopTrg + '" class="btn-standard"></button>';
+	s += '<button type="button" id="' + this.playStopTrg + '" class="btn-standard"></button>';
 	s += '<table id="' + this.gridTrg + '" class="rotational-grid" style="animation: rotating' + this.engine.rotation["direction"]() + ' ' + this.engine.rotation["value"] + 's linear infinite;">';
 	for(var i = 0; i < 3; i++) {
 		s += '<tr>';
@@ -184,6 +184,14 @@ DNB.prototype.init = function() {
 
 	this.name = this.getVarName();
 	
+	$(document).keydown(function(e) {
+		var keyCode = e.keyCode || e.which;
+		if(keyCode == 13) { 
+			e.preventDefault();
+			return false;
+		}
+	});
+	
 	$("body").append(this.getLayoutHTML());
 	this.populateTrainerHTML();
 	this.populateOptionsHTML();
@@ -199,7 +207,7 @@ DNB.prototype.init = function() {
 
 DNB.prototype.start = function() {
 
-	this.playing = setTimeout(function() {
+	playing = setTimeout(function() {
 
 		_this.playBlock();
 		_this.running = true;
@@ -220,26 +228,26 @@ DNB.prototype.stop = function(n) {
 	// END PATCH: FINISHED GAME INPUT
 	
 	this.running = false;
-	clearTimeout(this.playing);
+	clearTimeout(playing);
 	this.userScoreTemp 	= [0, 0, 0, 0, 0, 0];
 	this.remainedStimuli(this.engine.blocks["value"], n);
 	
 	this.assignFunction("#" + this.playStopTrg, this.name + ".start()", this.playChar);
 };
 
-DNB.prototype.prepareBlock = function(n, blocks) {
+DNB.prototype.prepareBlock = function(n, left, blocks) {
 
 	var thisBlock = [];
 	
-	for(var i = 0; i < this.engine.left["value"]; i++)
+	for(var i = 0; i < left; i++)
 		thisBlock.push([0, 0]);
 	
-	var blockLength = thisBlock.length;
-
-	var vis = 0;
+	var blockLength = thisBlock.length,
+		vis = 0,
+		aud = 0;
 	while(vis < blocks) {
 		var visTarg = Math.floor(Math.random() * blockLength);
-		if(thisBlock[visTarg + n] !== undefined) {
+		if(thisBlock[visTarg + n]) {
 			if(thisBlock[visTarg][0] == 0 && thisBlock[visTarg + n][0] == 0) {
 				thisBlock[visTarg][0] = 1 + Math.floor(Math.random() * 8);
 				thisBlock[visTarg + n][0] = thisBlock[visTarg][0];
@@ -257,11 +265,9 @@ DNB.prototype.prepareBlock = function(n, blocks) {
 			continue;
 		}
 	}
-	
-	var aud = 0;
 	while(aud < blocks) {
 		var audTarg = Math.floor(Math.random() * blockLength);
-		if(thisBlock[audTarg + n] !== undefined) {
+		if(thisBlock[audTarg + n]) {
 			if(thisBlock[audTarg][1] == 0 && thisBlock[audTarg + n][1] == 0) {
 				thisBlock[audTarg][1] = 1 + Math.floor(Math.random() * 8);
 				thisBlock[audTarg + n][1] = thisBlock[audTarg][1];
@@ -279,16 +285,15 @@ DNB.prototype.prepareBlock = function(n, blocks) {
 			continue;
 		}
 	}
-	
 	for(var x = 0; x < blockLength; x++) {
 		if(thisBlock[x][0] == 0) {
 			thisBlock[x][0] = 1 + Math.floor(Math.random() * 8);
-			if(thisBlock[x - n] !== undefined && thisBlock[x][0] == thisBlock[x - n][0]) {
+			if(thisBlock[x - n] && thisBlock[x][0] == thisBlock[x - n][0]) {
 				if(thisBlock[x][0] < 8)
 					thisBlock[x][0] += 1;
 				else
 					thisBlock[x][0] -= 1;
-			} else if(thisBlock[x + n] !== undefined && thisBlock[x][0] == thisBlock[x + n][0]) {
+			} else if(thisBlock[x + n] && thisBlock[x][0] == thisBlock[x + n][0]) {
 				if(thisBlock[x][0] < 8)
 					thisBlock[x][0] += 1;
 				else
@@ -297,12 +302,12 @@ DNB.prototype.prepareBlock = function(n, blocks) {
 		}
 		if(thisBlock[x][1] == 0) {
 			thisBlock[x][1] = 1 + Math.floor(Math.random() * 8);
-			if(thisBlock[x - n] !== undefined && thisBlock[x][1] == thisBlock[x - n][1]) {
+			if(thisBlock[x - n] && thisBlock[x][1] == thisBlock[x - n][1]) {
 				if(thisBlock[x][1] < 8)
 					thisBlock[x][1] += 1;
 				else
 					thisBlock[x][1] -= 1;
-			} else if(thisBlock[x + n] !== undefined && thisBlock[x][1] == thisBlock[x + n][1]) {
+			} else if(thisBlock[x + n] && thisBlock[x][1] == thisBlock[x + n][1]) {
 				if(thisBlock[x][1] < 8)
 					thisBlock[x][1] += 1;
 				else
@@ -318,28 +323,28 @@ DNB.prototype.prepareBlock = function(n, blocks) {
 // EVALUATE BLOCK FUNCTION
 DNB.prototype.evaluateBlock = function(block, n) {
 
-	var vTargCount = 0;
-	var aTargCount = 0;
+	var vis = 0,
+		aud = 0;
 	
 	for(var i = 0; i < block.length; i++)
 		if(block[i - n]) {
 			if(block[i][0] == block[i - n][0])
-				vTargCount += 1;
+				vis += 1;
 			if(block[i][1] == block[i - n][1])
-				aTargCount += 1;
+				aud += 1;
 		}
 
-	return [vTargCount, aTargCount];
+	return [vis, aud];
 };
 
 // MAIN GAME FUNCTION
 DNB.prototype.playBlock = function() {
 
-	var currentBlock = this.prepareBlock(this.engine.n["value"], this.engine.blocks["value"]),
+	var currentBlock = this.prepareBlock(this.engine.n["value"], this.engine.left["value"], this.engine.blocks["value"]),
 		blockEval = this.evaluateBlock(currentBlock, this.engine.n["value"]);
 	
-	while(blockEval[0] != this.engine.blocks["value"] && blockEval[1] != this.engine.blocks["value"]) {
-		currentBlock = this.prepareBlock(this.engine.n["value"], this.engine.blocks["value"]);
+	while(blockEval[0] != this.engine.blocks["value"] || blockEval[1] != this.engine.blocks["value"]) {
+		currentBlock = this.prepareBlock(this.engine.n["value"], this.engine.left["value"], this.engine.blocks["value"]);
 		blockEval = this.evaluateBlock(currentBlock, this.engine.n["value"]);
 	}
 	
@@ -348,66 +353,68 @@ DNB.prototype.playBlock = function() {
 	
 	var blockCounter = -1,
 		thisBlockLength = currentBlock.length,
+		keyAllowed = {},
 		enable = [0, 0];
 	
 	(function playValue() {
 
-		function isRightVisual(el) {
-			if(enable[0] != 1 && _this.running) {
-				enable[0] = 1;
-				if(blockCounter + 1 > _this.engine.n["value"] && currentBlock[blockCounter][0]) {
-					if(currentBlock[blockCounter][0] == currentBlock[blockCounter - _this.engine.n["value"]][0]) {
-						console.log('%c right visual', 'color: blue');
+		function isRight(cue) {
+
+			var pointer = (cue == "visual") ? 0 : 1,
+				element = (cue == "visual") ? "#eye" : "#ear",
+				rightScorePointer = (cue == "visual") ? 0 : 3,
+				wrongScorePointer = (cue == "visual") ? 2 : 5;
+
+			if(enable[pointer] != 1 && _this.running) {
+				enable[pointer] = 1;
+				if(blockCounter + 1 > _this.engine.n["value"] && currentBlock[blockCounter]) {
+					if(currentBlock[blockCounter][pointer] == currentBlock[blockCounter - _this.engine.n["value"]][pointer]) {
+						console.log('%c right ' + cue, 'color: blue');
 						
-						_this.wow(el, "right", _this.engine.time["value"]/6);
-						_this.userScoreTemp[0] += 1;
+						_this.wow(element, "right", _this.engine.time["value"]/6);
+						_this.userScoreTemp[rightScorePointer] += 1;
 					}
 					else {
-						console.log('%c wrong visual', 'color: red');
+						console.log('%c wrong ' + cue, 'color: red');
 						
-						_this.wow(el, "wrong", _this.engine.time["value"]/6);
-						_this.userScoreTemp[2] += 1;
+						_this.wow(element, "wrong", _this.engine.time["value"]/6);
+						_this.userScoreTemp[wrongScorePointer] += 1;
 					}
 				}
 			}
 		}
-		
-		function isRightAudio(el) {
-			if(enable[1] != 1 && _this.running) {
-				enable[1] = 1;
-				if(blockCounter + 1 > _this.engine.n["value"] && currentBlock[blockCounter][1]) {
-					if(currentBlock[blockCounter][1] == currentBlock[blockCounter - _this.engine.n["value"]][1]) {
-						console.log('%c right audio', 'color: blue');
-						
-						_this.wow(el, "right", _this.engine.time["value"]/6);
-						_this.userScoreTemp[3] += 1;
-					}
-					else {
-						console.log('%c wrong audio', 'color: red');
-						
-						_this.wow(el, "wrong", _this.engine.time["value"]/6);
-						_this.userScoreTemp[5] += 1;
-					}
-				}
+
+		$(document).keydown(function(e) {
+			e.preventDefault();
+			e.stopPropagation();
+			
+			if(keyAllowed[e.which] == false) return;
+			keyAllowed[e.which] = false;
+			
+			var keyCode = e.keyCode || e.which;
+			switch(keyCode) {
+				case 65:
+					isRight("visual");
+					break;
+				case 76:			
+					isRight("audio");
+					break;
+				default:
+					return;
 			}
-		}
-		
-		$("html").on("keydown", function(event) {
-			if(event.which == 65)
-				isRightVisual("#eye");
 		});
-		
-		$("html").on("keydown", function(event) {
-			if(event.which == 76)
-				isRightAudio("#ear");
+		$(document).keyup(function(e) { 
+			keyAllowed[e.which] = true;
+		});
+		$(document).focus(function(e) { 
+			keyAllowed = {};
 		});
 		
 		document.querySelector("#eye").addEventListener("touchstart", function() {
-			isRightVisual("#eye");
+			isRight("visual");
 		});
-		
 		document.querySelector("#ear").addEventListener("touchstart", function() {
-			isRightAudio("#ear");
+			isRight("audio");
 		});
 		
 		if(++blockCounter < thisBlockLength) {
@@ -443,22 +450,22 @@ DNB.prototype.playBlock = function() {
 			}
 			
 			console.log('%c block		: ' + currentBlock[blockCounter], 'color: black')
-			console.log('%c keypresses	: ' + this.enable, 'color: green');
+			console.log('%c keypresses	: ' + enable, 'color: green');
 			console.log('%c score		: ' + this.userScoreTemp, 'color: green');
 			
 			this.engine.left["value"]--;
 			this.updateN();
 			
-			this.playing = setTimeout(playValue.bind(this), this.engine.time["value"]);
+			playing = setTimeout(playValue.bind(this), this.engine.time["value"]);
 			enable = [0, 0];
 		}
 		else {
 			
-			// PATCH
+			// START PATCH: MISSED COUNT
 			this.userScoreTemp[1] = this.engine.blocks["value"] - this.userScoreTemp[0];
 			this.userScoreTemp[4] = this.engine.blocks["value"] - this.userScoreTemp[3];
 			
-			if(this.userScoreTemp[1] < 0) {
+			/*if(this.userScoreTemp[1] < 0) {
 				var visError = Math.abs(this.userScoreTemp[1]);
 				this.userScoreTemp[0] -= visError;
 				this.userScoreTemp[1] += visError;
@@ -467,8 +474,8 @@ DNB.prototype.playBlock = function() {
 				var audError = Math.abs(this.userScoreTemp[4]);
 				this.userScoreTemp[3] -= audError;
 				this.userScoreTemp[4] += audError;
-			}
-			// END PATCH
+			}*/
+			// END PATCH: MISSED COUNT
 			
 			var s = "";
 			s += '<table class="results-icons">';
