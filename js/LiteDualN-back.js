@@ -64,7 +64,7 @@ function populateOptionsHTML() {
 		s = "";
 	}
 	s += '<li class="nav-item">';
-	s += 	'<p>Controls:<br>"A" key for visual<br>"L" key for audio.<br><span style="color:#FFD700">Given to you by Fred</span></p>';
+	s += 	'<p>Controls:<br>"A" key for visual<br>"L" key for audio.</p>';
 	s += '</li>';
 	$("." + optionsTrg).append(s);
 }
