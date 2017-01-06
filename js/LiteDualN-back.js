@@ -17,6 +17,7 @@ engine.time 		= { "type":"range", "target":"stimulus-time", "text":"Stimulus:", 
 engine.blocks 		= { "type":"range", "target":"matching-blocks", "text":"Matching:", "value":6, "min":3, "step":1, "MAX":9};
 engine.n 			= { "type":"range", "target":"n-back", "text":"N-back", "value":2, "min":1, "step":1, "MAX":9, "char":""};
 engine.threshold 	= { "type":"range", "target":"success-threshold", "text":"Threshold:", "value":0.8, "min":0.7, "step":0.05, "MAX":1.0, "char":"%", "change":function(x) {return x*100}};
+engine.feedback 	= { "type":"range", "target":"feedback", "text":"Feedback:", "value":1, "min":0, "step":1, "MAX":1, "change":function(x) {return (x == 1) ? "on" : "off"}};
 engine.rotation		= { "type":"range", "target":"rotation-duration", "text":"Rotation:", "value":60, "min":30, "step":10, "MAX":120, "char":"s", "direction":function() {return (Math.floor(Math.random() * 2) == 0) ? "-clockwise" : "-anticlockwise"}};
 engine.audio		= { "type":"selector", "target":"audio-symbols", "text":"Audio:", "value":"Natural Numbers",
 						"symbols": {
@@ -334,11 +335,13 @@ function checkBlock(c) {
 		if(blockCounter + 1 > engine.n["value"] && currentBlock[blockCounter]) {
 			if(currentBlock[blockCounter][p] == currentBlock[blockCounter - engine.n["value"]][p]) {
 				console.log('%c right ' + c, 'color: blue');
-				wow(e, "right", engine.time["value"]/6);
+				if(engine.feedback["value"])
+					wow(e, "right", engine.time["value"]/6);
 				userScoreTemp[r] += 1;
 			} else {
 				console.log('%c wrong ' + c, 'color: red');
-				wow(e, "wrong", engine.time["value"]/6);
+				if(engine.feedback["value"])
+					wow(e, "wrong", engine.time["value"]/6);
 				userScoreTemp[w] += 1;
 			}
 		}
@@ -368,21 +371,25 @@ function playBlock() {
 			if(currentBlock[blockCounter - 1][0] == currentBlock[blockCounter - engine.n["value"] - 1][0] && currentBlock[blockCounter - 1][1] == currentBlock[blockCounter - engine.n["value"] - 1][1]) {
 				if(enable[0] < 1 && enable[1] < 1) {
 					console.log('%c both cues missed', 'color: orange');
-					wow("#eye", "missed", engine.time["value"]/6);
-					wow("#ear", "missed", engine.time["value"]/6);
+					if(engine.feedback["value"]) {
+						wow("#eye", "missed", engine.time["value"]/6);
+						wow("#ear", "missed", engine.time["value"]/6);
+					}
 					userScoreTemp[1] += 1;
 					userScoreTemp[4] += 1;
 				}
 			} else if(currentBlock[blockCounter - 1][0] == currentBlock[blockCounter - engine.n["value"] - 1][0]) {
 				if(enable[0] < 1) {
 					console.log('%c visual cue missed', 'color: orange');
-					wow("#eye", "missed", engine.time["value"]/6);
+					if(engine.feedback["value"])
+						wow("#eye", "missed", engine.time["value"]/6);
 					userScoreTemp[1] += 1;
 				}
 			} else if(currentBlock[blockCounter - 1][1] == currentBlock[blockCounter - engine.n["value"] - 1][1]) {
 				if(enable[1] < 1) {
 					console.log('%c audio cue missed', 'color: orange');
-					wow("#ear", "missed", engine.time["value"]/6);
+					if(engine.feedback["value"])
+						wow("#ear", "missed", engine.time["value"]/6);
 					userScoreTemp[4] += 1;
 				}
 			}
