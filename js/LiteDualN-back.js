@@ -368,20 +368,21 @@ function playBlock() {
 			if(currentBlock[blockCounter - 1][0] == currentBlock[blockCounter - engine.n["value"] - 1][0] && currentBlock[blockCounter - 1][1] == currentBlock[blockCounter - engine.n["value"] - 1][1]) {
 				if(enable[0] < 1 && enable[1] < 1) {
 					console.log('%c both cues missed', 'color: orange');
-					wow("#" + gridTrg, "missed", engine.time["value"]/6);
+					wow("#eye", "missed", engine.time["value"]/6);
+					wow("#ear", "missed", engine.time["value"]/6);
 					userScoreTemp[1] += 1;
 					userScoreTemp[4] += 1;
 				}
 			} else if(currentBlock[blockCounter - 1][0] == currentBlock[blockCounter - engine.n["value"] - 1][0]) {
 				if(enable[0] < 1) {
 					console.log('%c visual cue missed', 'color: orange');
-					wow("#" + gridTrg, "missed", engine.time["value"]/6);
+					wow("#eye", "missed", engine.time["value"]/6);
 					userScoreTemp[1] += 1;
 				}
 			} else if(currentBlock[blockCounter - 1][1] == currentBlock[blockCounter - engine.n["value"] - 1][1]) {
 				if(enable[1] < 1) {
 					console.log('%c audio cue missed', 'color: orange');
-					wow("#" + gridTrg, "missed", engine.time["value"]/6);
+					wow("#ear", "missed", engine.time["value"]/6);
 					userScoreTemp[4] += 1;
 				}
 			}
