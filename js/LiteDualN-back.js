@@ -21,8 +21,7 @@ engine.rotation		= { "type":"range", "target":"rotation-duration", "text":"Rotat
 engine.audio		= { "type":"selector", "target":"audio-symbols", "text":"Audio:", "value":"Natural Numbers",
 						"symbols": {
 							"Natural Numbers":[1,2,3,4,5,6,7,8],
-							"Prime Numbers":[2,3,5,7,11,13,17,19], 
-							"Consonant Letters":["c", "h", "k", "l", "q", "r", "s", "t"]
+							"Prime Numbers":[2,3,5,7,11,13,17,19]
 						}
 					};
 

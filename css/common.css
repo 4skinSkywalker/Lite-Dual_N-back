@@ -115,7 +115,7 @@ input[type=range].slider:focus::-webkit-slider-runnable-track {
 	overflow-y: scroll;
 }
 .nav-item input, .nav-item select {
-	margin: 4px 0;
+	margin: 8px 0;
 }
 .nav-item p {
 	margin: 12px 0;
@@ -141,13 +141,13 @@ input[type=range].slider:focus::-webkit-slider-runnable-track {
     border-radius: 4px;
 }
 .right {
-	background: #0e3e22!important; /*#27ae60*/
+	background: #0e3e22!important;
 }
 .missed {
 	background: radial-gradient(rgba(255, 165, 0, .20) 1%, rgba(0, 0, 0, 0) 99%)!important;
 }
 .wrong {
-	background: #3e130e!important; /*#c0392b*/
+	background: #3e130e!important;
 }
 @keyframes rotating-clockwise {
   from {
