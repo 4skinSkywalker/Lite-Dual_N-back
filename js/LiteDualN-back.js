@@ -1,113 +1,45 @@
-function DNB() {
-	_this = this;
+var optionsTrg 		= "navigation",
+	trainerTrg		= "site-wrap",
+	gridTrg			= "grid",
+	resultsTrg		= "results",
+	playStopTrg		= "engine-button",
+	playChar		= "Play",
+	stopChar		= "Stop",
+	running			= false,
+	blockCounter 	= -1,
+	enable 			= [0, 0],
+	userScoreTemp 	= [0, 0, 0, 0, 0, 0],
+	loadedSounds 	= [],
+	engine 			= {};
 	
-	this.optionsTrg 	= "navigation";
-	this.trainerTrg		= "site-wrap";
-	this.gridTrg		= "grid";
-	this.resultTrg		= "results";
-	this.playStopTrg	= "play-stop-button";
-	this.playChar		= "Play";
-	this.stopChar		= "Stop";
-	this.equalChar		= "=";
-	
-	this.running		= false;
-	this.userScoreTemp 	= [0, 0, 0, 0, 0, 0];
-	this.loadedSounds 	= [];
-	
-	this.engine 			= {};
-	this.engine.left 		= { "target":"left", "value":0};
-	this.engine.time 		= { "type":"range", "target":"stimulus-time", "text":"Stimulus:", "value":3000, "min":1500, "step":100, "MAX":6000, "char":"s"};
-	this.engine.blocks 		= { "type":"range", "target":"matching-blocks", "text":"Matching:", "value":6, "min":3, "step":1, "MAX":9};
-	this.engine.n 			= { "type":"range", "target":"n-back", "text":"N-back", "value":2, "min":1, "step":1, "MAX":9, "char":""};
-	this.engine.threshold 	= { "type":"range", "target":"success-threshold", "text":"Threshold:", "value":0.8, "min":0.7, "step":0.05, "MAX":1.0, "char":"%", "change":function(x) {return x*100}};
-	this.engine.rotation	= { "type":"range", "target":"rotation-duration", "text":"Rotation:", "value":60, "min":30, "step":10, "MAX":120, "char":"s", "direction":function() {return (Math.floor(Math.random() * 2) == 0) ? "-clockwise" : "-anticlockwise"}};
-	this.engine.audio		= { "type":"selector", "target":"audio-symbols", "text":"Audio:", "value":"Prime Numbers",
-								"symbols": {
-									"Prime Numbers":[2,3,5,7,11,13,17,19], 
-									"Natural Numbers":[1,2,3,4,5,6,7,8],
-									"Consonant Letters":["c", "h", "k", "l", "q", "r", "s", "t"]
-								}
-							};
-}
-	
-DNB.prototype.global = this;
+engine.left 		= { "target":"left", "value":0};
+engine.time 		= { "type":"range", "target":"stimulus-time", "text":"Stimulus:", "value":3000, "min":1500, "step":100, "MAX":6000, "char":"s"};
+engine.blocks 		= { "type":"range", "target":"matching-blocks", "text":"Matching:", "value":6, "min":3, "step":1, "MAX":9};
+engine.n 			= { "type":"range", "target":"n-back", "text":"N-back", "value":2, "min":1, "step":1, "MAX":9, "char":""};
+engine.threshold 	= { "type":"range", "target":"success-threshold", "text":"Threshold:", "value":0.8, "min":0.7, "step":0.05, "MAX":1.0, "char":"%", "change":function(x) {return x*100}};
+engine.rotation		= { "type":"range", "target":"rotation-duration", "text":"Rotation:", "value":60, "min":30, "step":10, "MAX":120, "char":"s", "direction":function() {return (Math.floor(Math.random() * 2) == 0) ? "-clockwise" : "-anticlockwise"}};
+engine.audio		= { "type":"selector", "target":"audio-symbols", "text":"Audio:", "value":"Natural Numbers",
+						"symbols": {
+							"Natural Numbers":[1,2,3,4,5,6,7,8],
+							"Prime Numbers":[2,3,5,7,11,13,17,19], 
+							"Consonant Letters":["c", "h", "k", "l", "q", "r", "s", "t"]
+						}
+					};
 
-DNB.prototype.getVarName = function () {
-    for(var name in this.global) 
-		if(this.global[name] == this) 
-			return name; 
-};
-
-DNB.prototype.getLayoutHTML = function() {
+function getLayoutHTML() {
 	var s = "";
-	s += '<ul class="' + this.optionsTrg + '"></ul>';
+	s += '<ul class="' + optionsTrg + '"></ul>';
 	s += '<input type="checkbox" id="nav-trigger" class="nav-trigger"/>';
 	s += '<label for="nav-trigger"></label>';
-	s += '<div class="' + this.trainerTrg + '"></div>';
+	s += '<div class="' + trainerTrg + '"></div>';
 	return s;
-};
+}
 
-DNB.prototype.onchangeCallback= function(obj, key) {
-	return function() {
-		if(obj[key]["type"] == "range") {
-			obj[key]["value"] = Number($("#" + obj[key]["target"]).val());
-			if($("#" +  obj[key]["target"] + "-span"))
-				$("#" +  obj[key]["target"] + "-span").text(obj[key]["value"]);
-		} else if(obj[key]["type"] == "selector") {
-			obj[key]["value"] = $("#" + obj[key]["target"]).val();
-		}
-		
-		if(obj[key]["change"] || obj[key]["char"]) {
-			var spanChar = (obj[key]["char"]) ? obj[key]["char"] : "";
-				spanText = (obj[key]["change"]) ? obj[key]["change"](obj[key]["value"]) + spanChar : obj[key]["value"] + spanChar;
-			$("#" +  obj[key]["target"] + "-span").text(spanText);
-		}
-
-		if(key == "time" || key == "blocks" || key == "n") {
-			_this.remainedStimuli(_this.engine.blocks["value"], _this.engine.n["value"]);
-		} else if(key == "rotation") {
-			var grid = $("#" + _this.gridTrg);
-			grid.attr("style", "animation: rotating" + obj[key]["direction"]() + " " + obj[key]["value"] + "s linear infinite;");
-			if(obj[key]["value"] == obj[key]["min"]) {
-				$("#" + obj[key]["target"] + "-span").text("off");
-				grid.removeClass("rotational-grid");
-				grid.attr("style", "");
-			} else if(!grid.hasClass("rotational-grid")){
-				grid.addClass("rotational-grid");
-				grid.attr("style", "animation: rotating" + obj[key]["direction"]() + " " + obj[key]["value"] + "s linear infinite;");
-			}
-		} else if(key == "audio") {
-			var selected = obj[key]["value"];
-			_this.loadNewAudio(selected, obj[key]["symbols"][selected]);
-		}
-	}
-};
-
-DNB.prototype.populateTrainerHTML = function() {
-    var s = "";
-	s += '<div id="status-bar">';
-	s += 	'<div id="' + this.engine.left["target"] + '">' + this.engine.left["value"] + '</div>';
-	s += '</div>';	
-	s += '<button type="button" id="' + this.playStopTrg + '" class="btn-standard"></button>';
-	s += '<table id="' + this.gridTrg + '" class="rotational-grid" style="animation: rotating' + this.engine.rotation["direction"]() + ' ' + this.engine.rotation["value"] + 's linear infinite;">';
-	for(var i = 0; i < 3; i++) {
-		s += '<tr>';
-		for(var j = 0; j < 3; j++) {
-			s += '<td><div class="tile"></div></td>';
-		}
-		s += '</tr>';
-	}
-	s += '</table>';
-	s += '<div id="eye"></div>';
-	s += '<div id="ear"></div>';
-    $("." + this.trainerTrg).append(s);
-};
-
-DNB.prototype.populateOptionsHTML = function() {
+function populateOptionsHTML() {
 	var s = "",
-		obj = this.engine;
+		obj = engine;
 	s += '<li class="nav-item">';
-	s += '<p id="level">N' + this.equalChar + this.engine.n["value"] + '</p>';
+	s += '<p id="level">N = ' + engine.n["value"] + '</p>';
 	s += '</li>';
 	for(var key in obj) {
 		if(obj.hasOwnProperty(key)) {
@@ -127,117 +59,183 @@ DNB.prototype.populateOptionsHTML = function() {
 				s +=	'</select>';
 				s += '</li>';
 			}
-			$("." + this.optionsTrg).append(s);
-			$("#" + obj[key]["target"]).on("change", this.onchangeCallback(obj, key));
+			$("." + optionsTrg).append(s);
+			$("#" + obj[key]["target"]).on("change", onchangeCallback(obj, key));
 		}
 		s = "";
 	}
 	s += '<li class="nav-item">';
 	s += 	'<p>Controls:<br>"A" key for visual<br>"L" key for audio.<br><span style="color:#FFD700">Given to you by Fred</span></p>';
 	s += '</li>';
-	$("." + this.optionsTrg).append(s);
-};
+	$("." + optionsTrg).append(s);
+}
 
-DNB.prototype.assignFunction = function(el, foo, txt) {
-
-	$(el).prop("onclick", null).attr("onclick", foo);
-	$(el).text(txt);
-};
-
-DNB.prototype.wow = function(selector, _class, time) {
-	
-	$(selector).addClass(_class);
-	setTimeout(function() {
-			$(selector).removeClass(_class)
+function onchangeCallback(obj, key) {
+	return function() {
+		if(obj[key]["type"] == "range") {
+			obj[key]["value"] = Number($("#" + obj[key]["target"]).val());
+			if($("#" +  obj[key]["target"] + "-span"))
+				$("#" +  obj[key]["target"] + "-span").text(obj[key]["value"]);
+		} else if(obj[key]["type"] == "selector") {
+			obj[key]["value"] = $("#" + obj[key]["target"]).val();
 		}
-	, time);
-};
+		
+		if(obj[key]["change"] || obj[key]["char"]) {
+			var spanChar = (obj[key]["char"]) ? obj[key]["char"] : "";
+				spanText = (obj[key]["change"]) ? obj[key]["change"](obj[key]["value"]) + spanChar : obj[key]["value"] + spanChar;
+			$("#" +  obj[key]["target"] + "-span").text(spanText);
+		}
 
-DNB.prototype.updateN = function(n) {
-
-	if(n) {
-		$("#" + this.engine.n["target"]).val(n);
-		$("#" + this.engine.n["target"] + "-span").text(n);
-		$("#level").html("N" + this.equalChar + n);
+		if(key == "time" || key == "blocks" || key == "n") {
+			calculateStimuli(engine.blocks["value"], engine.n["value"]);
+		} else if(key == "rotation") {
+			var grid = $("#" + gridTrg);
+			grid.attr("style", "animation: rotating" + obj[key]["direction"]() + " " + obj[key]["value"] + "s linear infinite;");
+			if(obj[key]["value"] == obj[key]["min"]) {
+				$("#" + obj[key]["target"] + "-span").text("off");
+				grid.removeClass("rotational-grid");
+				grid.attr("style", "");
+			} else if(!grid.hasClass("rotational-grid")){
+				grid.addClass("rotational-grid");
+				grid.attr("style", "animation: rotating" + obj[key]["direction"]() + " " + obj[key]["value"] + "s linear infinite;");
+			}
+		} else if(key == "audio") {
+			var sel = obj[key]["value"];
+			howlerizer(sel, obj[key]["symbols"][sel]);
+		}
 	}
-	
-	$("#" + this.engine.left["target"]).html(this.engine.left["value"]);
-};
+}
 
-DNB.prototype.remainedStimuli = function(blocks, n) {
-	
-	this.engine.left["value"] = blocks*(n + 1);
-	this.updateN(n);
-};
+function populateTrainerHTML() {
+    var s = "";
+	s += '<div id="status-bar">';
+	s += 	'<div id="' + engine.left["target"] + '">' + engine.left["value"] + '</div>';
+	s += '</div>';	
+	s += '<button type="button" id="' + playStopTrg + '" class="btn-standard"></button>';
+	s += '<table id="' + gridTrg + '" class="rotational-grid" style="animation: rotating' + engine.rotation["direction"]() + ' ' + engine.rotation["value"] + 's linear infinite;">';
+	for(var i = 0; i < 3; i++) {
+		s += '<tr>';
+		for(var j = 0; j < 3; j++)
+			s += '<td><div class="tile"></div></td>';
+		s += '</tr>';
+	}
+	s += '</table>';
+	s += '<div id="eye"></div>';
+	s += '<div id="ear"></div>';
+    $("." + trainerTrg).append(s);
+}
 
-DNB.prototype.loadNewAudio = function(dir, a) {
-	
-	this.loadedSounds = [];
-	
-	var netDir = dir.replace(/ /g, '-');
+function functionizer(e, f, t) {
+	$(e).prop("onclick", null).attr("onclick", f);
+	$(e).text(t);
+}
+
+function update(n) {
+	if(n) {
+		$("#" + engine.n["target"]).val(n);
+		$("#" + engine.n["target"] + "-span").text(n);
+		$("#level").html("N = " + n);
+	}
+	$("#" + engine.left["target"]).html(engine.left["value"]);
+}
+
+function howlerizer(dir, a) {
+	loadedSounds = [];
 	a.forEach(function(el) {
-		_this.loadedSounds.push(new Howl({src: ["snd/" + netDir + "/" + el +".wav"]}));
+		loadedSounds.push(new Howl({src: ["snd/" + dir.replace(/ /g, '-') + "/" + el +".wav"]}));
 	});
-};
+}
 
-DNB.prototype.init = function() {
+function wow(s, c, t) {
+	$(s).addClass(c);
+	setTimeout(function() {
+		$(s).removeClass(c)
+	}, t);
+}
 
-	this.name = this.getVarName();
+function markupInitializer() {
 	
-	// START PATCH: ENTER KEY
+	$("body").append(getLayoutHTML());
+	populateTrainerHTML();
+	populateOptionsHTML();
+	
+	calculateStimuli(engine.blocks["value"], engine.n["value"]);
+	functionizer("#" + playStopTrg, "start()", playChar);
+	
+	results = new Pop("results", resultsTrg);
+	$("body").append(results.getPopHTML());
+}
+
+function eventsInitializer() {
+	
+	var sel = engine.audio["value"];
+	howlerizer(sel, engine.audio["symbols"][sel]);
+	
+	var keyAllowed = {};
 	$(document).keydown(function(e) {
+		e.preventDefault();
+		e.stopPropagation();
+		
+		if(keyAllowed[e.which] == false) return;
+		keyAllowed[e.which] = false;
+		
 		var keyCode = e.keyCode || e.which;
-		if(keyCode == 13) { 
-			e.preventDefault();
-			return false;
+		switch(keyCode) {
+			case 65:
+				checkBlock("visual");
+				break;
+			case 76:			
+				checkBlock("audio");
+				break;
+			default:
+				return;
 		}
 	});
-	// END PATCH: ENTER KEY
+	$(document).keyup(function(e) {keyAllowed[e.which] = true;});
+	$(document).focus(function(e) {keyAllowed = {};});
 	
-	$("body").append(this.getLayoutHTML());
-	this.populateTrainerHTML();
-	this.populateOptionsHTML();
-	
-	this.pop = new Pop(this.name, this.resultTrg);
-	$("body").append(this.pop.getPopHTML());
+	document.querySelector("#eye").addEventListener("touchstart", function(e) {
+		e.preventDefault();
+		checkBlock("visual");
+	}, false);
+	document.querySelector("#ear").addEventListener("touchstart", function(e) {
+		e.preventDefault();
+		checkBlock("audio");
+	}, false);
+}
 
-	this.assignFunction("#" + this.playStopTrg, this.name + ".start()", this.playChar);
-	this.remainedStimuli(this.engine.blocks["value"], this.engine.n["value"]);
-	var selected = this.engine.audio["value"];
-	this.loadNewAudio(selected, this.engine.audio["symbols"][selected]);
-};
-
-DNB.prototype.start = function() {
+function start() {
 
 	playing = setTimeout(function() {
+		running = true;
+		createBlock();
+		playBlock();
+	}, engine.time["value"]/4);
 
-		_this.playBlock();
-		_this.running = true;
-		
-	}, _this.engine.time["value"]/2);
+	functionizer("#" + playStopTrg, "stop()", stopChar);
+}
 
-	this.assignFunction("#" + this.playStopTrg, this.name + ".stop()", this.stopChar);
-};
+function stop(n) {
 
-DNB.prototype.stop = function(n) {
-
-	n = n || this.engine.n["value"];
+	n = n || engine.n["value"];
 	
-	// START PATCH: FINISHED GAME INPUT
-	$(".tile").each(function() {
-		_this.wow(this, "reset", _this.engine.time["value"]/6);
-	});
-	// END PATCH: FINISHED GAME INPUT
-	
-	this.running = false;
+	running = false;
 	clearTimeout(playing);
-	this.userScoreTemp 	= [0, 0, 0, 0, 0, 0];
-	this.remainedStimuli(this.engine.blocks["value"], n);
 	
-	this.assignFunction("#" + this.playStopTrg, this.name + ".start()", this.playChar);
-};
+	blockCounter = -1;
+	enable = [0, 0];
+	userScoreTemp 	= [0, 0, 0, 0, 0, 0];
+	
+	calculateStimuli(engine.blocks["value"], n);
+	functionizer("#" + playStopTrg, "start()", playChar);
+}
 
-DNB.prototype.prepareBlock = function(n, left, blocks) {
+function calculateStimuli(blocks, n) {
+	engine.left["value"] = blocks*(n + 1);
+	update(n);
+}
+
+function prepareBlock(n, left, blocks) {
 
 	var thisBlock = [];
 	
@@ -292,252 +290,159 @@ DNB.prototype.prepareBlock = function(n, left, blocks) {
 		if(thisBlock[x][0] == 0) {
 			thisBlock[x][0] = 1 + Math.floor(Math.random() * 8);
 			if(thisBlock[x - n] && thisBlock[x][0] == thisBlock[x - n][0]) {
-				if(thisBlock[x][0] < 8)
-					thisBlock[x][0] += 1;
-				else
-					thisBlock[x][0] -= 1;
+				(thisBlock[x][0] < 8) ? thisBlock[x][0] += 1 : thisBlock[x][0] -= 1;
 			} else if(thisBlock[x + n] && thisBlock[x][0] == thisBlock[x + n][0]) {
-				if(thisBlock[x][0] < 8)
-					thisBlock[x][0] += 1;
-				else
-					thisBlock[x][0] -= 1;
+				(thisBlock[x][0] < 8) ? thisBlock[x][0] += 1 : thisBlock[x][0] -= 1;
 			}
 		}
 		if(thisBlock[x][1] == 0) {
 			thisBlock[x][1] = 1 + Math.floor(Math.random() * 8);
 			if(thisBlock[x - n] && thisBlock[x][1] == thisBlock[x - n][1]) {
-				if(thisBlock[x][1] < 8)
-					thisBlock[x][1] += 1;
-				else
-					thisBlock[x][1] -= 1;
+				(thisBlock[x][1] < 8) ? thisBlock[x][1] += 1 : thisBlock[x][1] -= 1;
 			} else if(thisBlock[x + n] && thisBlock[x][1] == thisBlock[x + n][1]) {
-				if(thisBlock[x][1] < 8)
-					thisBlock[x][1] += 1;
-				else
-					thisBlock[x][1] -= 1;
+				(thisBlock[x][1] < 8) ? thisBlock[x][1] += 1 : thisBlock[x][1] -= 1;
 			}
 		}
 	}
 	return thisBlock;
+}
 
-};
-// END PREPARE BLOCK FUNCTION
+function evaluateBlock(block, n) {
 
-// EVALUATE BLOCK FUNCTION
-DNB.prototype.evaluateBlock = function(block, n) {
-
-	var vis = 0,
-		aud = 0;
+	var v = 0,
+		a = 0;
 	
 	for(var i = 0; i < block.length; i++)
 		if(block[i - n]) {
 			if(block[i][0] == block[i - n][0])
-				vis += 1;
+				v += 1;
 			if(block[i][1] == block[i - n][1])
-				aud += 1;
+				a += 1;
 		}
 
-	return [vis, aud];
-};
+	return [v, a];
+}
 
-// MAIN GAME FUNCTION
-DNB.prototype.playBlock = function() {
+function checkBlock(c) {
 
-	var currentBlock = this.prepareBlock(this.engine.n["value"], this.engine.left["value"], this.engine.blocks["value"]),
-		blockEval = this.evaluateBlock(currentBlock, this.engine.n["value"]);
+	var p = (c == "visual") ? 0 : 1,
+		e = (c == "visual") ? "#eye" : "#ear",
+		r = (c == "visual") ? 0 : 3,
+		w = (c == "visual") ? 2 : 5;
+
+	if(enable[p] != 1 && running) {
+		enable[p] = 1;
+		if(blockCounter + 1 > engine.n["value"] && currentBlock[blockCounter]) {
+			if(currentBlock[blockCounter][p] == currentBlock[blockCounter - engine.n["value"]][p]) {
+				console.log('%c right ' + c, 'color: blue');
+				wow(e, "right", engine.time["value"]/6);
+				userScoreTemp[r] += 1;
+			} else {
+				console.log('%c wrong ' + c, 'color: red');
+				wow(e, "wrong", engine.time["value"]/6);
+				userScoreTemp[w] += 1;
+			}
+		}
+	}
+}
+
+function createBlock() {
 	
-	while(blockEval[0] != this.engine.blocks["value"] || blockEval[1] != this.engine.blocks["value"]) {
-		currentBlock = this.prepareBlock(this.engine.n["value"], this.engine.left["value"], this.engine.blocks["value"]);
-		blockEval = this.evaluateBlock(currentBlock, this.engine.n["value"]);
+	currentBlock = prepareBlock(engine.n["value"], engine.left["value"], engine.blocks["value"]);
+	blockEval = evaluateBlock(currentBlock, engine.n["value"]);
+	
+	while(blockEval[0] != engine.blocks["value"] || blockEval[1] != engine.blocks["value"]) {
+		currentBlock = prepareBlock(engine.n["value"], engine.left["value"], engine.blocks["value"]);
+		blockEval = evaluateBlock(currentBlock, engine.n["value"]);
 	}
 	
-	if(blockEval[0] != this.engine.blocks["value"] || blockEval[1] != this.engine.blocks["value"]) {
-		alert("Error 998: 'blockEval != this.engine.blocks[\"value\"]', PLEASE contact stopchemtrailsfred@gmail.com notifying this error code.");
-	}
+	thisBlockLength = currentBlock.length;
 	
 	console.log(currentBlock);
 	console.log('%c matching blocks: ' + blockEval, 'color: blue');
-	
-	var blockCounter = -1,
-		thisBlockLength = currentBlock.length,
-		keyAllowed = {},
+}
+
+function playBlock() {
+
+	if(++blockCounter < thisBlockLength) {
+		if(blockCounter > engine.n["value"]) {
+			if(currentBlock[blockCounter - 1][0] == currentBlock[blockCounter - engine.n["value"] - 1][0] && currentBlock[blockCounter - 1][1] == currentBlock[blockCounter - engine.n["value"] - 1][1]) {
+				if(enable[0] < 1 && enable[1] < 1) {
+					console.log('%c both cues missed', 'color: orange');
+					wow("#" + gridTrg, "missed", engine.time["value"]/6);
+					userScoreTemp[1] += 1;
+					userScoreTemp[4] += 1;
+				}
+			} else if(currentBlock[blockCounter - 1][0] == currentBlock[blockCounter - engine.n["value"] - 1][0]) {
+				if(enable[0] < 1) {
+					console.log('%c visual cue missed', 'color: orange');
+					wow("#" + gridTrg, "missed", engine.time["value"]/6);
+					userScoreTemp[1] += 1;
+				}
+			} else if(currentBlock[blockCounter - 1][1] == currentBlock[blockCounter - engine.n["value"] - 1][1]) {
+				if(enable[1] < 1) {
+					console.log('%c audio cue missed', 'color: orange');
+					wow("#" + gridTrg, "missed", engine.time["value"]/6);
+					userScoreTemp[4] += 1;
+				}
+			}
+		}
+		if(currentBlock[blockCounter]) {
+			var blockLight = (currentBlock[blockCounter][0] < 5) ? currentBlock[blockCounter][0]  - 1 : currentBlock[blockCounter][0] ;
+			wow(".tile:eq(" + blockLight + ")", "on", engine.time["value"]/6);
+			loadedSounds[currentBlock[blockCounter][1] - 1].play();
+		}
+		
+		console.log('%c round		: #' + blockCounter, 'color: black')
+		console.log('%c block		: ' + currentBlock[blockCounter], 'color: black')
+		console.log('%c keypresses	: ' + enable, 'color: green');
+		console.log('%c score		: ' + userScoreTemp, 'color: green');
+		
+		engine.left["value"]--;
+		update();
+		
+		playing = setTimeout(playBlock, engine.time["value"]);
 		enable = [0, 0];
-	
-	if(enable[0] != 0 || enable[1] != 0) {
-		alert("Error 999: 'enable != [0, 0]', PLEASE contact stopchemtrailsfred@gmail.com notifying this error code.");
-	}
-
-	(function playValue() {
+	} else {
+		userScoreTemp[1] = engine.blocks["value"] - userScoreTemp[0];
+		userScoreTemp[4] = engine.blocks["value"] - userScoreTemp[3];
 		
-		function isRight(cue) {
-
-			var pointer = (cue == "visual") ? 0 : 1,
-				element = (cue == "visual") ? "#eye" : "#ear",
-				rightScorePointer = (cue == "visual") ? 0 : 3,
-				wrongScorePointer = (cue == "visual") ? 2 : 5;
-
-			if(enable[pointer] != 1 && _this.running) {
-				enable[pointer] = 1;
-				if(blockCounter + 1 > _this.engine.n["value"] && currentBlock[blockCounter]) {
-					if(currentBlock[blockCounter][pointer] == currentBlock[blockCounter - _this.engine.n["value"]][pointer]) {
-						console.log('%c right ' + cue, 'color: blue');
-						
-						_this.wow(element, "right", _this.engine.time["value"]/6);
-						_this.userScoreTemp[rightScorePointer] += 1;
-					}
-					else {
-						console.log('%c wrong ' + cue, 'color: red');
-						
-						_this.wow(element, "wrong", _this.engine.time["value"]/6);
-						_this.userScoreTemp[wrongScorePointer] += 1;
-					}
-				}
-			}
-		}
-
-		$(document).keydown(function(e) {
-			e.preventDefault();
-			e.stopPropagation();
-			
-			if(keyAllowed[e.which] == false) return;
-			keyAllowed[e.which] = false;
-			
-			var keyCode = e.keyCode || e.which;
-			switch(keyCode) {
-				case 65:
-					isRight("visual");
-					break;
-				case 76:			
-					isRight("audio");
-					break;
-				default:
-					return;
-			}
-		});
-		$(document).keyup(function(e) { 
-			keyAllowed[e.which] = true;
-		});
-		$(document).focus(function(e) { 
-			keyAllowed = {};
-		});
+		var s = "";
+		s += '<table class="results-icons">';
+		s += '<tr><td colspan="2">Visual</td><td colspan="2">Audio</td></tr>';
+		s += '<tr><td>☑</td><td>' + userScoreTemp[0] + '</td><td>☑</td><td>' + userScoreTemp[3] + '</td></tr>';
+		s += '<tr><td>☐</td><td>' + userScoreTemp[1] + '</td><td>☐</td><td>' + userScoreTemp[4] + '</td></tr>';
+		s += '<tr><td>☒</td><td>' + userScoreTemp[2] + '</td><td>☒</td><td>' + userScoreTemp[5] + '</td></tr>';
+		s += '</table>'
 		
-		document.querySelector("#eye").addEventListener("touchstart", function() {
-			isRight("visual");
-		});
-		document.querySelector("#ear").addEventListener("touchstart", function() {
-			isRight("audio");
-		});
+		$("#" + resultsTrg).html(s);
 		
-		if(++blockCounter < thisBlockLength) {
-			if(blockCounter > this.engine.n["value"]) {
-				if(currentBlock[blockCounter - 1][0] == currentBlock[blockCounter - this.engine.n["value"] - 1][0] && currentBlock[blockCounter - 1][1] == currentBlock[blockCounter - this.engine.n["value"] - 1][1]) {
-					if(enable[0] < 1 && enable[1] < 1) {
-						console.log('%c both cues missed', 'color: orange');
-						
-						this.wow("#" + this.gridTrg, "missed", this.engine.time["value"]/6);
-						this.userScoreTemp[1] += 1;
-						this.userScoreTemp[4] += 1;
-					}
-				} else if(currentBlock[blockCounter - 1][0] == currentBlock[blockCounter - this.engine.n["value"] - 1][0]) {
-					if(enable[0] < 1) {
-						console.log('%c visual cue missed', 'color: orange');
-						
-						this.wow("#" + this.gridTrg, "missed", this.engine.time["value"]/6);
-						this.userScoreTemp[1] += 1;
-					}
-				} else if(currentBlock[blockCounter - 1][1] == currentBlock[blockCounter - this.engine.n["value"] - 1][1]) {
-					if(enable[1] < 1) {
-						console.log('%c audio cue missed', 'color: orange');
-						
-						this.wow("#" + this.gridTrg, "missed", this.engine.time["value"]/6);
-						this.userScoreTemp[4] += 1;
-					}
-				}
-			}
-			if(currentBlock[blockCounter]) {
-				var blockLight = (currentBlock[blockCounter][0] < 5) ? currentBlock[blockCounter][0]  - 1 : currentBlock[blockCounter][0] ;
-				this.wow(".tile:eq(" + blockLight + ")", "on", this.engine.time["value"]/6);
-				this.loadedSounds[currentBlock[blockCounter][1] - 1].play();
-			}
-			
-			console.log('%c block		: ' + currentBlock[blockCounter], 'color: black')
-			console.log('%c keypresses	: ' + enable, 'color: green');
-			console.log('%c score		: ' + this.userScoreTemp, 'color: green');
-			
-			this.engine.left["value"]--;
-			this.updateN();
-			
-			playing = setTimeout(playValue.bind(this), this.engine.time["value"]);
-			enable = [0, 0];
-		}
-		else {
-			
-			// START OLD PATCH: MISSED COUNT
-			this.userScoreTemp[1] = this.engine.blocks["value"] - this.userScoreTemp[0];
-			this.userScoreTemp[4] = this.engine.blocks["value"] - this.userScoreTemp[3];
-			
-			if(this.userScoreTemp[0] + this.userScoreTemp[1] > this.engine.blocks["value"] || this.userScoreTemp[3] + this.userScoreTemp[4] > this.engine.blocks["value"]) {
-				alert("Error 1000: 'this.userScoreTemp[0] + this.userScoreTemp[1] > this.engine.blocks[\"value\"] || this.userScoreTemp[3] + this.userScoreTemp[4] > this.engine.blocks[\"value\"]', PLEASE contact stopchemtrailsfred@gmail.com notifying this error code.");
-			}
-			
-			/*if(this.userScoreTemp[1] < 0) {
-				var visError = Math.abs(this.userScoreTemp[1]);
-				this.userScoreTemp[0] -= visError;
-				this.userScoreTemp[1] += visError;
-			}
-			if(this.userScoreTemp[4] < 0) {
-				var audError = Math.abs(this.userScoreTemp[4]);
-				this.userScoreTemp[3] -= audError;
-				this.userScoreTemp[4] += audError;
-			}*/
-			// END OLD PATCH: MISSED COUNT
-			
-			var s = "";
-			s += '<table class="results-icons">';
-			s += '<tr><td colspan="2">Visual</td><td colspan="2">Audio</td></tr>';
-			s += '<tr><td>☑</td><td>' + this.userScoreTemp[0] + '</td><td>☑</td><td>' + this.userScoreTemp[3] + '</td></tr>';
-			s += '<tr><td>☐</td><td>' + this.userScoreTemp[1] + '</td><td>☐</td><td>' + this.userScoreTemp[4] + '</td></tr>';
-			s += '<tr><td>☒</td><td>' + this.userScoreTemp[2] + '</td><td>☒</td><td>' + this.userScoreTemp[5] + '</td></tr>';
-			s += '</table>'
-			
-			$("#" + this.resultTrg).html(s);
-			
-			var incorrectVis = this.userScoreTemp[1] + this.userScoreTemp[2],
-				incorrectAud = this.userScoreTemp[4] + this.userScoreTemp[5],
-				threshold = this.engine.blocks["value"]*(1 - this.engine.threshold["value"]),
-				upperThreshold = Math.ceil(threshold),
-				lowerThreshold = Math.floor(threshold);
-			
-			if(incorrectVis <= lowerThreshold && incorrectAud <= lowerThreshold) {
-
-				$("#" + this.resultTrg).append('<p class="results-text">N is now:<br>' + ++this.engine.n["value"] + '</p>');
-				
-			} else if(incorrectVis > upperThreshold || incorrectAud > upperThreshold) {
-				
-				if(this.engine.n["value"] != 1) {
-					
-					$("#" + this.resultTrg).append('<p class="results-text">N is now:<br>' + --this.engine.n["value"] + '</p>');
-					
-				} else {
-					
-					$("#" + this.resultTrg).append('<p class="results-text">N stays: 1<br>Keep trying</p>');
-				}
+		var incorrectVis = userScoreTemp[1] + userScoreTemp[2],
+			incorrectAud = userScoreTemp[4] + userScoreTemp[5],
+			threshold = engine.blocks["value"]*(1 - engine.threshold["value"]),
+			upperThreshold = Math.ceil(threshold),
+			lowerThreshold = Math.floor(threshold);
+		
+		if(incorrectVis <= lowerThreshold && incorrectAud <= lowerThreshold) {
+			$("#" + resultsTrg).append('<p class="results-text">N is now:<br>' + ++engine.n["value"] + '</p>');
+		} else if(incorrectVis > upperThreshold || incorrectAud > upperThreshold) {
+			if(engine.n["value"] != 1) {
+				$("#" + resultsTrg).append('<p class="results-text">N is now:<br>' + --engine.n["value"] + '</p>');
 			} else {
-				
-				$("#" + this.resultTrg).append('<p class="results-text">N stays: ' + this.engine.n["value"] + '<br>Keep trying</p>');
+				$("#" + resultsTrg).append('<p class="results-text">N stays: 1<br>Keep trying</p>');
 			}
-			
-			this.userScoreTemp = [0, 0, 0, 0, 0, 0];
-			
-			this.stop(this.engine.n["value"]);
-			setTimeout(this.pop.yes(), 400);
+		} else {
+			$("#" + resultsTrg).append('<p class="results-text">N stays: ' + engine.n["value"] + '<br>Keep trying</p>');
 		}
-	}.bind(this))();
-};
 
-function Pop(objName, innerId) {
-	this.objName = objName + ".pop";
-    this.id = objName + "-popup";
+		stop(engine.n["value"]);
+		setTimeout(results.yes(), 400);
+	}
+}
+
+function Pop(name, innerId) {
+	this.name = name;
+    this.id = this.name + "-popup";
 	this.innerId = innerId;
 }
 
@@ -562,7 +467,7 @@ Pop.prototype.getPopHTML = function(inStr) {
 	s += 	'<div id="' + this.innerId + '">';
     if(inStr) s += 	inStr;
 	s += 	'</div>';
-    s += 	'<button onclick="' + this.objName + '.no()" style="z-index:40" class="btn-popup">✖</button>';
+    s += 	'<button onclick="' + this.name + '.no()" style="z-index:40" class="btn-popup">✖</button>';
 	s += '</div>';
     return s;
 };
