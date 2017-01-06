@@ -141,13 +141,13 @@ input[type=range].slider:focus::-webkit-slider-runnable-track {
     border-radius: 4px;
 }
 .right {
-	background: #16a085!important;
+	background: #0c5a4a!important;
 }
 .missed {
-	background: #f39c12!important;
+	background: #613e05!important;
 }
 .wrong {
-	background: #d35400!important;
+	background: #662900!important;
 }
 @keyframes rotating-clockwise {
   from {
