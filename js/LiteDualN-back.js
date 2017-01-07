@@ -16,7 +16,7 @@ var optionsTrg 		= "navigation",
 engine.left 		= { "target":"left", "value":0};
 engine.time 		= { "type":"range", "target":"stimulus-time", "text":"Stimulus:", "value":3000, "min":1500, "step":100, "MAX":6000, "char":"s"};
 engine.blocks 		= { "type":"range", "target":"matching-blocks", "text":"Matching:", "value":6, "min":3, "step":1, "MAX":9};
-engine.n 			= { "type":"range", "target":"n-back", "text":"N-back", "value":2, "min":1, "step":1, "MAX":9, "char":""};
+engine.n 			= { "type":"range", "target":"n-back", "text":"N-back:", "value":2, "min":1, "step":1, "MAX":9, "char":""};
 engine.threshold 	= { "type":"range", "target":"success-threshold", "text":"Threshold:", "value":0.8, "min":0.7, "step":0.05, "MAX":1.0, "char":"%", "change":function(x) {return x*100}};
 engine.feedback 	= { "type":"range", "target":"feedback", "text":"Feedback:", "value":1, "min":0, "step":1, "MAX":1, "change":function(x) {return (x == 1) ? "on" : "off"}};
 engine.rotation		= { "type":"range", "target":"rotation-duration", "text":"Rotation:", "value":60, "min":30, "step":10, "MAX":120, "char":"s", "direction":function() {return (Math.floor(Math.random() * 2) == 0) ? "-clockwise" : "-anticlockwise"}};
