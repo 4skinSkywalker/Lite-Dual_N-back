@@ -135,6 +135,7 @@ input[type=range].slider:focus::-webkit-slider-runnable-track {
 }
 .btn-popup {
 	position: absolute;
+	line-height: 100%;
     background: #333;
     color: #111;
     border-radius: 4px;
