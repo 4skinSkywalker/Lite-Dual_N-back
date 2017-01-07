@@ -62,6 +62,9 @@
 	background: rgba(0, 0, 0, .5);
 	font-size: 5vh;
 }
+#progress-outer {
+	height: 1vh!important;
+}
 .results-icons td, .results-text {
 	padding: 1vh;
 }

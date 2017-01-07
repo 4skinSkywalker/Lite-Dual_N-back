@@ -1,8 +1,6 @@
 body *{user-select:none;-moz-user-select:none;-khtml-user-select:none;-webkit-user-select:none;-o-user-select:none;font-family:monospace}
 body{overflow:hidden;position:fixed;margin:0;height:100vh;background:#000}
 ::-webkit-scrollbar{display:none}
-input[type="button"],button{background:none;border:0;color:inherit;font:inherit;line-height:normal;overflow:visible;padding:0;-webkit-appearance:button;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none}
-input::-moz-focus-inner,button::-moz-focus-inner{border:0;padding:0}
 button:focus{outline:0!important}
 #status-bar * {
 	color: #222;
@@ -136,8 +134,10 @@ input[type=range].slider:focus::-webkit-slider-runnable-track {
 .btn-popup {
 	position: absolute;
 	line-height: 100%;
-    background: #333;
-    color: #111;
+	padding: 0;
+	border: 0;
+    background: transparent;
+    color: #fff;
     border-radius: 4px;
 }
 .right {

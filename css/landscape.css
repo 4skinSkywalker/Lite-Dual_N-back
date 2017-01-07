@@ -62,6 +62,9 @@
 	background: rgba(0, 0, 0, .5);
 	font-size: 8vh;
 }
+#progress-outer {
+	height: 2vh!important;
+}
 .results-icons td, .results-text {
 	padding: 2vh;
 }
@@ -73,8 +76,8 @@
 .btn-popup {
     top: 4vh;
     right: 4vh;
-    width: 10vh;
-    height: 10vh;
+    width: 12vh;
+    height: 12vh;
     font-size: 7vh;
     cursor: pointer;
 }
