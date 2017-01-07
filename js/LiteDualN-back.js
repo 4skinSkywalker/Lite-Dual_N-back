@@ -75,8 +75,8 @@ function onchangeCallback(obj, key) {
 	return function() {
 		if(obj[key]["type"] == "range") {
 			obj[key]["value"] = Number($("#" + obj[key]["target"]).val());
-			if($("#" +  obj[key]["target"] + "-span"))
-				$("#" +  obj[key]["target"] + "-span").text(obj[key]["value"]);
+			if($("#" + obj[key]["target"] + "-span"))
+				$("#" + obj[key]["target"] + "-span").text(obj[key]["value"]);
 		} else if(obj[key]["type"] == "selector") {
 			obj[key]["value"] = $("#" + obj[key]["target"]).val();
 		}
@@ -84,7 +84,7 @@ function onchangeCallback(obj, key) {
 		if(obj[key]["change"] || obj[key]["char"]) {
 			var spanChar = (obj[key]["char"]) ? obj[key]["char"] : "";
 				spanText = (obj[key]["change"]) ? obj[key]["change"](obj[key]["value"]) + spanChar : obj[key]["value"] + spanChar;
-			$("#" +  obj[key]["target"] + "-span").text(spanText);
+			$("#" + obj[key]["target"] + "-span").text(spanText);
 		}
 
 		if(key == "blocks" || key == "n") {
