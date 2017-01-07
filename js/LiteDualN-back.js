@@ -6,6 +6,7 @@ var optionsTrg 		= "navigation",
 	playChar		= "Play",
 	stopChar		= "Stop",
 	running			= false,
+	runs			= 0,
 	blockCounter 	= -1,
 	enable 			= [0, 0],
 	userScoreTemp 	= [0, 0, 0, 0, 0, 0],
@@ -86,7 +87,7 @@ function onchangeCallback(obj, key) {
 			$("#" +  obj[key]["target"] + "-span").text(spanText);
 		}
 
-		if(key == "time" || key == "blocks" || key == "n") {
+		if(key == "blocks" || key == "n") {
 			calculateStimuli(engine.blocks["value"], engine.n["value"]);
 		} else if(key == "rotation") {
 			var grid = $("#" + gridTrg);
@@ -164,6 +165,9 @@ function markupInitializer() {
 	
 	results = new Pop("results", resultsTrg);
 	$("body").append(results.getPopHTML());
+	
+	progress = new Progress("progress", "1vh", "transparent", "#fff");
+	$("#" + results.id).append(progress.getProgressHTML());
 }
 
 function eventsInitializer() {
@@ -400,8 +404,8 @@ function playBlock() {
 			loadedSounds[currentBlock[blockCounter][1] - 1].play();
 		}
 		
-		console.log('%c round		: #' + blockCounter, 'color: black')
-		console.log('%c block		: ' + currentBlock[blockCounter], 'color: black')
+		console.log('%c id			: #' + blockCounter, 'color: black')
+		console.log('%c value		: ' + currentBlock[blockCounter], 'color: black')
 		console.log('%c keypresses	: ' + enable, 'color: green');
 		console.log('%c score		: ' + userScoreTemp, 'color: green');
 		
@@ -443,6 +447,9 @@ function playBlock() {
 		}
 
 		stop(engine.n["value"]);
+		
+		runs++;
+		progress.move(runs/20*100);
 		setTimeout(results.yes(), 400);
 	}
 }
@@ -474,7 +481,39 @@ Pop.prototype.getPopHTML = function(inStr) {
 	s += 	'<div id="' + this.innerId + '">';
     if(inStr) s += 	inStr;
 	s += 	'</div>';
-    s += 	'<button onclick="' + this.name + '.no()" style="z-index:40" class="btn-popup">✖</button>';
+    s += 	'<button onclick="' + this.name + '.no()" style="z-index:50" class="btn-popup">✖</button>';
 	s += '</div>';
     return s;
+};
+
+function Progress(name, height, background, color) {
+	this.name = name;
+    this.progressId = this.name + "-outer";
+	this.barId = this.name + "-inner";
+	this.height = height;
+	this.background = background;
+	this.color = color;
+	this.carryPoint = 0;
+}
+
+Progress.prototype.getProgressHTML = function(inStr) {
+    var s = '';
+	s += '<div id="' + this.progressId + '" style="position:absolute; z-index:40; width:100%; height:' + this.height + '; top:0; left:0; background-color:' + this.background + '">';
+	s += 	'<div id="' + this.barId + '" style="position:absolute; width:0; height:100%; background-color:' + this.color + '"></div>';
+	s += '</div>';
+    return s;
+};
+
+Progress.prototype.move = function(point) {
+	this.movePoint = point;
+	this.element = document.getElementById(this.barId);
+	this.frame = function() {
+		if(this.carryPoint >= this.movePoint) {
+			clearInterval(this.interval);
+		} else {
+			this.carryPoint++; 
+			this.element.style.width = this.carryPoint + "%"; 
+		}
+	}
+	this.interval = setInterval(this.frame.bind(this), 10);
 };

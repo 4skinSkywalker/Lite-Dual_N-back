@@ -73,10 +73,10 @@
 .btn-popup {
     top: 4vh;
     right: 4vh;
-    width: 12vh;
-    height: 12vh;
-    font-size: 8vh;
-	cursor: pointer;
+    width: 10vh;
+    height: 10vh;
+    font-size: 7vh;
+    cursor: pointer;
 }
 .navigation {
 	padding: 4vh;
