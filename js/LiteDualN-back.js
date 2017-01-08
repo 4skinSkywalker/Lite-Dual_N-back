@@ -16,12 +16,12 @@ var optionsTrg 		= "navigation",
 engine.left 		= { "target":"left", "value":0};
 engine.time 		= { "type":"range", "target":"stimulus-time", "text":"Stimulus:", "value":3000, "min":1500, "step":100, "MAX":6000, "char":"s"};
 engine.blocks 		= { "type":"range", "target":"matching-blocks", "text":"Matching:", "value":6, "min":3, "step":1, "MAX":9};
-engine.n 			= { "type":"range", "target":"n-back", "text":"N-back:", "value":2, "min":1, "step":1, "MAX":9, "char":""};
+engine.n 			= { "type":"range", "target":"n-back", "text":"N-back:", "value":2, "min":1, "step":1, "MAX":9};
 engine.threshold 	= { "type":"range", "target":"success-threshold", "text":"Threshold:", "value":0.8, "min":0.7, "step":0.05, "MAX":1.0, "char":"%", "change":function(x) {return x*100}};
 engine.feedback 	= { "type":"range", "target":"feedback", "text":"Feedback:", "value":1, "min":0, "step":1, "MAX":1, "change":function(x) {return (x == 1) ? "on" : "off"}};
 engine.rotation		= { "type":"range", "target":"rotation-duration", "text":"Rotation:", "value":60, "min":30, "step":10, "MAX":120, "char":"s", "direction":function() {return (Math.floor(Math.random() * 2) == 0) ? "-clockwise" : "-anticlockwise"}};
-engine.audio		= { "type":"selector", "target":"audio-symbols", "text":"Audio:", "value":"Natural Numbers",
-						"symbols": {
+engine.audio		= { "type":"selector", "target":"audio-selection", "text":"Audio:", "value":"Natural Numbers",
+						"selection": {
 							"Natural Numbers":[1,2,3,4,5,6,7,8],
 							"Prime Numbers":[2,3,5,7,11,13,17,19]
 						}
@@ -45,17 +45,17 @@ function populateOptionsHTML() {
 	for(var key in obj) {
 		if(obj.hasOwnProperty(key)) {
 			if(obj[key]["type"] == "range") {
-				var spanChar = (obj[key]["char"]) ? obj[key]["char"] : "";
-					spanText = (obj[key]["change"]) ? obj[key]["change"](obj[key]["value"]) + spanChar : obj[key]["value"] + spanChar;
+				var ch = (obj[key]["char"]) ? obj[key]["char"] : "";
+					txt = (obj[key]["change"]) ? obj[key]["change"](obj[key]["value"]) + ch : obj[key]["value"] + ch;
 				s += '<li class="nav-item">';
-				s += 	'<span class="range-label">' + obj[key]["text"] + ' </span><span id="' + obj[key]["target"] + '-span" class="range-label">' + spanText +'</span>';
+				s += 	'<span class="range-label">' + obj[key]["text"] + ' </span><span id="' + obj[key]["target"] + '-span" class="range-label">' + txt +'</span>';
 				s +=	'<input type="range" class="slider" id="' + obj[key]["target"] + '" min="' + obj[key]["min"] + '" max="' + obj[key]["MAX"] + '" step="' + obj[key]["step"] + '" value="' + obj[key]["value"] + '">';
 				s += '</li>';
 			} else if(obj[key]["type"] == "selector") {
 				s += '<li class="nav-item">';
 				s += 	'<label for="' + obj[key]["target"] + '">' + obj[key]["text"] + '</label>';
 				s +=	'<select class="option" id="' + obj[key]["target"] + '">';
-				for(var subkey in obj[key]["symbols"])
+				for(var subkey in obj[key]["selection"])
 					s +=	'<option>' + subkey + '</option>';
 				s +=	'</select>';
 				s += '</li>';
@@ -116,7 +116,7 @@ function onSettingChange(obj, key) {
 	} else if(key == "audio") {
 		onChangeAttacher(el, function() {
 			var sel = obj[key]["value"];
-			howlerizer(sel, obj[key]["symbols"][sel]);
+			howlerizer(sel, obj[key]["selection"][sel]);
 		});
 	}
 }
@@ -191,7 +191,7 @@ function markupInitializer() {
 function eventsInitializer() {
 	
 	var sel = engine.audio["value"];
-	howlerizer(sel, engine.audio["symbols"][sel]);
+	howlerizer(sel, engine.audio["selection"][sel]);
 	
 	var keyAllowed = {};
 	$(document).keydown(function(e) {
