@@ -61,7 +61,7 @@ function populateOptionsHTML() {
 				s += '</li>';
 			}
 			$("." + optionsTrg).append(s);
-			$("#" + obj[key]["target"]).on("change", onchangeCallback(obj, key));
+			onSettingChange(obj, key);
 		}
 		s = "";
 	}
@@ -71,25 +71,37 @@ function populateOptionsHTML() {
 	$("." + optionsTrg).append(s);
 }
 
-function onchangeCallback(obj, key) {
-	return function() {
-		if(obj[key]["type"] == "range") {
+function onSettingChange(obj, key) {
+	var el = "#" + obj[key]["target"];
+	
+	if(obj[key]["type"] == "range") {
+		onChangeAttacher(el, function() {
 			obj[key]["value"] = Number($("#" + obj[key]["target"]).val());
-			if($("#" + obj[key]["target"] + "-span"))
+		});
+		if($("#" + obj[key]["target"] + "-span"))
+			onChangeAttacher(el, function() {
 				$("#" + obj[key]["target"] + "-span").text(obj[key]["value"]);
-		} else if(obj[key]["type"] == "selector") {
+			});
+	} else if(obj[key]["type"] == "selector") {
+		onChangeAttacher(el, function() {
 			obj[key]["value"] = $("#" + obj[key]["target"]).val();
-		}
-		
-		if(obj[key]["change"] || obj[key]["char"]) {
-			var spanChar = (obj[key]["char"]) ? obj[key]["char"] : "";
-				spanText = (obj[key]["change"]) ? obj[key]["change"](obj[key]["value"]) + spanChar : obj[key]["value"] + spanChar;
-			$("#" + obj[key]["target"] + "-span").text(spanText);
-		}
+		});
+	}
+	
+	if(obj[key]["change"] || obj[key]["char"]) {
+		onChangeAttacher(el, function() {
+			var ch = (obj[key]["char"]) ? obj[key]["char"] : "";
+				txt = (obj[key]["change"]) ? obj[key]["change"](obj[key]["value"]) + ch : obj[key]["value"] + ch;
+			$("#" + obj[key]["target"] + "-span").text(txt);
+		});
+	}
 
-		if(key == "blocks" || key == "n") {
+	if(key == "blocks" || key == "n") {
+		onChangeAttacher(el, function() {
 			calculateStimuli(engine.blocks["value"], engine.n["value"]);
-		} else if(key == "rotation") {
+		});
+	} else if(key == "rotation") {
+		onChangeAttacher(el, function() {
 			var grid = $("#" + gridTrg);
 			grid.attr("style", "animation: rotating" + obj[key]["direction"]() + " " + obj[key]["value"] + "s linear infinite;");
 			if(obj[key]["value"] == obj[key]["min"]) {
@@ -100,11 +112,17 @@ function onchangeCallback(obj, key) {
 				grid.addClass("rotational-grid");
 				grid.attr("style", "animation: rotating" + obj[key]["direction"]() + " " + obj[key]["value"] + "s linear infinite;");
 			}
-		} else if(key == "audio") {
+		});
+	} else if(key == "audio") {
+		onChangeAttacher(el, function() {
 			var sel = obj[key]["value"];
 			howlerizer(sel, obj[key]["symbols"][sel]);
-		}
+		});
 	}
+}
+
+function onChangeAttacher(el, foo) {
+	$(el).on("change", foo);
 }
 
 function populateTrainerHTML() {
@@ -202,7 +220,15 @@ function eventsInitializer() {
 		e.preventDefault();
 		checkBlock("visual");
 	}, false);
+	document.querySelector("#eye").addEventListener("click", function(e) {
+		e.preventDefault();
+		checkBlock("visual");
+	}, false);
 	document.querySelector("#ear").addEventListener("touchstart", function(e) {
+		e.preventDefault();
+		checkBlock("audio");
+	}, false);
+	document.querySelector("#ear").addEventListener("click", function(e) {
 		e.preventDefault();
 		checkBlock("audio");
 	}, false);
@@ -493,10 +519,10 @@ function Progress(name, height, background, color) {
 	this.height = height;
 	this.background = background;
 	this.color = color;
-	this.carryPoint = 0;
+	this.stored = 0;
 }
 
-Progress.prototype.getProgressHTML = function(inStr) {
+Progress.prototype.getProgressHTML = function() {
     var s = '';
 	s += '<div id="' + this.progressId + '" style="position:absolute; z-index:40; width:100%; height:' + this.height + '; top:0; left:0; background-color:' + this.background + '">';
 	s += 	'<div id="' + this.barId + '" style="position:absolute; width:0; height:100%; background-color:' + this.color + '"></div>';
@@ -504,15 +530,15 @@ Progress.prototype.getProgressHTML = function(inStr) {
     return s;
 };
 
-Progress.prototype.move = function(point) {
-	this.movePoint = point;
+Progress.prototype.move = function(curr) {
+	this.current = curr;
 	this.element = document.getElementById(this.barId);
 	this.frame = function() {
-		if(this.carryPoint >= this.movePoint) {
+		if(this.stored >= this.current) {
 			clearInterval(this.interval);
 		} else {
-			this.carryPoint++; 
-			this.element.style.width = this.carryPoint + "%"; 
+			this.stored++; 
+			this.element.style.width = this.stored + "%"; 
 		}
 	}
 	this.interval = setInterval(this.frame.bind(this), 10);
