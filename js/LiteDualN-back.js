@@ -1,20 +1,26 @@
-var optionsTrg 		= "navigation",
-	trainerTrg		= "site-wrap",
-	gridTrg			= "grid",
-	resultsTrg		= "results",
-	playStopTrg		= "engine-button",
-	playChar		= "Play",
-	stopChar		= "Stop",
-	running			= false,
-	runs			= 0,
-	blockCounter 	= -1,
-	enable 			= [0, 0],
-	userScoreTemp 	= [0, 0, 0, 0, 0, 0],
-	loadedSounds 	= [],
-	engine 			= {};
+var engine 					= {};
+
+engine.optionsTrg 	= "navigation";
+engine.trainerTrg	= "site-wrap";
+engine.gridTrg		= "grid";
+engine.resultsTrg	= "results";
+engine.btnTrg		= "engine-button";
+engine.playSymbol	= "Play";
+engine.stopSymbol	= "Stop";
+engine.running		= false;
+
+engine.currBlock	= [];
+engine.currBlockLen	= 0;
+engine.blockCounter = -1;
+engine.enable 		= [0, 0];
+engine.userScore 	= [0, 0, 0, 0, 0, 0];
+
+engine.results 		= new Pop("engine.results", engine.resultsTrg);
+engine.progress 	= new Progress("progress", "1vh", "transparent", "#fff");
+engine.runs			= 0;
 	
 engine.left 		= { "target":"left", "value":0};
-engine.time 		= { "type":"range", "target":"stimulus-time", "text":"Stimulus:", "value":3000, "min":1500, "step":100, "MAX":6000, "char":"s"};
+engine.time 		= { "type":"range", "target":"stimulus-time", "text":"Stimulus:", "value":3000, "min":1500, "step":250, "MAX":4500, "char":"s"};
 engine.blocks 		= { "type":"range", "target":"matching-blocks", "text":"Matching:", "value":6, "min":3, "step":1, "MAX":9};
 engine.n 			= { "type":"range", "target":"n-back", "text":"N-back:", "value":2, "min":1, "step":1, "MAX":9};
 engine.threshold 	= { "type":"range", "target":"success-threshold", "text":"Threshold:", "value":0.8, "min":0.7, "step":0.05, "MAX":1.0, "char":"%", "change":function(x) {return x*100}};
@@ -26,13 +32,14 @@ engine.audio		= { "type":"selector", "target":"audio-selection", "text":"Audio:"
 							"Prime Numbers":[2,3,5,7,11,13,17,19]
 						}
 					};
+engine.loadedSounds = [];
 
 function getLayoutHTML() {
 	var s = "";
-	s += '<ul class="' + optionsTrg + '"></ul>';
+	s += '<ul class="' + engine.optionsTrg + '"></ul>';
 	s += '<input type="checkbox" id="nav-trigger" class="nav-trigger"/>';
 	s += '<label for="nav-trigger"></label>';
-	s += '<div class="' + trainerTrg + '"></div>';
+	s += '<div class="' + engine.trainerTrg + '"></div>';
 	return s;
 }
 
@@ -44,31 +51,33 @@ function populateOptionsHTML() {
 	s += '</li>';
 	for(var key in obj) {
 		if(obj.hasOwnProperty(key)) {
-			if(obj[key]["type"] == "range") {
-				var ch = (obj[key]["char"]) ? obj[key]["char"] : "";
-					txt = (obj[key]["change"]) ? obj[key]["change"](obj[key]["value"]) + ch : obj[key]["value"] + ch;
-				s += '<li class="nav-item">';
-				s += 	'<span class="range-label">' + obj[key]["text"] + ' </span><span id="' + obj[key]["target"] + '-span" class="range-label">' + txt +'</span>';
-				s +=	'<input type="range" class="slider" id="' + obj[key]["target"] + '" min="' + obj[key]["min"] + '" max="' + obj[key]["MAX"] + '" step="' + obj[key]["step"] + '" value="' + obj[key]["value"] + '">';
-				s += '</li>';
-			} else if(obj[key]["type"] == "selector") {
-				s += '<li class="nav-item">';
-				s += 	'<label for="' + obj[key]["target"] + '">' + obj[key]["text"] + '</label>';
-				s +=	'<select class="option" id="' + obj[key]["target"] + '">';
-				for(var subkey in obj[key]["selection"])
-					s +=	'<option>' + subkey + '</option>';
-				s +=	'</select>';
-				s += '</li>';
+			if(obj[key]["type"] == "range" || obj[key]["type"] == "selector") {
+				if(obj[key]["type"] == "range") {
+					var ch = (obj[key]["char"]) ? obj[key]["char"] : "";
+						txt = (obj[key]["change"]) ? obj[key]["change"](obj[key]["value"]) + ch : obj[key]["value"] + ch;
+					s += '<li class="nav-item">';
+					s += 	'<span class="range-label">' + obj[key]["text"] + ' </span><span id="' + obj[key]["target"] + '-span" class="range-label">' + txt +'</span>';
+					s +=	'<input type="range" class="slider" id="' + obj[key]["target"] + '" min="' + obj[key]["min"] + '" max="' + obj[key]["MAX"] + '" step="' + obj[key]["step"] + '" value="' + obj[key]["value"] + '">';
+					s += '</li>';
+				} else if(obj[key]["type"] == "selector") {
+					s += '<li class="nav-item">';
+					s += 	'<label for="' + obj[key]["target"] + '">' + obj[key]["text"] + '</label>';
+					s +=	'<select class="option" id="' + obj[key]["target"] + '">';
+					for(var subkey in obj[key]["selection"])
+						s +=	'<option>' + subkey + '</option>';
+					s +=	'</select>';
+					s += '</li>';
+				}
+				$("." + engine.optionsTrg).append(s);
+				onSettingChange(obj, key);
 			}
-			$("." + optionsTrg).append(s);
-			onSettingChange(obj, key);
 		}
 		s = "";
 	}
 	s += '<li class="nav-item">';
 	s += 	'<p>Controls:<br>"A" key for visual<br>"L" key for audio.</p>';
 	s += '</li>';
-	$("." + optionsTrg).append(s);
+	$("." + engine.optionsTrg).append(s);
 }
 
 function onSettingChange(obj, key) {
@@ -98,11 +107,14 @@ function onSettingChange(obj, key) {
 
 	if(key == "blocks" || key == "n") {
 		onChangeAttacher(el, function() {
-			calculateStimuli(engine.blocks["value"], engine.n["value"]);
+			if(engine.running)
+				stop();
+			else
+				calculateStimuli(engine.blocks["value"], engine.n["value"]);
 		});
 	} else if(key == "rotation") {
 		onChangeAttacher(el, function() {
-			var grid = $("#" + gridTrg);
+			var grid = $("#" + engine.gridTrg);
 			grid.attr("style", "animation: rotating" + obj[key]["direction"]() + " " + obj[key]["value"] + "s linear infinite;");
 			if(obj[key]["value"] == obj[key]["min"]) {
 				$("#" + obj[key]["target"] + "-span").text("off");
@@ -130,8 +142,8 @@ function populateTrainerHTML() {
 	s += '<div id="status-bar">';
 	s += 	'<div id="' + engine.left["target"] + '">' + engine.left["value"] + '</div>';
 	s += '</div>';	
-	s += '<button type="button" id="' + playStopTrg + '" class="btn-standard"></button>';
-	s += '<table id="' + gridTrg + '" class="rotational-grid" style="animation: rotating' + engine.rotation["direction"]() + ' ' + engine.rotation["value"] + 's linear infinite;">';
+	s += '<button type="button" id="' + engine.btnTrg + '" class="btn-standard"></button>';
+	s += '<table id="' + engine.gridTrg + '" class="rotational-grid" style="animation: rotating' + engine.rotation["direction"]() + ' ' + engine.rotation["value"] + 's linear infinite;">';
 	for(var i = 0; i < 3; i++) {
 		s += '<tr>';
 		for(var j = 0; j < 3; j++)
@@ -141,7 +153,7 @@ function populateTrainerHTML() {
 	s += '</table>';
 	s += '<div id="eye"></div>';
 	s += '<div id="ear"></div>';
-    $("." + trainerTrg).append(s);
+    $("." + engine.trainerTrg).append(s);
 }
 
 function functionizer(e, f, t) {
@@ -159,9 +171,9 @@ function update(n) {
 }
 
 function howlerizer(dir, a) {
-	loadedSounds = [];
+	engine.loadedSounds = [];
 	a.forEach(function(el) {
-		loadedSounds.push(new Howl({src: ["snd/" + dir.replace(/ /g, '-') + "/" + el +".wav"]}));
+		engine.loadedSounds.push(new Howl({src: ["snd/" + dir.replace(/ /g, '-') + "/" + el +".wav"]}));
 	});
 }
 
@@ -174,18 +186,15 @@ function wow(s, c, t) {
 
 function markupInitializer() {
 	
-	$("body").append(getLayoutHTML());
+	var body = $("body");
+	
+	body.append(getLayoutHTML(), engine.results.getPopHTML());
 	populateTrainerHTML();
 	populateOptionsHTML();
+	$("#" + engine.results.id).append(engine.progress.getProgressHTML());
 	
 	calculateStimuli(engine.blocks["value"], engine.n["value"]);
-	functionizer("#" + playStopTrg, "start()", playChar);
-	
-	results = new Pop("results", resultsTrg);
-	$("body").append(results.getPopHTML());
-	
-	progress = new Progress("progress", "1vh", "transparent", "#fff");
-	$("#" + results.id).append(progress.getProgressHTML());
+	functionizer("#" + engine.btnTrg, "start()", engine.playSymbol);
 }
 
 function eventsInitializer() {
@@ -235,29 +244,31 @@ function eventsInitializer() {
 }
 
 function start() {
-
-	playing = setTimeout(function() {
-		running = true;
+	
+	engine.running = true;
+	
+	engine.playing = setTimeout(function() {
+		engine.running = true;
 		createBlock();
 		playBlock();
 	}, engine.time["value"]/4);
 
-	functionizer("#" + playStopTrg, "stop()", stopChar);
+	functionizer("#" + engine.btnTrg, "stop()", engine.stopSymbol);
 }
 
 function stop(n) {
 
 	n = n || engine.n["value"];
 	
-	running = false;
-	clearTimeout(playing);
+	engine.running = false;
+	clearTimeout(engine.playing);
 	
-	blockCounter = -1;
-	enable = [0, 0];
-	userScoreTemp 	= [0, 0, 0, 0, 0, 0];
+	engine.blockCounter = -1;
+	engine.enable = [0, 0];
+	engine.userScore = [0, 0, 0, 0, 0, 0];
 	
 	calculateStimuli(engine.blocks["value"], n);
-	functionizer("#" + playStopTrg, "start()", playChar);
+	functionizer("#" + engine.btnTrg, "start()", engine.playSymbol);
 }
 
 function calculateStimuli(blocks, n) {
@@ -360,19 +371,19 @@ function checkBlock(c) {
 		r = (c == "visual") ? 0 : 3,
 		w = (c == "visual") ? 2 : 5;
 
-	if(enable[p] != 1 && running) {
-		enable[p] = 1;
-		if(blockCounter + 1 > engine.n["value"] && currentBlock[blockCounter]) {
-			if(currentBlock[blockCounter][p] == currentBlock[blockCounter - engine.n["value"]][p]) {
+	if(engine.enable[p] != 1 && engine.running) {
+		engine.enable[p] = 1;
+		if(engine.blockCounter + 1 > engine.n["value"] && engine.currBlock[engine.blockCounter]) {
+			if(engine.currBlock[engine.blockCounter][p] == engine.currBlock[engine.blockCounter - engine.n["value"]][p]) {
 				console.log('%c right ' + c, 'color: blue');
 				if(engine.feedback["value"])
 					wow(e, "right", engine.time["value"]/6);
-				userScoreTemp[r] += 1;
+				engine.userScore[r] += 1;
 			} else {
 				console.log('%c wrong ' + c, 'color: red');
 				if(engine.feedback["value"])
 					wow(e, "wrong", engine.time["value"]/6);
-				userScoreTemp[w] += 1;
+				engine.userScore[w] += 1;
 			}
 		}
 	}
@@ -380,124 +391,125 @@ function checkBlock(c) {
 
 function createBlock() {
 	
-	currentBlock = prepareBlock(engine.n["value"], engine.left["value"], engine.blocks["value"]);
-	blockEval = evaluateBlock(currentBlock, engine.n["value"]);
+	var blockEval = evaluateBlock(engine.currBlock, engine.n["value"]);
+	
+	engine.currBlock = prepareBlock(engine.n["value"], engine.left["value"], engine.blocks["value"]);
 	
 	while(blockEval[0] != engine.blocks["value"] || blockEval[1] != engine.blocks["value"]) {
-		currentBlock = prepareBlock(engine.n["value"], engine.left["value"], engine.blocks["value"]);
-		blockEval = evaluateBlock(currentBlock, engine.n["value"]);
+		engine.currBlock = prepareBlock(engine.n["value"], engine.left["value"], engine.blocks["value"]);
+		blockEval = evaluateBlock(engine.currBlock, engine.n["value"]);
 	}
 	
-	thisBlockLength = currentBlock.length;
+	engine.currBlockLen = engine.currBlock.length;
 	
-	console.log(currentBlock);
+	console.log(engine.currBlock);
 	console.log('%c matching blocks: ' + blockEval, 'color: blue');
 }
 
 function playBlock() {
 
-	if(++blockCounter < thisBlockLength) {
-		if(blockCounter > engine.n["value"]) {
-			if(currentBlock[blockCounter - 1][0] == currentBlock[blockCounter - engine.n["value"] - 1][0] && currentBlock[blockCounter - 1][1] == currentBlock[blockCounter - engine.n["value"] - 1][1]) {
-				if(enable[0] < 1 && enable[1] < 1) {
+	if(++engine.blockCounter < engine.currBlockLen) {
+		if(engine.blockCounter > engine.n["value"]) {
+			if(engine.currBlock[engine.blockCounter - 1][0] == engine.currBlock[engine.blockCounter - engine.n["value"] - 1][0] && engine.currBlock[engine.blockCounter - 1][1] == engine.currBlock[engine.blockCounter - engine.n["value"] - 1][1]) {
+				if(engine.enable[0] < 1 && engine.enable[1] < 1) {
 					console.log('%c both cues missed', 'color: orange');
 					if(engine.feedback["value"]) {
 						wow("#eye", "missed", engine.time["value"]/6);
 						wow("#ear", "missed", engine.time["value"]/6);
 					}
-					userScoreTemp[1] += 1;
-					userScoreTemp[4] += 1;
+					engine.userScore[1] += 1;
+					engine.userScore[4] += 1;
 				}
-			} else if(currentBlock[blockCounter - 1][0] == currentBlock[blockCounter - engine.n["value"] - 1][0]) {
-				if(enable[0] < 1) {
+			} else if(engine.currBlock[engine.blockCounter - 1][0] == engine.currBlock[engine.blockCounter - engine.n["value"] - 1][0]) {
+				if(engine.enable[0] < 1) {
 					console.log('%c visual cue missed', 'color: orange');
 					if(engine.feedback["value"])
 						wow("#eye", "missed", engine.time["value"]/6);
-					userScoreTemp[1] += 1;
+					engine.userScore[1] += 1;
 				}
-			} else if(currentBlock[blockCounter - 1][1] == currentBlock[blockCounter - engine.n["value"] - 1][1]) {
-				if(enable[1] < 1) {
+			} else if(engine.currBlock[engine.blockCounter - 1][1] == engine.currBlock[engine.blockCounter - engine.n["value"] - 1][1]) {
+				if(engine.enable[1] < 1) {
 					console.log('%c audio cue missed', 'color: orange');
 					if(engine.feedback["value"])
 						wow("#ear", "missed", engine.time["value"]/6);
-					userScoreTemp[4] += 1;
+					engine.userScore[4] += 1;
 				}
 			}
 		}
-		if(currentBlock[blockCounter]) {
-			var blockLight = (currentBlock[blockCounter][0] < 5) ? currentBlock[blockCounter][0]  - 1 : currentBlock[blockCounter][0] ;
+		if(engine.currBlock[engine.blockCounter]) {
+			var blockLight = (engine.currBlock[engine.blockCounter][0] < 5) ? engine.currBlock[engine.blockCounter][0] - 1 : engine.currBlock[engine.blockCounter][0] ;
 			wow(".tile:eq(" + blockLight + ")", "on", engine.time["value"]/6);
-			loadedSounds[currentBlock[blockCounter][1] - 1].play();
+			engine.loadedSounds[engine.currBlock[engine.blockCounter][1] - 1].play();
 		}
 		
-		console.log('%c id			: #' + blockCounter, 'color: black')
-		console.log('%c value		: ' + currentBlock[blockCounter], 'color: black')
-		console.log('%c keypresses	: ' + enable, 'color: green');
-		console.log('%c score		: ' + userScoreTemp, 'color: green');
+		console.log('%c id			: #' + engine.blockCounter, 'color: black')
+		console.log('%c value		: ' + engine.currBlock[engine.blockCounter], 'color: black')
+		console.log('%c keypresses	: ' + engine.enable, 'color: green');
+		console.log('%c score		: ' + engine.userScore, 'color: green');
 		
 		engine.left["value"]--;
 		update();
 		
-		playing = setTimeout(playBlock, engine.time["value"]);
-		enable = [0, 0];
+		engine.playing = setTimeout(playBlock, engine.time["value"]);
+		engine.enable = [0, 0];
 	} else {
-		userScoreTemp[1] = engine.blocks["value"] - userScoreTemp[0];
-		userScoreTemp[4] = engine.blocks["value"] - userScoreTemp[3];
+		engine.userScore[1] = engine.blocks["value"] - engine.userScore[0];
+		engine.userScore[4] = engine.blocks["value"] - engine.userScore[3];
 		
 		var s = "";
 		s += '<table class="results-icons">';
 		s += '<tr><td colspan="2">Visual</td><td colspan="2">Audio</td></tr>';
-		s += '<tr><td>☑</td><td>' + userScoreTemp[0] + '</td><td>☑</td><td>' + userScoreTemp[3] + '</td></tr>';
-		s += '<tr><td>☐</td><td>' + userScoreTemp[1] + '</td><td>☐</td><td>' + userScoreTemp[4] + '</td></tr>';
-		s += '<tr><td>☒</td><td>' + userScoreTemp[2] + '</td><td>☒</td><td>' + userScoreTemp[5] + '</td></tr>';
+		s += '<tr><td>☑</td><td>' + engine.userScore[0] + '</td><td>☑</td><td>' + engine.userScore[3] + '</td></tr>';
+		s += '<tr><td>☐</td><td>' + engine.userScore[1] + '</td><td>☐</td><td>' + engine.userScore[4] + '</td></tr>';
+		s += '<tr><td>☒</td><td>' + engine.userScore[2] + '</td><td>☒</td><td>' + engine.userScore[5] + '</td></tr>';
 		s += '</table>'
 		
-		$("#" + resultsTrg).html(s);
+		$("#" + engine.resultsTrg).html(s);
 		
-		var incorrectVis = userScoreTemp[1] + userScoreTemp[2],
-			incorrectAud = userScoreTemp[4] + userScoreTemp[5],
+		var incorrectVis = engine.userScore[1] + engine.userScore[2],
+			incorrectAud = engine.userScore[4] + engine.userScore[5],
 			threshold = engine.blocks["value"]*(1 - engine.threshold["value"]),
 			upperThreshold = Math.ceil(threshold),
 			lowerThreshold = Math.floor(threshold);
 		
 		if(incorrectVis <= lowerThreshold && incorrectAud <= lowerThreshold) {
-			$("#" + resultsTrg).append('<p class="results-text">N is now:<br>' + ++engine.n["value"] + '</p>');
+			$("#" + engine.resultsTrg).append('<p class="results-text">N is now:<br>' + ++engine.n["value"] + '</p>');
 		} else if(incorrectVis > upperThreshold || incorrectAud > upperThreshold) {
 			if(engine.n["value"] != 1) {
-				$("#" + resultsTrg).append('<p class="results-text">N is now:<br>' + --engine.n["value"] + '</p>');
+				$("#" + engine.resultsTrg).append('<p class="results-text">N is now:<br>' + --engine.n["value"] + '</p>');
 			} else {
-				$("#" + resultsTrg).append('<p class="results-text">N stays: 1<br>Keep trying</p>');
+				$("#" + engine.resultsTrg).append('<p class="results-text">N stays: 1<br>Keep trying</p>');
 			}
 		} else {
-			$("#" + resultsTrg).append('<p class="results-text">N stays: ' + engine.n["value"] + '<br>Keep trying</p>');
+			$("#" + engine.resultsTrg).append('<p class="results-text">N stays: ' + engine.n["value"] + '<br>Keep trying</p>');
 		}
 
 		stop(engine.n["value"]);
 		
-		runs++;
-		progress.move(runs/20*100);
-		setTimeout(results.yes(), 400);
+		engine.runs++;
+		engine.progress.move(engine.runs/20*100);
+		setTimeout(engine.results.yes(), 400);
 	}
 }
 
 function Pop(name, innerId) {
 	this.name = name;
-    this.id = this.name + "-popup";
+    this.id = (this.name + "-popup").replace(/\./g, "-");
 	this.innerId = innerId;
 }
 
 Pop.prototype.yes = function() {
-    var pop = document.getElementById(this.id);
-    pop.style.opacity = 1;
-	pop.style.height = 100 + "vh";
-	pop.style.width = 100 + "vw";
+    var el = document.getElementById(this.id);
+    el.style.opacity = 1;
+	el.style.height = 100 + "vh";
+	el.style.width = 100 + "vw";
 };
 
 Pop.prototype.no = function() {
-    var pop = document.getElementById(this.id);
-    pop.style.opacity = 0;
-	pop.style.height = 0;
-	pop.style.width = 0;
+    var el = document.getElementById(this.id);
+    el.style.opacity = 0;
+	el.style.height = 0;
+	el.style.width = 0;
 	document.getElementById(this.innerId).innerHTML = "";
 };
 
@@ -532,14 +544,14 @@ Progress.prototype.getProgressHTML = function() {
 
 Progress.prototype.move = function(curr) {
 	this.current = curr;
-	this.element = document.getElementById(this.barId);
-	this.frame = function() {
+	this.el = document.getElementById(this.barId);
+	function advance() {
 		if(this.stored >= this.current) {
 			clearInterval(this.interval);
 		} else {
 			this.stored++; 
-			this.element.style.width = this.stored + "%"; 
+			this.el.style.width = this.stored + "%"; 
 		}
 	}
-	this.interval = setInterval(this.frame.bind(this), 10);
+	this.interval = setInterval(advance.bind(this), 10);
 };
