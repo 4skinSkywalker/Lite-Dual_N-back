@@ -20,7 +20,7 @@ engine.progress 	= new Progress("progress", "1vh", "transparent", "#fff");
 engine.runs			= 0;
 	
 engine.left 		= { "target":"left", "value":0};
-engine.time 		= { "type":"range", "target":"stimulus-time", "text":"Stimulus:", "value":3000, "min":1500, "step":250, "MAX":4500, "char":"s"};
+engine.time 		= { "type":"range", "target":"stimulus-time", "text":"Stimulus:", "value":3000, "min":1500, "step":250, "MAX":4500, "char":"ms"};
 engine.blocks 		= { "type":"range", "target":"matching-blocks", "text":"Matching:", "value":6, "min":3, "step":1, "MAX":9};
 engine.n 			= { "type":"range", "target":"n-back", "text":"N-back:", "value":2, "min":1, "step":1, "MAX":9};
 engine.threshold 	= { "type":"range", "target":"success-threshold", "text":"Threshold:", "value":0.8, "min":0.7, "step":0.05, "MAX":1.0, "char":"%", "change":function(x) {return x*100}};
