@@ -616,7 +616,6 @@ function playBlock() {
 			} else {
 				$("#" + engine.resultsTrg).append('<p class="results-text">N stays: 1<br>Keep trying</p>');
 			}
-			historicize(date.ddmm(), engine.n["value"]); //dbg
 		} else {
 			historicize(date.ddmm(), engine.n["value"]);
 			$("#" + engine.resultsTrg).append('<p class="results-text">N stays: ' + engine.n["value"] + '<br>Keep trying</p>');
