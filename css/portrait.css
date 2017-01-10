@@ -59,7 +59,6 @@
   content: "Audio";
 }
 .pop {
-	background: rgba(0, 0, 0, .5);
 	font-size: 5vh;
 }
 #progress-outer {
@@ -68,16 +67,25 @@
 .results-icons td, .results-text {
 	padding: 1vh;
 }
+.ct-label {
+    font-size: 3vh;
+}
 .btn-standard {
     font-size: 4vh;
     padding: 1vh 1.5vh;
 }
 .btn-popup {
-    top: 2vh;
-    right: 2vh;
     width: 7vh;
     height: 7vh;
     font-size: 4vh;
+}
+.btn-popup.normal {
+	top: 2vh;
+    right: 2vh;
+}
+.btn-popup.reflected {
+    bottom: 13vh;
+    right: 2vh;
 }
 .navigation {
 	padding: 2vh;

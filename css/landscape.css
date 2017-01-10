@@ -59,7 +59,6 @@
   content: "L";
 }
 .pop {
-	background: rgba(0, 0, 0, .5);
 	font-size: 8vh;
 }
 #progress-outer {
@@ -68,18 +67,27 @@
 .results-icons td, .results-text {
 	padding: 2vh;
 }
+.ct-label {
+    font-size: 6vh;
+}
 .btn-standard {
 	font-size: 7vh;
 	padding: 1vh 3vh;
 	cursor: pointer;
 }
 .btn-popup {
-    top: 4vh;
-    right: 4vh;
     width: 12vh;
     height: 12vh;
     font-size: 7vh;
     cursor: pointer;
+}
+.btn-popup.normal {
+	top: 4vh;
+    right: 4vh;
+}
+.btn-popup.reflected {
+    top: 4vh;
+    right: 4vh;
 }
 .navigation {
 	padding: 4vh;
@@ -120,9 +128,6 @@ input[type=range].slider::-webkit-slider-thumb {
 	width: 6vh;
 }
 @media (min-width:961px) {
-	.pop {
-		background: rgba(0, 0, 0, .75);
-	}
 	.btn-standard:hover {
 		color: #000;
 		background: #604e06;

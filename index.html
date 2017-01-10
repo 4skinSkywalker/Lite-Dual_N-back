@@ -6,12 +6,15 @@
 		<meta name="viewport" content="width=device-width, user-scalable=no">
 		<script src="js/jquery.min.js"></script>
 		<script src="js/howler.js"></script>
+		<script src="js/chartist.min.js"></script>
 		<script src="js/LiteDualN-back.js"></script>
+		<link rel="stylesheet" href="css/chartist.min.css">
 		<link rel="stylesheet" href="css/common.css">
 		<link rel="stylesheet" media="all and (orientation:portrait)" href="css/portrait.css">
 		<link rel="stylesheet" media="all and (orientation:landscape)" href="css/landscape.css">
 		<script>
 			$(document).ready(function() {
+				savedataInitializer();
 				markupInitializer();
 				eventsInitializer();
 			});

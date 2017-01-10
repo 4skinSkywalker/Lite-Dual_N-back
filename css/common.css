@@ -54,14 +54,20 @@ label[for="nav-trigger"] {
 	left: 0;
 	text-align: center;
 	transition: opacity .4s ease-in-out;
+	background: rgba(0, 0, 0, .5);
 }
-#results {
+#results, #chart {
 	position: absolute;
 	z-index: 30;
 	width: 100vw;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+#chart {
+	display: none;
+	height: 85vh;
+	width: 85vw;
 }
 .results-icons {
 	border-collapse: collapse;
@@ -72,6 +78,28 @@ label[for="nav-trigger"] {
 .results-text {
 	margin: 0;
 	line-height: 100%;
+}
+.ct-chart-line{
+    overflow:visible!important;
+}
+.ct-grid { 
+	stroke: white;
+}
+.ct-label {
+	fill: white;
+    color: white;
+}
+.ct-series-a .ct-line,
+.ct-series-a .ct-point {
+  stroke: green;
+}
+.ct-series-b .ct-line,
+.ct-series-b .ct-point {
+  stroke: orange;
+}
+.ct-series-c .ct-line,
+.ct-series-c .ct-point {
+  stroke: red;
 }
 input:focus {
 	outline: 0;
@@ -139,6 +167,12 @@ input[type=range].slider:focus::-webkit-slider-runnable-track {
     background: transparent;
     color: #fff;
     border-radius: 4px;
+}
+.btn-popup.reflected {
+	color: #4d4100;
+}
+.btn-popup.reflected:hover {
+	color: #FFD700;
 }
 .right {
 	background: #0c5a4a!important;

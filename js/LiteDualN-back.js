@@ -1,23 +1,20 @@
-var engine 					= {};
+var engine 			= {};
 
 engine.optionsTrg 	= "navigation";
 engine.trainerTrg	= "site-wrap";
 engine.gridTrg		= "grid";
 engine.resultsTrg	= "results";
+engine.chartTrg		= "chart";
 engine.btnTrg		= "engine-button";
 engine.playSymbol	= "Play";
 engine.stopSymbol	= "Stop";
-engine.running		= false;
-
-engine.currBlock	= [];
-engine.currBlockLen	= 0;
-engine.blockCounter = -1;
-engine.enable 		= [0, 0];
-engine.userScore 	= [0, 0, 0, 0, 0, 0];
 
 engine.results 		= new Pop("engine.results", engine.resultsTrg);
 engine.progress 	= new Progress("progress", "1vh", "transparent", "#fff");
 engine.runs			= 0;
+
+engine.chart 		= new Pop("engine.chart", engine.chartTrg);
+engine.hist 		= {};
 	
 engine.left 		= { "target":"left", "value":0};
 engine.time 		= { "type":"range", "target":"stimulus-time", "text":"Stimulus:", "value":3000, "min":1500, "step":250, "MAX":4500, "char":"ms"};
@@ -33,6 +30,67 @@ engine.audio		= { "type":"selector", "target":"audio-selection", "text":"Audio:"
 						}
 					};
 engine.loadedSounds = [];
+
+function chart() {
+	
+	var MAXS = [];
+	$.each(engine.hist, function(key, value) {
+		MAXS.push(MAX(value));
+	});
+	var avgs = [];
+	$.each(engine.hist, function(key, value) {
+		avgs.push(avg(value));
+	});
+	var mins = [];
+	$.each(engine.hist, function(key, value) {
+		mins.push(min(value));
+	});
+	if(MAXS.length == avgs.length == mins.length == 0)
+		setTimeout(function() {
+			alert("No data");
+		}, 400);
+	else
+		engine.chart.yes();
+		
+	
+	return new Chartist.Line("#" + engine.chartTrg, {
+			labels: Object.keys(engine.hist),
+			series: [MAXS, avgs, mins]
+		}, 
+		{	
+			fullWidth: true,
+			axisX: {
+				onlyInteger: true,
+			},
+			axisY: {
+				onlyInteger: true,
+				high: 9,
+				low: 1,
+				ticks: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+			},
+			chartPadding: {
+				top: 40,
+				right: 40
+			}
+		},
+		[
+			["screen and (min-width: 641px) and (max-width: 1024px)", {
+					axisX: {
+						labelInterpolationFnc: function (value) {
+							return value;
+						}
+					}
+			}],
+			["screen and (max-width: 640px)", {
+				axisX: {
+					labelInterpolationFnc: function (value) {
+						return value.substring(0, 2);
+					}
+				}
+			}]
+		]
+	);
+}
 
 function getLayoutHTML() {
 	var s = "";
@@ -156,9 +214,54 @@ function populateTrainerHTML() {
     $("." + engine.trainerTrg).append(s);
 }
 
+Date.prototype.ddmm = function() {
+	var mm = this.getMonth() + 1,
+		dd = this.getDate();
+
+	return [
+		(mm>9 ? "" : "0") + mm,
+		(dd>9 ? "" : "0") + dd
+	].join("/");
+};
+
 function functionizer(e, f, t) {
 	$(e).prop("onclick", null).attr("onclick", f);
 	$(e).text(t);
+}
+
+function load() {
+	engine.hist = JSON.parse(localStorage["andrey-pozdnyakov-lrdn"]);
+}
+
+function save() {
+	localStorage["andrey-pozdnyakov-lrdn"] = JSON.stringify(engine.hist);
+}
+
+function historicize(date, n) {
+	if(engine.hist[date] != undefined) {
+		engine.hist[date].push(n)
+	} else {
+		engine.hist[date] = [];
+		engine.hist[date].push(n)
+	}
+}
+
+function MAX(array) {
+	
+	if(array.length >= 2)
+		return array.reduce(function(a, b) {return ( a > b ? a : b );});
+}
+
+function avg(array) {
+	
+	if(array.length >= 2)
+		return array.reduce(function(a, b) {return a + b;}) / array.length;
+}
+
+function min(array) {
+	
+	if(array.length >= 2)
+		return array.reduce(function(a, b) {return ( a < b ? a : b );});
 }
 
 function update(n) {
@@ -180,27 +283,40 @@ function howlerizer(dir, a) {
 function wow(s, c, t) {
 	$(s).addClass(c);
 	setTimeout(function() {
-		$(s).removeClass(c)
+		$(s).removeClass(c);
 	}, t);
+}
+
+function savedataInitializer() {
+	
+	if(!localStorage["andrey-pozdnyakov-lrdn"]) {
+		save();
+	}
+	else {
+		load();
+	}
 }
 
 function markupInitializer() {
 	
 	var body = $("body");
 	
-	body.append(getLayoutHTML(), engine.results.getPopHTML());
+	body.append(getLayoutHTML(), engine.results.getPopHTML(), engine.chart.getPopHTML());
+	$("." + engine.trainerTrg).append('<button onclick="chart()" style="z-index:50" class="btn-popup reflected">★</button>');
+	$("#" + engine.results.id).append(engine.progress.getProgressHTML());
 	populateTrainerHTML();
 	populateOptionsHTML();
-	$("#" + engine.results.id).append(engine.progress.getProgressHTML());
 	
 	calculateStimuli(engine.blocks["value"], engine.n["value"]);
 	functionizer("#" + engine.btnTrg, "start()", engine.playSymbol);
 }
 
 function eventsInitializer() {
-	
+
 	var sel = engine.audio["value"];
 	howlerizer(sel, engine.audio["selection"][sel]);
+	
+	reset();
 	
 	var keyAllowed = {};
 	$(document).keydown(function(e) {
@@ -243,12 +359,20 @@ function eventsInitializer() {
 	}, false);
 }
 
+function reset() {
+	
+	engine.running		= false;
+	engine.currBlock	= [];
+	engine.currBlockLen	= 0;
+	engine.blockCounter = -1;
+	engine.enable 		= [0, 0];
+	engine.userScore 	= [0, 0, 0, 0, 0, 0];
+}
+
 function start() {
 	
 	engine.running = true;
-	
 	engine.playing = setTimeout(function() {
-		engine.running = true;
 		createBlock();
 		playBlock();
 	}, engine.time["value"]/4);
@@ -260,8 +384,8 @@ function stop(n) {
 
 	n = n || engine.n["value"];
 	
-	engine.running = false;
 	clearTimeout(engine.playing);
+	reset();
 	
 	engine.blockCounter = -1;
 	engine.enable = [0, 0];
@@ -453,6 +577,8 @@ function playBlock() {
 		engine.playing = setTimeout(playBlock, engine.time["value"]);
 		engine.enable = [0, 0];
 	} else {
+		var date = new Date();
+		
 		engine.userScore[1] = engine.blocks["value"] - engine.userScore[0];
 		engine.userScore[4] = engine.blocks["value"] - engine.userScore[3];
 		
@@ -473,6 +599,7 @@ function playBlock() {
 			lowerThreshold = Math.floor(threshold);
 		
 		if(incorrectVis <= lowerThreshold && incorrectAud <= lowerThreshold) {
+			historicize(date.ddmm(), engine.n["value"]);
 			$("#" + engine.resultsTrg).append('<p class="results-text">N is now:<br>' + ++engine.n["value"] + '</p>');
 		} else if(incorrectVis > upperThreshold || incorrectAud > upperThreshold) {
 			if(engine.n["value"] != 1) {
@@ -480,15 +607,19 @@ function playBlock() {
 			} else {
 				$("#" + engine.resultsTrg).append('<p class="results-text">N stays: 1<br>Keep trying</p>');
 			}
+			historicize(date.ddmm(), engine.n["value"]); //dbg
 		} else {
+			historicize(date.ddmm(), engine.n["value"]);
 			$("#" + engine.resultsTrg).append('<p class="results-text">N stays: ' + engine.n["value"] + '<br>Keep trying</p>');
 		}
 
+		save();
 		stop(engine.n["value"]);
-		
 		engine.runs++;
 		engine.progress.move(engine.runs/20*100);
-		setTimeout(engine.results.yes(), 400);
+		setTimeout(function() {
+			engine.results.yes();
+		}, 400);
 	}
 }
 
@@ -503,6 +634,8 @@ Pop.prototype.yes = function() {
     el.style.opacity = 1;
 	el.style.height = 100 + "vh";
 	el.style.width = 100 + "vw";
+	var cont = document.getElementById(this.innerId);
+	cont.style.display = "block";
 };
 
 Pop.prototype.no = function() {
@@ -510,7 +643,9 @@ Pop.prototype.no = function() {
     el.style.opacity = 0;
 	el.style.height = 0;
 	el.style.width = 0;
-	document.getElementById(this.innerId).innerHTML = "";
+	var cont = document.getElementById(this.innerId);
+	cont.style.display = "none";
+	cont.innerHTML = "";
 };
 
 Pop.prototype.getPopHTML = function(inStr) {
@@ -519,7 +654,7 @@ Pop.prototype.getPopHTML = function(inStr) {
 	s += 	'<div id="' + this.innerId + '">';
     if(inStr) s += 	inStr;
 	s += 	'</div>';
-    s += 	'<button onclick="' + this.name + '.no()" style="z-index:50" class="btn-popup">✖</button>';
+    s += 	'<button onclick="' + this.name + '.no()" style="z-index:50" class="btn-popup normal">✖</button>';
 	s += '</div>';
     return s;
 };
