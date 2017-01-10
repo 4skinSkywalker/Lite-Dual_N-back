@@ -35,17 +35,20 @@ function chart() {
 	
 	var MAXS = [];
 	$.each(engine.hist, function(key, value) {
-		MAXS.push(MAX(value));
+		if(MAX(value) != undefined)
+			MAXS.push(MAX(value));
 	});
 	var avgs = [];
 	$.each(engine.hist, function(key, value) {
-		avgs.push(avg(value));
+		if(avg(value) != undefined)
+			avgs.push(avg(value));
 	});
 	var mins = [];
 	$.each(engine.hist, function(key, value) {
+		if(min(value) != undefined)
 		mins.push(min(value));
 	});
-	if(avgs.length < 2)
+	if(avgs.length == 0)
 		setTimeout(function() {
 			alert("No data");
 		}, 400);
@@ -250,18 +253,24 @@ function MAX(array) {
 	
 	if(array.length >= 2)
 		return array.reduce(function(a, b) {return ( a > b ? a : b );});
+	else if(array[0] != undefined)
+		return array[0];
 }
 
 function avg(array) {
 	
 	if(array.length >= 2)
 		return array.reduce(function(a, b) {return a + b;}) / array.length;
+	else if(array[0] != undefined)
+		return array[0];
 }
 
 function min(array) {
 	
 	if(array.length >= 2)
 		return array.reduce(function(a, b) {return ( a < b ? a : b );});
+	else if(array[0] != undefined)
+		return array[0];
 }
 
 function update(n) {
