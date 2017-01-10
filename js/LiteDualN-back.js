@@ -45,7 +45,7 @@ function chart() {
 	$.each(engine.hist, function(key, value) {
 		mins.push(min(value));
 	});
-	if(MAXS.length == avgs.length == mins.length == 0)
+	if(avgs.length < 2)
 		setTimeout(function() {
 			alert("No data");
 		}, 400);
