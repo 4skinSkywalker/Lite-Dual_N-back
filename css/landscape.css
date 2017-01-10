@@ -135,6 +135,9 @@ input[type=range].slider::-webkit-slider-thumb {
 	.btn-popup:hover {
 		color: #604e06;
 	}
+	.btn-popup.reflected:hover {
+		color: #FFD700;
+	}
 	.btn-standard[disabled]:hover {
 		color: #000;
 		background: #111;
