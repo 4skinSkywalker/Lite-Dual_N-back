@@ -77,14 +77,14 @@ function chart() {
 			}
 		},
 		[
-			["screen and (min-width: 641px) and (max-width: 1024px)", {
+			["screen and (min-width: 481px) and (max-width: 1200px)", {
 					axisX: {
 						labelInterpolationFnc: function (value) {
 							return value;
 						}
 					}
 			}],
-			["screen and (max-width: 640px)", {
+			["screen and (max-width: 480px)", {
 				axisX: {
 					labelInterpolationFnc: function (value) {
 						return value.substring(0, 2);
@@ -218,12 +218,12 @@ function populateTrainerHTML() {
 }
 
 Date.prototype.ddmm = function() {
-	var mm = this.getMonth() + 1,
-		dd = this.getDate();
+	var dd = this.getDate(),
+		mm = this.getMonth() + 1;
 
 	return [
+		(dd>9 ? "" : "0") + dd,
 		(mm>9 ? "" : "0") + mm,
-		(dd>9 ? "" : "0") + dd
 	].join("/");
 };
 
