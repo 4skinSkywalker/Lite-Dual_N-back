@@ -10,11 +10,11 @@ function Engine(name) {
     this.playSymbol = "Play";
     this.stopSymbol = "Stop";
 
-    this.results = new Pop("this.results", this.resultsTrg);
+    this.results = new Pop(this.name + ".results", this.resultsTrg);
     this.progress = new Progress("progress", "1vh", "transparent", "#fff");
     this.runs = 0;
 
-    this.chartist = new Pop("this.chart", this.chartistTrg);
+    this.chartist = new Pop(this.name + ".chartist", this.chartistTrg);
     this.hist = {};
 
     this.left = {
@@ -101,24 +101,24 @@ function Engine(name) {
 }
 
 Engine.prototype.drawChart = function () {
-
+	var that = this;
     var MAXS = [];
     var avgs = [];
     var mins = [];
 
     $.each(this.hist, function (key, value) {
-        if (this.MAX(value) !== undefined) {
-            MAXS.push(this.MAX(value));
+        if (that.MAX(value) !== undefined) {
+            MAXS.push(that.MAX(value));
         }
     });
     $.each(this.hist, function (key, value) {
-        if (this.avg(value) !== undefined) {
-            avgs.push(this.avg(value));
+        if (that.avg(value) !== undefined) {
+            avgs.push(that.avg(value));
         }
     });
     $.each(this.hist, function (key, value) {
-        if (this.min(value) !== undefined) {
-            mins.push(this.min(value));
+        if (that.min(value) !== undefined) {
+            mins.push(that.min(value));
         }
     });
     if (avgs.length === 0) {
@@ -398,7 +398,7 @@ Engine.prototype.markupInitializer = function () {
     var body = $("body");
 
     body.append(this.getLayoutHTML(), this.results.getPopHTML(), this.chartist.getPopHTML());
-    $("." + this.trainerTrg).append("<button onclick=\"this.drawChart()\" style=\"z-index:50\" class=\"btn-popup reflected\">★</button>");
+    $("." + this.trainerTrg).append("<button onclick=" + this.name + ".drawChart() style=\"z-index:50\" class=\"btn-popup reflected\">★</button>");
     $("#" + this.results.id).append(this.progress.getProgressHTML());
     this.populateTrainerHTML();
     this.populateOptionsHTML();
@@ -771,7 +771,7 @@ Pop.prototype.getPopHTML = function (inStr) {
         s += inStr;
     }
     s += "</div>";
-    s += "<button onclick=" + this.name + ".no()\" style=\"z-index:50\" class=\"btn-popup normal\">✖</button>";
+    s += "<button onclick=" + this.name + ".no() style=\"z-index:50\" class=\"btn-popup normal\">✖</button>";
     s += "</div>";
     return s;
 };
@@ -788,19 +788,17 @@ function Progress(name, height, background, color) {
 
 Progress.prototype.getProgressHTML = function () {
     var s = "";
-    s += "<div id=" + this.progressId + " style=\"position:absolute; z-index:40; width:100%; height:" + this.height + "; top:0; left:0; background-color:" + this.background + ">";
-    s += "<div id=" + this.barId + " style=\"position:absolute; width:0; height:100%; background-color:" + this.color + "></div>";
+    s += "<div id=" + this.progressId + " style=\"position:absolute; z-index:40; width:100%; height:" + this.height + "; top:0; left:0; background-color:" + this.background + "\">";
+    s += "<div id=" + this.barId + " style=\"position:absolute; width:0; height:100%; background-color:" + this.color + "\"></div>";
     s += "</div>";
     return s;
 };
 
 Progress.prototype.move = function (curr) {
-    var that = this;
-
     this.current = curr;
     this.el = document.getElementById(this.barId);
 
-    function advance() {
+    this.advance = function () {
         if (this.stored >= this.current) {
             clearInterval(this.interval);
         } else {
@@ -808,5 +806,5 @@ Progress.prototype.move = function (curr) {
             this.el.style.width = this.stored + "%";
         }
     }
-    this.interval = setInterval(that.advance.bind(that), 10);
+    this.interval = setInterval(this.advance.bind(this), 10);
 };
