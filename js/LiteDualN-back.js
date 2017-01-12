@@ -57,7 +57,7 @@ ENGINE.threshold = {
     "step": 0.05,
     "MAX": 1.0,
     "char": "%",
-    "change": function (x) {
+    "change": function(x) {
         return x * 100;
     }
 };
@@ -69,7 +69,7 @@ ENGINE.feedback = {
     "min": 0,
     "step": 1,
     "MAX": 1,
-    "change": function (x) {
+    "change": function(x) {
         return (x == 1) ? "on" : "off";
     }
 };
@@ -82,7 +82,7 @@ ENGINE.rotation = {
     "step": 10,
     "MAX": 120,
     "char": "s",
-    "direction": function () {
+    "direction": function() {
         return (Math.floor(Math.random() * 2) == 0) ? "-clockwise" : "-anticlockwise";
     }
 };
@@ -98,25 +98,25 @@ ENGINE.audio = {
 };
 ENGINE.loadedSounds = [];
 
-ENGINE.drawChart = function () {
+ENGINE.drawChart = function() {
 
     var MAXS = [];
-    $.each(ENGINE.hist, function (key, value) {
+    $.each(ENGINE.hist, function(key, value) {
         if (ENGINE.MAX(value) != undefined)
             MAXS.push(ENGINE.MAX(value));
     });
     var avgs = [];
-    $.each(ENGINE.hist, function (key, value) {
+    $.each(ENGINE.hist, function(key, value) {
         if (ENGINE.avg(value) != undefined)
             avgs.push(ENGINE.avg(value));
     });
     var mins = [];
-    $.each(ENGINE.hist, function (key, value) {
+    $.each(ENGINE.hist, function(key, value) {
         if (ENGINE.min(value) != undefined)
             mins.push(ENGINE.min(value));
     });
     if (avgs.length == 0)
-        setTimeout(function () {
+        setTimeout(function() {
             alert("No data");
         }, 400);
     else
@@ -144,14 +144,14 @@ ENGINE.drawChart = function () {
     }, [
         ["screen and (min-width: 481px) and (max-width: 1200px)", {
             axisX: {
-                labelInterpolationFnc: function (value) {
+                labelInterpolationFnc: function(value) {
                     return value;
                 }
             }
         }],
         ["screen and (max-width: 480px)", {
             axisX: {
-                labelInterpolationFnc: function (value) {
+                labelInterpolationFnc: function(value) {
                     return value.substring(0, 2);
                 }
             }
@@ -159,7 +159,7 @@ ENGINE.drawChart = function () {
     ]);
 }
 
-ENGINE.getLayoutHTML = function () {
+ENGINE.getLayoutHTML = function() {
     var s = "";
     s += "<ul class=" + ENGINE.optionsTrg + "></ul>";
     s += "<input type=\"checkbox\" id=\"nav-trigger\" class=\"nav-trigger\"/>";
@@ -168,7 +168,7 @@ ENGINE.getLayoutHTML = function () {
     return s;
 }
 
-ENGINE.populateOptionsHTML = function () {
+ENGINE.populateOptionsHTML = function() {
     var s = "",
         obj = ENGINE;
     s += "<li class=\"nav-item\">";
@@ -194,7 +194,7 @@ ENGINE.populateOptionsHTML = function () {
                     s += "</li>";
                 }
                 $("." + ENGINE.optionsTrg).append(s);
-                ENGINE.onSettingChange(obj, key);
+                onSettingChange(obj, key);
             }
         }
         s = "";
@@ -205,25 +205,25 @@ ENGINE.populateOptionsHTML = function () {
     $("." + ENGINE.optionsTrg).append(s);
 }
 
-ENGINE.onSettingChange = function (obj, key) {
+function onSettingChange(obj, key) {
     var el = "#" + obj[key]["target"];
 
     if (obj[key]["type"] == "range") {
-        ENGINE.onChangeAttacher(el, function () {
+        onChangeAttacher(el, function() {
             obj[key]["value"] = Number($("#" + obj[key]["target"]).val());
         });
         if ($("#" + obj[key]["target"] + "-span"))
-            ENGINE.onChangeAttacher(el, function () {
+            onChangeAttacher(el, function() {
                 $("#" + obj[key]["target"] + "-span").text(obj[key]["value"]);
             });
     } else if (obj[key]["type"] == "selector") {
-        ENGINE.onChangeAttacher(el, function () {
+        onChangeAttacher(el, function() {
             obj[key]["value"] = $("#" + obj[key]["target"]).val();
         });
     }
 
     if (obj[key]["change"] || obj[key]["char"]) {
-        ENGINE.onChangeAttacher(el, function () {
+        onChangeAttacher(el, function() {
             var ch = (obj[key]["char"]) ? obj[key]["char"] : "";
             txt = (obj[key]["change"]) ? obj[key]["change"](obj[key]["value"]) + ch : obj[key]["value"] + ch;
             $("#" + obj[key]["target"] + "-span").text(txt);
@@ -231,14 +231,14 @@ ENGINE.onSettingChange = function (obj, key) {
     }
 
     if (key == "blocks" || key == "n") {
-        ENGINE.onChangeAttacher(el, function () {
+        onChangeAttacher(el, function() {
             if (ENGINE.running)
                 ENGINE.stop();
             else
                 ENGINE.calculateStimuli(ENGINE.blocks["value"], ENGINE.n["value"]);
         });
     } else if (key == "rotation") {
-        ENGINE.onChangeAttacher(el, function () {
+        onChangeAttacher(el, function() {
             var grid = $("#" + ENGINE.gridTrg);
             grid.attr("style", "animation: rotating" + obj[key]["direction"]() + " " + obj[key]["value"] + "s linear infinite;");
             if (obj[key]["value"] == obj[key]["min"]) {
@@ -251,18 +251,18 @@ ENGINE.onSettingChange = function (obj, key) {
             }
         });
     } else if (key == "audio") {
-        ENGINE.onChangeAttacher(el, function () {
+        onChangeAttacher(el, function() {
             var sel = obj[key]["value"];
             ENGINE.howlerizer(sel, obj[key]["selection"][sel]);
         });
     }
 }
 
-ENGINE.onChangeAttacher = function (el, foo) {
+function onChangeAttacher(el, foo) {
     $(el).on("change", foo);
 }
 
-ENGINE.populateTrainerHTML = function () {
+ENGINE.populateTrainerHTML = function() {
     var s = "";
     s += "<div id=\"status-bar\">";
     s += "<div id=" + ENGINE.left["target"] + ">" + ENGINE.left["value"] + "</div>";
@@ -281,7 +281,7 @@ ENGINE.populateTrainerHTML = function () {
     $("." + ENGINE.trainerTrg).append(s);
 }
 
-Date.prototype.ddmm = function () {
+Date.prototype.ddmm = function() {
     var dd = this.getDate(),
         mm = this.getMonth() + 1;
 
@@ -291,20 +291,20 @@ Date.prototype.ddmm = function () {
     ].join("/");
 };
 
-ENGINE.functionizer = function (e, f, t) {
+ENGINE.functionizer = function(e, f, t) {
     $(e).prop("onclick", null).attr("onclick", f);
     $(e).text(t);
 }
 
-ENGINE.load = function () {
+ENGINE.load = function() {
     ENGINE.hist = JSON.parse(localStorage["andrey-pozdnyakov-lrdn"]);
 }
 
-ENGINE.save = function () {
+ENGINE.save = function() {
     localStorage["andrey-pozdnyakov-lrdn"] = JSON.stringify(ENGINE.hist);
 }
 
-ENGINE.historicize = function (date, n) {
+ENGINE.historicize = function(date, n) {
     if (ENGINE.hist[date] != undefined) {
         ENGINE.hist[date].push(n)
     } else {
@@ -313,37 +313,37 @@ ENGINE.historicize = function (date, n) {
     }
 }
 
-ENGINE.MAX = function (array) {
+ENGINE.MAX = function(array) {
 
     if (array.length >= 2)
-        return array.reduce(function (a, b) {
+        return array.reduce(function(a, b) {
             return (a > b ? a : b);
         });
     else if (array[0] != undefined)
         return array[0];
 }
 
-ENGINE.avg = function (array) {
+ENGINE.avg = function(array) {
 
     if (array.length >= 2)
-        return array.reduce(function (a, b) {
+        return array.reduce(function(a, b) {
             return a + b;
         }) / array.length;
     else if (array[0] != undefined)
         return array[0];
 }
 
-ENGINE.min = function (array) {
+ENGINE.min = function(array) {
 
     if (array.length >= 2)
-        return array.reduce(function (a, b) {
+        return array.reduce(function(a, b) {
             return (a < b ? a : b);
         });
     else if (array[0] != undefined)
         return array[0];
 }
 
-ENGINE.update = function (n) {
+ENGINE.update = function(n) {
     if (n) {
         $("#" + ENGINE.n["target"]).val(n);
         $("#" + ENGINE.n["target"] + "-span").text(n);
@@ -352,23 +352,23 @@ ENGINE.update = function (n) {
     $("#" + ENGINE.left["target"]).html(ENGINE.left["value"]);
 }
 
-ENGINE.howlerizer = function (dir, a) {
+ENGINE.howlerizer = function(dir, a) {
     ENGINE.loadedSounds = [];
-    a.forEach(function (el) {
+    a.forEach(function(el) {
         ENGINE.loadedSounds.push(new Howl({
             src: ["snd/" + dir.replace(/\s/g, "-") + "/" + el + ".wav"]
         }));
     });
 }
 
-ENGINE.wow = function (s, c, t) {
+ENGINE.wow = function(s, c, t) {
     $(s).addClass(c);
-    setTimeout(function () {
+    setTimeout(function() {
         $(s).removeClass(c);
     }, t);
 }
 
-ENGINE.savedataInitializer = function () {
+ENGINE.savedataInitializer = function() {
 
     if (!localStorage["andrey-pozdnyakov-lrdn"]) {
         ENGINE.save();
@@ -377,7 +377,7 @@ ENGINE.savedataInitializer = function () {
     }
 }
 
-ENGINE.markupInitializer = function () {
+ENGINE.markupInitializer = function() {
 
     var body = $("body");
 
@@ -391,7 +391,7 @@ ENGINE.markupInitializer = function () {
     ENGINE.functionizer("#" + ENGINE.btnTrg, "ENGINE.start()", ENGINE.playSymbol);
 }
 
-ENGINE.eventsInitializer = function () {
+ENGINE.eventsInitializer = function() {
 
     var sel = ENGINE.audio["value"];
     ENGINE.howlerizer(sel, ENGINE.audio["selection"][sel]);
@@ -399,7 +399,7 @@ ENGINE.eventsInitializer = function () {
     ENGINE.reset();
 
     var keyAllowed = {};
-    $(document).keydown(function (e) {
+    $(document).keydown(function(e) {
         e.preventDefault();
         e.stopPropagation();
 
@@ -418,32 +418,32 @@ ENGINE.eventsInitializer = function () {
             return;
         }
     });
-    $(document).keyup(function (e) {
+    $(document).keyup(function(e) {
         keyAllowed[e.which] = true;
     });
-    $(document).focus(function (e) {
+    $(document).focus(function(e) {
         keyAllowed = {};
     });
 
-    document.querySelector("#eye").addEventListener("touchstart", function (e) {
+    document.querySelector("#eye").addEventListener("touchstart", function(e) {
         e.preventDefault();
         ENGINE.checkBlock("visual");
     }, false);
-    document.querySelector("#eye").addEventListener("click", function (e) {
+    document.querySelector("#eye").addEventListener("click", function(e) {
         e.preventDefault();
         ENGINE.checkBlock("visual");
     }, false);
-    document.querySelector("#ear").addEventListener("touchstart", function (e) {
+    document.querySelector("#ear").addEventListener("touchstart", function(e) {
         e.preventDefault();
         ENGINE.checkBlock("audio");
     }, false);
-    document.querySelector("#ear").addEventListener("click", function (e) {
+    document.querySelector("#ear").addEventListener("click", function(e) {
         e.preventDefault();
         ENGINE.checkBlock("audio");
     }, false);
 }
 
-ENGINE.reset = function () {
+ENGINE.reset = function() {
 
     ENGINE.running = false;
     ENGINE.currBlock = [];
@@ -453,10 +453,10 @@ ENGINE.reset = function () {
     ENGINE.userScore = [0, 0, 0, 0, 0, 0];
 }
 
-ENGINE.start = function () {
+ENGINE.start = function() {
 
     ENGINE.running = true;
-    ENGINE.playing = setTimeout(function () {
+    ENGINE.playing = setTimeout(function() {
         ENGINE.createBlock();
         ENGINE.playBlock();
     }, ENGINE.time["value"] / 4);
@@ -464,7 +464,7 @@ ENGINE.start = function () {
     ENGINE.functionizer("#" + ENGINE.btnTrg, "ENGINE.stop()", ENGINE.stopSymbol);
 }
 
-ENGINE.stop = function (n) {
+ENGINE.stop = function(n) {
 
     n = n || ENGINE.n["value"];
 
@@ -479,12 +479,12 @@ ENGINE.stop = function (n) {
     ENGINE.functionizer("#" + ENGINE.btnTrg, "ENGINE.start()", ENGINE.playSymbol);
 }
 
-ENGINE.calculateStimuli = function (blocks, n) {
+ENGINE.calculateStimuli = function(blocks, n) {
     ENGINE.left["value"] = blocks * (n + 1);
     ENGINE.update(n);
 }
 
-ENGINE.prepareBlock = function (n, left, blocks) {
+ENGINE.prepareBlock = function(n, left, blocks) {
 
     var thisBlock = [];
 
@@ -556,7 +556,7 @@ ENGINE.prepareBlock = function (n, left, blocks) {
     return thisBlock;
 }
 
-ENGINE.evaluateBlock = function (block, n) {
+ENGINE.evaluateBlock = function(block, n) {
 
     var v = 0,
         a = 0;
@@ -572,7 +572,7 @@ ENGINE.evaluateBlock = function (block, n) {
     return [v, a];
 }
 
-ENGINE.checkBlock = function (c) {
+ENGINE.checkBlock = function(c) {
 
     var p = (c == "visual") ? 0 : 1,
         e = (c == "visual") ? "#eye" : "#ear",
@@ -597,7 +597,7 @@ ENGINE.checkBlock = function (c) {
     }
 }
 
-ENGINE.createBlock = function () {
+ENGINE.createBlock = function() {
 
     var blockEval = ENGINE.evaluateBlock(ENGINE.currBlock, ENGINE.n["value"]);
 
@@ -614,7 +614,7 @@ ENGINE.createBlock = function () {
     console.log("%c matching blocks: " + blockEval, "color: blue");
 }
 
-ENGINE.playBlock = function () {
+ENGINE.playBlock = function() {
 
     if (++ENGINE.blockCounter < ENGINE.currBlockLen) {
         if (ENGINE.blockCounter > ENGINE.n["value"]) {
@@ -700,7 +700,7 @@ ENGINE.playBlock = function () {
         ENGINE.stop(ENGINE.n["value"]);
         ENGINE.runs++;
         ENGINE.progress.move(ENGINE.runs / 20 * 100);
-        setTimeout(function () {
+        setTimeout(function() {
             ENGINE.results.yes();
         }, 400);
     }
@@ -712,7 +712,7 @@ function Pop(name, innerId) {
     this.innerId = innerId;
 }
 
-Pop.prototype.yes = function () {
+Pop.prototype.yes = function() {
     var el = document.getElementById(this.id);
     el.style.opacity = 1;
     el.style.height = 100 + "vh";
@@ -721,7 +721,7 @@ Pop.prototype.yes = function () {
     cont.style.display = "block";
 };
 
-Pop.prototype.no = function () {
+Pop.prototype.no = function() {
     var el = document.getElementById(this.id);
     el.style.opacity = 0;
     el.style.height = 0;
@@ -731,7 +731,7 @@ Pop.prototype.no = function () {
     cont.innerHTML = "";
 };
 
-Pop.prototype.getPopHTML = function (inStr) {
+Pop.prototype.getPopHTML = function(inStr) {
     var s = "";
     s += "<div id=" + this.id + " class=\"pop\" style=\"opacity:0; height:0; width:0\">";
     s += "<div id=" + this.innerId + ">";
@@ -752,7 +752,7 @@ function Progress(name, height, background, color) {
     this.stored = 0;
 }
 
-Progress.prototype.getProgressHTML = function () {
+Progress.prototype.getProgressHTML = function() {
     var s = "";
     s += "<div id=" + this.progressId + " style=\"position:absolute; z-index:40; width:100%; height:" + this.height + "; top:0; left:0; background-color:" + this.background + ">";
     s += "<div id=" + this.barId + " style=\"position:absolute; width:0; height:100%; background-color:" + this.color + "></div>";
@@ -760,7 +760,7 @@ Progress.prototype.getProgressHTML = function () {
     return s;
 };
 
-Progress.prototype.move = function (curr) {
+Progress.prototype.move = function(curr) {
     this.current = curr;
     this.el = document.getElementById(this.barId);
 
