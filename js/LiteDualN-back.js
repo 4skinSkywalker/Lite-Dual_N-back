@@ -1,5 +1,4 @@
 function Engine(name) {
-
     this.name = name;
     this.optionsTrg = "navigation";
     this.trainerTrg = "site-wrap";
@@ -9,14 +8,11 @@ function Engine(name) {
     this.btnTrg = "engine-button";
     this.playSymbol = "Play";
     this.stopSymbol = "Stop";
-
     this.results = new Pop(this.name + ".results", this.resultsTrg);
     this.progress = new Progress("progress", "1vh", "transparent", "#fff");
     this.runs = 0;
-
     this.chartist = new Pop(this.name + ".chartist", this.chartistTrg);
     this.hist = {};
-
     this.left = {
         target: "left",
         value: 0
@@ -99,13 +95,11 @@ function Engine(name) {
     };
     this.loadedSounds = [];
 }
-
 Engine.prototype.drawChart = function () {
     var that = this;
     var MAXS = [];
     var avgs = [];
     var mins = [];
-
     $.each(this.hist, function (key, value) {
         if (that.MAX(value) !== undefined) {
             MAXS.push(that.MAX(value));
@@ -123,15 +117,12 @@ Engine.prototype.drawChart = function () {
     });
     if (avgs.length === 0) {
         setTimeout(function () {
-            alert("No data");
+            alert("There are insufficient data to construct the graph");
         }, 400);
     } else {
         this.chartist.yes();
     }
-
-
     return new Chartist.Line("#" + this.chartistTrg, {
-        labels: Object.keys(this.hist),
         series: [MAXS, avgs, mins]
     }, {
         fullWidth: true,
@@ -148,24 +139,8 @@ Engine.prototype.drawChart = function () {
             top: 40,
             right: 40
         }
-    }, [
-        ["screen and (min-width: 481px) and (max-width: 1200px)", {
-            axisX: {
-                labelInterpolationFnc: function (value) {
-                    return value;
-                }
-            }
-        }],
-        ["screen and (max-width: 480px)", {
-            axisX: {
-                labelInterpolationFnc: function (value) {
-                    return value.substring(0, 2);
-                }
-            }
-        }]
-    ]);
+    });
 };
-
 Engine.prototype.getLayoutHTML = function () {
     var s = "";
     s += "<ul class=" + this.optionsTrg + "></ul>";
@@ -174,7 +149,6 @@ Engine.prototype.getLayoutHTML = function () {
     s += "<div class=" + this.trainerTrg + "></div>";
     return s;
 };
-
 Engine.prototype.populateOptionsHTML = function () {
     var s = "";
     s += "<li class=\"nav-item\">";
@@ -211,11 +185,9 @@ Engine.prototype.populateOptionsHTML = function () {
     s += "</li>";
     $("." + this.optionsTrg).append(s);
 };
-
 Engine.prototype.onSettingChange = function (obj, key) {
     var that = this;
     var el = "#" + obj[key].target;
-
     if (obj[key].type === "range") {
         this.onChangeAttacher(el, function () {
             obj[key].value = Number($("#" + obj[key].target).val());
@@ -230,7 +202,6 @@ Engine.prototype.onSettingChange = function (obj, key) {
             obj[key].value = $("#" + obj[key].target).val();
         });
     }
-
     if (obj[key].change || obj[key].char) {
         this.onChangeAttacher(el, function () {
             var ch = (obj[key].char) ? obj[key].char : "";
@@ -238,7 +209,6 @@ Engine.prototype.onSettingChange = function (obj, key) {
             $("#" + obj[key].target + "-span").text(txt);
         });
     }
-
     if (key === "blocks" || key === "n") {
         this.onChangeAttacher(el, function () {
             if (that.running) {
@@ -267,11 +237,9 @@ Engine.prototype.onSettingChange = function (obj, key) {
         });
     }
 };
-
 Engine.prototype.onChangeAttacher = function (el, foo) {
     $(el).on("change", foo);
 };
-
 Engine.prototype.populateTrainerHTML = function () {
     var s = "";
     s += "<div id=\"status-bar\">";
@@ -291,30 +259,23 @@ Engine.prototype.populateTrainerHTML = function () {
     s += "<div id=\"ear\"></div>";
     $("." + this.trainerTrg).append(s);
 };
-
 Date.prototype.ddmm = function () {
     var dd = this.getDate();
     var mm = this.getMonth() + 1;
-
     return [
-        (dd > 9 ? "" : "0") + dd,
-        (mm > 9 ? "" : "0") + mm
+        (dd > 9 ? "" : "0") + dd, (mm > 9 ? "" : "0") + mm
     ].join("/");
 };
-
 Engine.prototype.functionizer = function (e, f, t) {
     $(e).prop("onclick", null).attr("onclick", f);
     $(e).text(t);
 };
-
 Engine.prototype.load = function () {
     this.hist = JSON.parse(localStorage["andrey-pozdnyakov-lrdn"]);
 };
-
 Engine.prototype.save = function () {
     localStorage["andrey-pozdnyakov-lrdn"] = JSON.stringify(this.hist);
 };
-
 Engine.prototype.historicize = function (date, n) {
     if (this.hist[date] !== undefined) {
         this.hist[date].push(n);
@@ -323,9 +284,7 @@ Engine.prototype.historicize = function (date, n) {
         this.hist[date].push(n);
     }
 };
-
 Engine.prototype.MAX = function (array) {
-
     if (array.length >= 2) {
         return array.reduce(function (a, b) {
             return (a > b ? a : b);
@@ -334,9 +293,7 @@ Engine.prototype.MAX = function (array) {
         return array[0];
     }
 };
-
 Engine.prototype.avg = function (array) {
-
     if (array.length >= 2) {
         return array.reduce(function (a, b) {
             return a + b;
@@ -345,9 +302,7 @@ Engine.prototype.avg = function (array) {
         return array[0];
     }
 };
-
 Engine.prototype.min = function (array) {
-
     if (array.length >= 2) {
         return array.reduce(function (a, b) {
             return (a < b ? a : b);
@@ -356,7 +311,6 @@ Engine.prototype.min = function (array) {
         return array[0];
     }
 };
-
 Engine.prototype.update = function (n) {
     if (n) {
         $("#" + this.n.target).val(n);
@@ -365,10 +319,8 @@ Engine.prototype.update = function (n) {
     }
     $("#" + this.left.target).html(this.left.value);
 };
-
 Engine.prototype.howlerizer = function (dir, a) {
     var that = this;
-
     this.loadedSounds = [];
     a.forEach(function (el) {
         that.loadedSounds.push(new Howl({
@@ -376,55 +328,42 @@ Engine.prototype.howlerizer = function (dir, a) {
         }));
     });
 };
-
 Engine.prototype.wow = function (s, c, t) {
     $(s).addClass(c);
     setTimeout(function () {
         $(s).removeClass(c);
     }, t);
 };
-
 Engine.prototype.savedataInitializer = function () {
-
     if (!localStorage["andrey-pozdnyakov-lrdn"]) {
         this.save();
     } else {
         this.load();
     }
 };
-
 Engine.prototype.markupInitializer = function () {
-
     var body = $("body");
-
     body.append(this.getLayoutHTML(), this.results.getPopHTML(), this.chartist.getPopHTML());
     $("." + this.trainerTrg).append("<button onclick=" + this.name + ".drawChart() style=\"z-index:50\" class=\"btn-popup reflected\">★</button>");
     $("#" + this.results.id).append(this.progress.getProgressHTML());
     this.populateTrainerHTML();
     this.populateOptionsHTML();
-
     this.calculateStimuli(this.blocks.value, this.n.value);
     this.functionizer("#" + this.btnTrg, this.name + ".start()", this.playSymbol);
 };
-
 Engine.prototype.eventsInitializer = function () {
     var that = this;
-
     var sel = this.audio.value;
     this.howlerizer(sel, this.audio.selection[sel]);
-
     this.reset();
-
     var keyAllowed = {};
     $(document).keydown(function (e) {
         e.preventDefault();
         e.stopPropagation();
-
         if (keyAllowed[e.which] === false) {
             return;
         }
         keyAllowed[e.which] = false;
-
         var keyCode = e.keyCode || e.which;
         switch (keyCode) {
         case 65:
@@ -443,7 +382,6 @@ Engine.prototype.eventsInitializer = function () {
     $(document).focus(function (e) {
         keyAllowed = {};
     });
-
     document.querySelector("#eye").addEventListener("touchstart", function (e) {
         e.preventDefault();
         that.checkBlock.call(that, "visual");
@@ -461,9 +399,7 @@ Engine.prototype.eventsInitializer = function () {
         that.checkBlock.call(that, "audio");
     }, false);
 };
-
 Engine.prototype.reset = function () {
-
     this.running = false;
     this.currBlock = [];
     this.currBlockLen = 0;
@@ -471,54 +407,39 @@ Engine.prototype.reset = function () {
     this.enable = [0, 0];
     this.userScore = [0, 0, 0, 0, 0, 0];
 };
-
 Engine.prototype.start = function () {
     var that = this;
-
     this.running = true;
     this.playing = setTimeout(function () {
-        that.createBlock.apply(that);
-        that.playBlock.apply(that);
+        that.createBlock.call(that);
+        that.playBlock.call(that);
     }, this.time.value / 4);
-
     this.functionizer("#" + this.btnTrg, this.name + ".stop()", this.stopSymbol);
 };
-
 Engine.prototype.stop = function (n) {
-
     n = n || this.n.value;
-
     clearTimeout(this.playing);
     this.reset();
-
     this.blockCounter = -1;
     this.enable = [0, 0];
     this.userScore = [0, 0, 0, 0, 0, 0];
-
     this.calculateStimuli(this.blocks.value, n);
     this.functionizer("#" + this.btnTrg, this.name + ".start()", this.playSymbol);
 };
-
 Engine.prototype.calculateStimuli = function (blocks, n) {
     this.left.value = blocks * (n + 1);
     this.update(n);
 };
-
 Engine.prototype.prepareBlock = function (n, left, blocks) {
-
     var thisBlock = [];
-
     for (var i = 0; i < left; i++) {
         thisBlock.push([0, 0]);
     }
-
     var blockLength = thisBlock.length;
     var vis = 0;
     var aud = 0;
-
     var visTarg;
     var audTarg;
-
     while (vis < blocks) {
         visTarg = Math.floor(Math.random() * blockLength);
         if (thisBlock[visTarg + n]) {
@@ -559,7 +480,6 @@ Engine.prototype.prepareBlock = function (n, left, blocks) {
             continue;
         }
     }
-
     for (var x = 0; x < blockLength; x++) {
         if (thisBlock[x][0] === 0) {
             thisBlock[x][0] = 1 + Math.floor(Math.random() * 8);
@@ -580,12 +500,9 @@ Engine.prototype.prepareBlock = function (n, left, blocks) {
     }
     return thisBlock;
 };
-
 Engine.prototype.evaluateBlock = function (block, n) {
-
     var v = 0;
     var a = 0;
-
     for (var i = 0; i < block.length; i++) {
         if (block[i - n]) {
             if (block[i][0] === block[i - n][0]) {
@@ -596,17 +513,13 @@ Engine.prototype.evaluateBlock = function (block, n) {
             }
         }
     }
-
     return [v, a];
 };
-
 Engine.prototype.checkBlock = function (c) {
-
     var p = (c === "visual") ? 0 : 1;
     var e = (c === "visual") ? "#eye" : "#ear";
     var r = (c === "visual") ? 0 : 3;
     var w = (c === "visual") ? 2 : 5;
-
     if (this.enable[p] !== 1 && this.running) {
         this.enable[p] = 1;
         if (this.blockCounter + 1 > this.n.value && this.currBlock[this.blockCounter]) {
@@ -626,27 +539,18 @@ Engine.prototype.checkBlock = function (c) {
         }
     }
 };
-
 Engine.prototype.createBlock = function () {
-
     var blockEval = this.evaluateBlock(this.currBlock, this.n.value);
-
     this.currBlock = this.prepareBlock(this.n.value, this.left.value, this.blocks.value);
-
     while (blockEval[0] !== this.blocks.value || blockEval[1] !== this.blocks.value) {
         this.currBlock = this.prepareBlock(this.n.value, this.left.value, this.blocks.value);
         blockEval = this.evaluateBlock(this.currBlock, this.n.value);
     }
-
     this.currBlockLen = this.currBlock.length;
-
     console.log(this.currBlock);
     console.log("%c matching blocks: " + blockEval, "color: blue");
 };
-
 Engine.prototype.playBlock = function () {
-    var that = this;
-
     if (++this.blockCounter < this.currBlockLen) {
         if (this.blockCounter > this.n.value) {
             if (this.currBlock[this.blockCounter - 1][0] === this.currBlock[this.blockCounter - this.n.value - 1][0] && this.currBlock[this.blockCounter - 1][1] === this.currBlock[this.blockCounter - this.n.value - 1][1]) {
@@ -682,23 +586,18 @@ Engine.prototype.playBlock = function () {
             this.wow(".tile:eq(" + blockLight + ")", "on", this.time.value / 6);
             this.loadedSounds[this.currBlock[this.blockCounter][1] - 1].play();
         }
-
         console.log("%c id : #" + this.blockCounter, "color: black");
         console.log("%c value : " + this.currBlock[this.blockCounter], "color: black");
         console.log("%c keypresses : " + this.enable, "color: green");
         console.log("%c score : " + this.userScore, "color: green");
-
         this.left.value--;
         this.update();
-
-        this.playing = setTimeout(that.playBlock.bind(that), that.time.value);
+        this.playing = setTimeout(this.playBlock.bind(this), this.time.value);
         this.enable = [0, 0];
     } else {
         var date = new Date();
-
         this.userScore[1] = this.blocks.value - this.userScore[0];
         this.userScore[4] = this.blocks.value - this.userScore[3];
-
         var s = "";
         s += "<table class=\"results-icons\">";
         s += "<tr><td colspan=\"2\">Visual</td><td colspan=\"2\">Audio</td></tr>";
@@ -706,15 +605,12 @@ Engine.prototype.playBlock = function () {
         s += "<tr><td>☐</td><td>" + this.userScore[1] + "</td><td>☐</td><td>" + this.userScore[4] + "</td></tr>";
         s += "<tr><td>☒</td><td>" + this.userScore[2] + "</td><td>☒</td><td>" + this.userScore[5] + "</td></tr>";
         s += "</table>";
-
         $("#" + this.resultsTrg).html(s);
-
         var incorrectVis = this.userScore[1] + this.userScore[2];
         var incorrectAud = this.userScore[4] + this.userScore[5];
         var threshold = this.blocks.value * (1 - this.threshold.value);
         var upperThreshold = Math.ceil(threshold);
         var lowerThreshold = Math.floor(threshold);
-
         if (incorrectVis <= lowerThreshold && incorrectAud <= lowerThreshold) {
             this.historicize(date.ddmm(), this.n.value);
             $("#" + this.resultsTrg).append("<p class=\"results-text\">N is now:<br>" + ++this.n.value + "</p>");
@@ -728,14 +624,11 @@ Engine.prototype.playBlock = function () {
             this.historicize(date.ddmm(), this.n.value);
             $("#" + this.resultsTrg).append("<p class=\"results-text\">N stays: " + this.n.value + "<br>Keep trying</p>");
         }
-
         this.save();
         this.stop(this.n.value);
         this.runs++;
-        this.progress.move(this.runs / 20 * 100);
-        setTimeout(function () {
-            that.results.yes();
-        }, 400);
+        this.results.yes();
+		this.progress.move(this.runs / 20 * 100);
     }
 };
 
@@ -744,7 +637,6 @@ function Pop(name, innerId) {
     this.id = (this.name + "-popup").replace(/\./g, "-");
     this.innerId = innerId;
 }
-
 Pop.prototype.yes = function () {
     var el = document.getElementById(this.id);
     el.style.opacity = 1;
@@ -753,7 +645,6 @@ Pop.prototype.yes = function () {
     var cont = document.getElementById(this.innerId);
     cont.style.display = "block";
 };
-
 Pop.prototype.no = function () {
     var el = document.getElementById(this.id);
     el.style.opacity = 0;
@@ -763,7 +654,6 @@ Pop.prototype.no = function () {
     cont.style.display = "none";
     cont.innerHTML = "";
 };
-
 Pop.prototype.getPopHTML = function (inStr) {
     var s = "";
     s += "<div id=" + this.id + " class=\"pop\" style=\"opacity:0; height:0; width:0\">";
@@ -786,7 +676,6 @@ function Progress(name, height, background, color) {
     this.color = color;
     this.stored = 0;
 }
-
 Progress.prototype.getProgressHTML = function () {
     var s = "";
     s += "<div id=" + this.progressId + " style=\"position:absolute; z-index:40; width:100%; height:" + this.height + "; top:0; left:0; background-color:" + this.background + "\">";
@@ -794,11 +683,9 @@ Progress.prototype.getProgressHTML = function () {
     s += "</div>";
     return s;
 };
-
 Progress.prototype.move = function (curr) {
     this.current = curr;
     this.el = document.getElementById(this.barId);
-
     this.advance = function () {
         if (this.stored >= this.current) {
             clearInterval(this.interval);
