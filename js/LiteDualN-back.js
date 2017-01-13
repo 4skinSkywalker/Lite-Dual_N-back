@@ -191,12 +191,8 @@ Engine.prototype.onSettingChange = function (obj, key) {
     if (obj[key].type === "range") {
         this.onChangeAttacher(el, function () {
             obj[key].value = Number($("#" + obj[key].target).val());
+			$("#" + obj[key].target + "-span").text(obj[key].value);
         });
-        if ($("#" + obj[key].target + "-span")) {
-            this.onChangeAttacher(el, function () {
-                $("#" + obj[key].target + "-span").text(obj[key].value);
-            });
-        }
     } else if (obj[key].type === "selector") {
         this.onChangeAttacher(el, function () {
             obj[key].value = $("#" + obj[key].target).val();

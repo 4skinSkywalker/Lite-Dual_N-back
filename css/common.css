@@ -43,9 +43,6 @@ label[for="nav-trigger"] {
 .on {
 	background: #fff!important;
 }
-.reset {
-	background: transparent!important;
-}
 .pop {
 	position: absolute;
 	z-index:20;
