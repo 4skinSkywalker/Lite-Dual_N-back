@@ -428,10 +428,10 @@ Engine.prototype.eventsInitializer = function () {
         var keyCode = e.keyCode || e.which;
         switch (keyCode) {
         case 65:
-            that.checkBlock.apply(that, "visual");
+            that.checkBlock.call(that, "visual");
             break;
         case 76:
-            that.checkBlock.apply(that, "audio");
+            that.checkBlock.call(that, "audio");
             break;
         default:
             return;
@@ -446,19 +446,19 @@ Engine.prototype.eventsInitializer = function () {
 
     document.querySelector("#eye").addEventListener("touchstart", function (e) {
         e.preventDefault();
-        that.checkBlock.apply(that, "visual");
+        that.checkBlock.call(that, "visual");
     }, false);
     document.querySelector("#eye").addEventListener("click", function (e) {
         e.preventDefault();
-        that.checkBlock.apply(that, "visual");
+        that.checkBlock.call(that, "visual");
     }, false);
     document.querySelector("#ear").addEventListener("touchstart", function (e) {
         e.preventDefault();
-        that.checkBlock.apply(that, "audio");
+        that.checkBlock.call(that, "audio");
     }, false);
     document.querySelector("#ear").addEventListener("click", function (e) {
         e.preventDefault();
-        that.checkBlock.apply(that, "audio");
+        that.checkBlock.call(that, "audio");
     }, false);
 };
 
