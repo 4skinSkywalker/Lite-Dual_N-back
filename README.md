@@ -14,7 +14,6 @@
 
 - - - -
 ![screenshot3](https://lh3.googleusercontent.com/-ZTh7nRRef7s/WHiksT_EX6I/AAAAAAAADmA/efSxNzh2SGcjzH7EwrE5hxpARRwQnhUtACLcB/s1600/ldnb3.png)
-- - - -
 
 ###Detailed end-game screen showing statistics for that game, which also shows a progress bar at the top.
 
