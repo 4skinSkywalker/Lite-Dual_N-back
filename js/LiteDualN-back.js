@@ -101,7 +101,7 @@ function Engine(name) {
 }
 
 Engine.prototype.drawChart = function () {
-	var that = this;
+    var that = this;
     var MAXS = [];
     var avgs = [];
     var mins = [];
@@ -408,6 +408,7 @@ Engine.prototype.markupInitializer = function () {
 };
 
 Engine.prototype.eventsInitializer = function () {
+    var that = this;
 
     var sel = this.audio.value;
     this.howlerizer(sel, this.audio.selection[sel]);
@@ -427,10 +428,10 @@ Engine.prototype.eventsInitializer = function () {
         var keyCode = e.keyCode || e.which;
         switch (keyCode) {
         case 65:
-            this.checkBlock("visual");
+            that.checkBlock.apply(that, "visual");
             break;
         case 76:
-            this.checkBlock("audio");
+            that.checkBlock.apply(that, "audio");
             break;
         default:
             return;
@@ -445,19 +446,19 @@ Engine.prototype.eventsInitializer = function () {
 
     document.querySelector("#eye").addEventListener("touchstart", function (e) {
         e.preventDefault();
-        this.checkBlock("visual");
+        that.checkBlock.apply(that, "visual");
     }, false);
     document.querySelector("#eye").addEventListener("click", function (e) {
         e.preventDefault();
-        this.checkBlock("visual");
+        that.checkBlock.apply(that, "visual");
     }, false);
     document.querySelector("#ear").addEventListener("touchstart", function (e) {
         e.preventDefault();
-        this.checkBlock("audio");
+        that.checkBlock.apply(that, "audio");
     }, false);
     document.querySelector("#ear").addEventListener("click", function (e) {
         e.preventDefault();
-        this.checkBlock("audio");
+        that.checkBlock.apply(that, "audio");
     }, false);
 };
 
