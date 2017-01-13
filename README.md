@@ -7,7 +7,7 @@ Many settings and customizations available in the hamburgher menu.
 
 ![screenshot2](https://lh3.googleusercontent.com/-3SUzS0nTTGE/WHikXa6Hp5I/AAAAAAAADl8/k2dIQ7r85a0v_FU4QgwaKoJ-N9eoaknjQCLcB/s1600/ldnb2.png)
 
-Instant feedback inputs: 
+Instant input feedback: 
 * green = correct; 
 * orange = missed; 
 * red = wrong.
