@@ -20,7 +20,7 @@
 - - - -
 ![screenshot4](https://lh3.googleusercontent.com/-xHUeBF3ALe0/WHikzpBKXwI/AAAAAAAADmE/-gGMI2U40D0fkJfUfyTGCpRHsRDe8Va0wCLcB/s1600/ldnb5.png)
 
-###You can open chart based on the historical results obtained per day using the button ★ (star shaped), which describes:
+###You can open a chart, based on the historical results obtained per day, using the button ★ (star shaped), which describes:
 * green line = maximum N reached; 
 * orange = avarage N; 
 * red = minimum N scored.
