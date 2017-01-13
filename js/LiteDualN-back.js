@@ -259,11 +259,11 @@ Engine.prototype.populateTrainerHTML = function () {
     s += "<div id=\"ear\"></div>";
     $("." + this.trainerTrg).append(s);
 };
-Date.prototype.ddmm = function () {
+Date.prototype.ddmmyy = function () {
     var dd = this.getDate();
     var mm = this.getMonth() + 1;
     return [
-        (dd > 9 ? "" : "0") + dd, (mm > 9 ? "" : "0") + mm
+        (dd > 9 ? "" : "0") + dd, (mm > 9 ? "" : "0") + mm, this.getFullYear()
     ].join("/");
 };
 Engine.prototype.functionizer = function (e, f, t) {
@@ -612,7 +612,7 @@ Engine.prototype.playBlock = function () {
         var upperThreshold = Math.ceil(threshold);
         var lowerThreshold = Math.floor(threshold);
         if (incorrectVis <= lowerThreshold && incorrectAud <= lowerThreshold) {
-            this.historicize(date.ddmm(), this.n.value);
+            this.historicize(date.ddmmyy(), this.n.value);
             $("#" + this.resultsTrg).append("<p class=\"results-text\">N is now:<br>" + ++this.n.value + "</p>");
         } else if (incorrectVis > upperThreshold || incorrectAud > upperThreshold) {
             if (this.n.value !== 1) {
@@ -621,7 +621,7 @@ Engine.prototype.playBlock = function () {
                 $("#" + this.resultsTrg).append("<p class=\"results-text\">N stays: 1<br>Keep trying</p>");
             }
         } else {
-            this.historicize(date.ddmm(), this.n.value);
+            this.historicize(date.ddmmyy(), this.n.value);
             $("#" + this.resultsTrg).append("<p class=\"results-text\">N stays: " + this.n.value + "<br>Keep trying</p>");
         }
         this.save();
