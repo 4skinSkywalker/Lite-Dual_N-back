@@ -56,9 +56,6 @@ label[for="nav-trigger"] {
 	transition: opacity .4s ease-in-out;
 	background: rgba(0, 0, 0, .5);
 }
-#engine-chart-popup {
-	background: rgba(0, 0, 0, .85);
-}
 #results, #chart {
 	position: absolute;
 	z-index: 30;
