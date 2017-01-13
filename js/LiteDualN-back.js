@@ -117,7 +117,7 @@ Engine.prototype.drawChart = function () {
     });
     if (avgs.length === 0) {
         setTimeout(function () {
-            alert("There are insufficient data to construct the graph");
+            alert("There are insufficient data to construct the graph.");
         }, 400);
     } else {
         this.chartist.yes();
@@ -181,7 +181,7 @@ Engine.prototype.populateOptionsHTML = function () {
         s = "";
     }
     s += "<li class=\"nav-item\">";
-    s += "<p>Controls:<br>\"A\" key for visual<br>\"L\" key for audio.</p>";
+    s += "<p>Controls:<br>\"A\" key for visual;<br>\"L\" key for audio.</p>";
     s += "</li>";
     $("." + this.optionsTrg).append(s);
 };

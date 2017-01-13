@@ -1,4 +1,4 @@
-# Lite Dual N-back
+﻿# Lite Dual N-back
 ##A open source and cross platform rotation [dual N-back](https://4skinskywalker.github.io/Lite-Dual_N-back/)
 ![screenshot1](https://lh3.googleusercontent.com/-67MfE-CsJ6w/WHEOR18nKXI/AAAAAAAADlU/T7h9CaF5IwgjOIBN5mBEBBj5ss8CJ2eFACLcB/s1600/dualN-back.png)
 
@@ -20,7 +20,7 @@
 - - - -
 ![screenshot4](https://lh3.googleusercontent.com/-xHUeBF3ALe0/WHikzpBKXwI/AAAAAAAADmE/-gGMI2U40D0fkJfUfyTGCpRHsRDe8Va0wCLcB/s1600/ldnb5.png)
 
-###Chart based on the historical results obtained per day, which describes:
+###You can open chart based on the historical results obtained per day using the button ★ (star shaped), which describes:
 * green line = maximum N reached; 
 * orange = avarage N; 
 * red = minimum N scored.
