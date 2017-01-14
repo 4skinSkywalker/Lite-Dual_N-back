@@ -1,22 +1,11 @@
 function Engine(name) {
     this.name = name;
-    this.optionsTrg = "navigation";
-    this.trainerTrg = "site-wrap";
-    this.gridTrg = "grid";
-    this.resultsTrg = "results";
-    this.chartistTrg = "chart";
-    this.btnTrg = "engine-button";
-    this.playSymbol = "Play";
-    this.stopSymbol = "Stop";
-    this.results = new Pop(this.name + ".results", this.resultsTrg);
+    this.results = new Pop(this.name + ".results", "results");
     this.progress = new Progress("progress", "1vh", "transparent", "#fff");
+    this.chartist = new Pop(this.name + ".chartist", "chart");
     this.runs = 0;
-    this.chartist = new Pop(this.name + ".chartist", this.chartistTrg);
+    this.left = 0;
     this.hist = {};
-    this.left = {
-        target: "left",
-        value: 0
-    };
     this.time = {
         type: "range",
         target: "stimulus-time",
@@ -122,7 +111,7 @@ Engine.prototype.drawChart = function () {
     } else {
         this.chartist.yes();
     }
-    return new Chartist.Line("#" + this.chartistTrg, {
+    return new Chartist.Line("#chart", {
         series: [MAXS, avgs, mins]
     }, {
         fullWidth: true,
@@ -143,17 +132,18 @@ Engine.prototype.drawChart = function () {
 };
 Engine.prototype.getLayoutHTML = function () {
     var s = "";
-    s += "<ul class=" + this.optionsTrg + "></ul>";
-    s += "<input type=\"checkbox\" id=\"nav-trigger\" class=\"nav-trigger\"/>";
+    s += "<ul id=\"navigation\"></ul>";
+    s += "<input type=\"checkbox\" id=\"nav-trigger\"/>";
     s += "<label for=\"nav-trigger\"></label>";
-    s += "<div class=" + this.trainerTrg + "></div>";
+    s += "<div id=\"site-wrap\"></div>";
     return s;
 };
-Engine.prototype.populateOptionsHTML = function () {
+Engine.prototype.populateNavigation = function () {
     var s = "";
     s += "<li class=\"nav-item\">";
-    s += "<p id=\"level\">N = " + this.n.value + "</p>";
+    s += "<p id=\"N-level\">N = " + this.n.value + "</p>";
     s += "</li>";
+    $("#navigation").append(s);
     for (var key in this) {
         if (this.hasOwnProperty(key)) {
             if (this[key].type === "range" || this[key].type === "selector") {
@@ -174,16 +164,16 @@ Engine.prototype.populateOptionsHTML = function () {
                     s += "</select>";
                     s += "</li>";
                 }
-                $("." + this.optionsTrg).append(s);
+                $("#navigation").append(s);
                 this.onSettingChange(this, key);
             }
         }
         s = "";
     }
     s += "<li class=\"nav-item\">";
-    s += "<p>Controls:<br>\"A\" key for visual;<br>\"L\" key for audio.</p>";
+    s += "<p>Controls:<br>\"A\" key for visual<br>\"L\" key for audio</br></br></p>";
     s += "</li>";
-    $("." + this.optionsTrg).append(s);
+    $("#navigation").append(s);
 };
 Engine.prototype.onSettingChange = function (obj, key) {
     var that = this;
@@ -191,7 +181,7 @@ Engine.prototype.onSettingChange = function (obj, key) {
     if (obj[key].type === "range") {
         this.onChangeAttacher(el, function () {
             obj[key].value = Number($("#" + obj[key].target).val());
-			$("#" + obj[key].target + "-span").text(obj[key].value);
+            $("#" + obj[key].target + "-span").text(obj[key].value);
         });
     } else if (obj[key].type === "selector") {
         this.onChangeAttacher(el, function () {
@@ -215,7 +205,7 @@ Engine.prototype.onSettingChange = function (obj, key) {
         });
     } else if (key === "rotation") {
         this.onChangeAttacher(el, function () {
-            var grid = $("#" + that.gridTrg);
+            var grid = $("#grid");
             grid.attr("style", "animation: rotating" + obj[key].direction() + " " + obj[key].value + "s linear infinite;");
             if (obj[key].value === obj[key].min) {
                 $("#" + obj[key].target + "-span").text("off");
@@ -236,13 +226,13 @@ Engine.prototype.onSettingChange = function (obj, key) {
 Engine.prototype.onChangeAttacher = function (el, foo) {
     $(el).on("change", foo);
 };
-Engine.prototype.populateTrainerHTML = function () {
+Engine.prototype.populateSiteWrap = function () {
     var s = "";
     s += "<div id=\"status-bar\">";
-    s += "<div id=" + this.left.target + ">" + this.left.value + "</div>";
+    s += "<div id=\"left-stimuli\">" + this.left + "</div>";
     s += "</div>";
-    s += "<button type=\"button\" id=" + this.btnTrg + " class=\"btn-standard\"></button>";
-    s += "<table id=" + this.gridTrg + " class=\"rotational-grid\" style=\"animation: rotating" + this.rotation.direction() + " " + this.rotation.value + "s linear infinite;\">";
+    s += "<button type=\"button\" id=\"engine-button\" class=\"btn-standard\"></button>";
+    s += "<table id=\"grid\" class=\"rotational-grid\" style=\"animation: rotating" + this.rotation.direction() + " " + this.rotation.value + "s linear infinite;\">";
     for (var i = 0; i < 3; i++) {
         s += "<tr>";
         for (var j = 0; j < 3; j++) {
@@ -251,9 +241,9 @@ Engine.prototype.populateTrainerHTML = function () {
         s += "</tr>";
     }
     s += "</table>";
-    s += "<div id=\"eye\"></div>";
-    s += "<div id=\"ear\"></div>";
-    $("." + this.trainerTrg).append(s);
+    s += "<div id=\"eye-btn\"></div>";
+    s += "<div id=\"ear-btn\"></div>";
+    $("#site-wrap").append(s);
 };
 Date.prototype.ddmmyy = function () {
     var dd = this.getDate();
@@ -311,9 +301,9 @@ Engine.prototype.update = function (n) {
     if (n) {
         $("#" + this.n.target).val(n);
         $("#" + this.n.target + "-span").text(n);
-        $("#level").html("N = " + n);
+        $("#N-level").html("N = " + n);
     }
-    $("#" + this.left.target).html(this.left.value);
+    $("#left-stimuli").html(this.left);
 };
 Engine.prototype.howlerizer = function (dir, a) {
     var that = this;
@@ -330,24 +320,23 @@ Engine.prototype.wow = function (s, c, t) {
         $(s).removeClass(c);
     }, t);
 };
-Engine.prototype.savedataInitializer = function () {
+Engine.prototype.savedataInit = function () {
     if (!localStorage["andrey-pozdnyakov-lrdn"]) {
         this.save();
     } else {
         this.load();
     }
 };
-Engine.prototype.markupInitializer = function () {
-    var body = $("body");
-    body.append(this.getLayoutHTML(), this.results.getPopHTML(), this.chartist.getPopHTML());
-    $("." + this.trainerTrg).append("<button onclick=" + this.name + ".drawChart() style=\"z-index:50\" class=\"btn-popup reflected\">★</button>");
+Engine.prototype.markupInit = function () {
+    $("body").append(this.getLayoutHTML(), this.results.getPopHTML(), this.chartist.getPopHTML());
+    $("#site-wrap").append("<button onclick=" + this.name + ".drawChart() style=\"z-index:50\" class=\"btn-popup reflected\">★</button>");
     $("#" + this.results.id).append(this.progress.getProgressHTML());
-    this.populateTrainerHTML();
-    this.populateOptionsHTML();
+    this.populateSiteWrap();
+    this.populateNavigation();
     this.calculateStimuli(this.blocks.value, this.n.value);
-    this.functionizer("#" + this.btnTrg, this.name + ".start()", this.playSymbol);
+    this.functionizer("#engine-button", this.name + ".start()", "Play");
 };
-Engine.prototype.eventsInitializer = function () {
+Engine.prototype.eventsInit = function () {
     var that = this;
     var sel = this.audio.value;
     this.howlerizer(sel, this.audio.selection[sel]);
@@ -378,19 +367,19 @@ Engine.prototype.eventsInitializer = function () {
     $(document).focus(function (e) {
         keyAllowed = {};
     });
-    document.querySelector("#eye").addEventListener("touchstart", function (e) {
+    document.querySelector("#eye-btn").addEventListener("touchstart", function (e) {
         e.preventDefault();
         that.checkBlock.call(that, "visual");
     }, false);
-    document.querySelector("#eye").addEventListener("click", function (e) {
+    document.querySelector("#eye-btn").addEventListener("click", function (e) {
         e.preventDefault();
         that.checkBlock.call(that, "visual");
     }, false);
-    document.querySelector("#ear").addEventListener("touchstart", function (e) {
+    document.querySelector("#ear-btn").addEventListener("touchstart", function (e) {
         e.preventDefault();
         that.checkBlock.call(that, "audio");
     }, false);
-    document.querySelector("#ear").addEventListener("click", function (e) {
+    document.querySelector("#ear-btn").addEventListener("click", function (e) {
         e.preventDefault();
         that.checkBlock.call(that, "audio");
     }, false);
@@ -410,7 +399,7 @@ Engine.prototype.start = function () {
         that.createBlock.call(that);
         that.playBlock.call(that);
     }, this.time.value / 4);
-    this.functionizer("#" + this.btnTrg, this.name + ".stop()", this.stopSymbol);
+    this.functionizer("#engine-button", this.name + ".stop()", "Stop");
 };
 Engine.prototype.stop = function (n) {
     n = n || this.n.value;
@@ -420,10 +409,10 @@ Engine.prototype.stop = function (n) {
     this.enable = [0, 0];
     this.userScore = [0, 0, 0, 0, 0, 0];
     this.calculateStimuli(this.blocks.value, n);
-    this.functionizer("#" + this.btnTrg, this.name + ".start()", this.playSymbol);
+    this.functionizer("#engine-button", this.name + ".start()", "Play");
 };
 Engine.prototype.calculateStimuli = function (blocks, n) {
-    this.left.value = blocks * (n + 1);
+    this.left = blocks * (n + 1);
     this.update(n);
 };
 Engine.prototype.prepareBlock = function (n, left, blocks) {
@@ -513,7 +502,7 @@ Engine.prototype.evaluateBlock = function (block, n) {
 };
 Engine.prototype.checkBlock = function (c) {
     var p = (c === "visual") ? 0 : 1;
-    var e = (c === "visual") ? "#eye" : "#ear";
+    var e = (c === "visual") ? "#eye-btn" : "#ear-btn";
     var r = (c === "visual") ? 0 : 3;
     var w = (c === "visual") ? 2 : 5;
     if (this.enable[p] !== 1 && this.running) {
@@ -537,9 +526,9 @@ Engine.prototype.checkBlock = function (c) {
 };
 Engine.prototype.createBlock = function () {
     var blockEval = this.evaluateBlock(this.currBlock, this.n.value);
-    this.currBlock = this.prepareBlock(this.n.value, this.left.value, this.blocks.value);
+    this.currBlock = this.prepareBlock(this.n.value, this.left, this.blocks.value);
     while (blockEval[0] !== this.blocks.value || blockEval[1] !== this.blocks.value) {
-        this.currBlock = this.prepareBlock(this.n.value, this.left.value, this.blocks.value);
+        this.currBlock = this.prepareBlock(this.n.value, this.left, this.blocks.value);
         blockEval = this.evaluateBlock(this.currBlock, this.n.value);
     }
     this.currBlockLen = this.currBlock.length;
@@ -553,8 +542,8 @@ Engine.prototype.playBlock = function () {
                 if (this.enable[0] < 1 && this.enable[1] < 1) {
                     console.log("%c both cues missed", "color: orange");
                     if (this.feedback.value) {
-                        this.wow("#eye", "missed", this.time.value / 6);
-                        this.wow("#ear", "missed", this.time.value / 6);
+                        this.wow("#eye-btn", "missed", this.time.value / 6);
+                        this.wow("#ear-btn", "missed", this.time.value / 6);
                     }
                     this.userScore[1] += 1;
                     this.userScore[4] += 1;
@@ -563,7 +552,7 @@ Engine.prototype.playBlock = function () {
                 if (this.enable[0] < 1) {
                     console.log("%c visual cue missed", "color: orange");
                     if (this.feedback.value) {
-                        this.wow("#eye", "missed", this.time.value / 6);
+                        this.wow("#eye-btn", "missed", this.time.value / 6);
                     }
                     this.userScore[1] += 1;
                 }
@@ -571,7 +560,7 @@ Engine.prototype.playBlock = function () {
                 if (this.enable[1] < 1) {
                     console.log("%c audio cue missed", "color: orange");
                     if (this.feedback.value) {
-                        this.wow("#ear", "missed", this.time.value / 6);
+                        this.wow("#ear-btn", "missed", this.time.value / 6);
                     }
                     this.userScore[4] += 1;
                 }
@@ -586,7 +575,7 @@ Engine.prototype.playBlock = function () {
         console.log("%c value : " + this.currBlock[this.blockCounter], "color: black");
         console.log("%c keypresses : " + this.enable, "color: green");
         console.log("%c score : " + this.userScore, "color: green");
-        this.left.value--;
+        this.left--;
         this.update();
         this.playing = setTimeout(this.playBlock.bind(this), this.time.value);
         this.enable = [0, 0];
@@ -601,7 +590,7 @@ Engine.prototype.playBlock = function () {
         s += "<tr><td>☐</td><td>" + this.userScore[1] + "</td><td>☐</td><td>" + this.userScore[4] + "</td></tr>";
         s += "<tr><td>☒</td><td>" + this.userScore[2] + "</td><td>☒</td><td>" + this.userScore[5] + "</td></tr>";
         s += "</table>";
-        $("#" + this.resultsTrg).html(s);
+        $("#results").html(s);
         var incorrectVis = this.userScore[1] + this.userScore[2];
         var incorrectAud = this.userScore[4] + this.userScore[5];
         var threshold = this.blocks.value * (1 - this.threshold.value);
@@ -609,22 +598,22 @@ Engine.prototype.playBlock = function () {
         var lowerThreshold = Math.floor(threshold);
         if (incorrectVis <= lowerThreshold && incorrectAud <= lowerThreshold) {
             this.historicize(date.ddmmyy(), this.n.value);
-            $("#" + this.resultsTrg).append("<p class=\"results-text\">N is now:<br>" + ++this.n.value + "</p>");
+            $("#results").append("<p class=\"results-text\">N is now:<br>" + ++this.n.value + "</p>");
         } else if (incorrectVis > upperThreshold || incorrectAud > upperThreshold) {
             if (this.n.value !== 1) {
-                $("#" + this.resultsTrg).append("<p class=\"results-text\">N is now:<br>" + --this.n.value + "</p>");
+                $("#results").append("<p class=\"results-text\">N is now:<br>" + --this.n.value + "</p>");
             } else {
-                $("#" + this.resultsTrg).append("<p class=\"results-text\">N stays: 1<br>Keep trying</p>");
+                $("#results").append("<p class=\"results-text\">N stays: 1<br>Keep trying</p>");
             }
         } else {
             this.historicize(date.ddmmyy(), this.n.value);
-            $("#" + this.resultsTrg).append("<p class=\"results-text\">N stays: " + this.n.value + "<br>Keep trying</p>");
+            $("#results").append("<p class=\"results-text\">N stays: " + this.n.value + "<br>Keep trying</p>");
         }
         this.save();
         this.stop(this.n.value);
         this.runs++;
         this.results.yes();
-		this.progress.move(this.runs / 20 * 100);
+        this.progress.move(this.runs / 20 * 100);
     }
 };
 

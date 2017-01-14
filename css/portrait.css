@@ -23,15 +23,15 @@
 	font-size: 9vh;
 	text-align: center;
 }
-#level {
+#N-level {
 	font-size: 4vh;
 }
 #engine-button {
 	top: 2vh;
 	right: 2vh;
 }
-#eye, #ear {
-        font-size: 5vh;
+#eye-btn, #ear-btn {
+    font-size: 5vh;
     text-align: center;
     width: 49.5vw;
     line-height: 100%;
@@ -42,20 +42,20 @@
     padding: 3vh 0;
     border: 0.1vw solid #000;
 }
-#eye {
+#eye-btn {
 	left: 0;
     border-top-right-radius: 4px;
     border-width: 0 .25vw 0 0;
 }
-#ear {
+#ear-btn {
 	right: 0;
 	border-top-left-radius: 4px;
     border-width: 0 0 0 .25vw; 
 }
-#eye:before {
+#eye-btn:before {
   content: "Visual";
 }
-#ear:before {
+#ear-btn:before {
   content: "Audio";
 }
 .pop {
@@ -87,7 +87,7 @@
     bottom: 13vh;
     right: 2vh;
 }
-.navigation {
+#navigation {
 	padding: 2vh;
 }
 label[for="nav-trigger"] {
@@ -96,13 +96,13 @@ label[for="nav-trigger"] {
 	width: 6vh;
 	height: 6vh;
 }
-.nav-trigger:checked + label {
+#nav-trigger:checked + label {
 	left: 37vh;
 }
-.nav-trigger:checked ~ .site-wrap {
+#nav-trigger:checked ~ #site-wrap {
 	left: 35vh;
 }
-.nav-trigger + label, .site-wrap {
+#nav-trigger + label, #site-wrap {
 	transition: left 0.2s;
 }
 .nav-item label, .nav-item p, .nav-item span.range-label  {
