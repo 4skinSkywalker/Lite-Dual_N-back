@@ -1,19 +1,13 @@
 #grid {
-	position: absolute;
-    top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
 	height: 100vw;
 	width: 100vw;
-	border-collapse: collapse;
-	background: transparent;
 }
 .rotational-grid {
 	height: 70vw!important;
 	width: 70vw!important;
 }
 #grid td {
-	border: 0.5vh solid #333;
+	border: 1vw solid #333;
 }
 #status-bar {
 	padding-top: 2vh;

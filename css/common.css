@@ -5,6 +5,14 @@ input:focus, button:focus{outline:0!important}
 #status-bar * {
 	color: #222;
 }
+#grid {
+	position: absolute;
+    top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	border-collapse: collapse;
+	background: transparent;
+}
 #grid td {
 	vertical-align: middle;
 	height: 34%;
