@@ -405,9 +405,6 @@ Engine.prototype.stop = function (n) {
     n = n || this.n.value;
     clearTimeout(this.playing);
     this.reset();
-    this.blockCounter = -1;
-    this.enable = [0, 0];
-    this.userScore = [0, 0, 0, 0, 0, 0];
     this.calculateStimuli(this.blocks.value, n);
     this.functionizer("#engine-button", this.name + ".start()", "Play");
 };
