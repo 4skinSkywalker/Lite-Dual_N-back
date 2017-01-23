@@ -15,8 +15,8 @@ input:focus, button:focus{outline:0!important}
 }
 #grid td {
 	vertical-align: middle;
-	height: 34%;
-	width: 34%;
+	height: 33.33333%;
+	width: 33.33333%;
 }
 #grid td div {
 	height: 100%;
