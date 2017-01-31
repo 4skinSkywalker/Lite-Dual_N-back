@@ -183,7 +183,7 @@ Engine.prototype.populateNavigation = function () {
         s = "";
     }
     s += "<li class=\"nav-item\">";
-    s += "<p>Controls:<br>\"A\" key for visual<br>\"L\" key for audio</br></br></p>";
+    s += "<p><span style=\"color: #ffd700\">Controls:</span><br>\"A\" key for visual<br>\"L\" key for audio</br></br></p>";
     s += "</li>";
     $("#navigation").append(s);
 };
@@ -248,7 +248,7 @@ Engine.prototype.populateSiteWrap = function () {
     s += "<div id=\"left-stimuli\">" + this.left + "</div>";
     s += "</div>";
     s += "<button type=\"button\" id=\"engine-button\" class=\"btn-standard\"></button>";
-    s += "<table id=\"grid\" class=\"rotational-grid\" style=\"animation: rotating" + this.rotation.direction() + " " + this.rotation.value + "s linear infinite;\">";
+    s += "<table id=\"grid\">";
     for (var i = 0; i < 3; i++) {
         s += "<tr>";
         for (var j = 0; j < 3; j++) {
