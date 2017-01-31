@@ -2,6 +2,10 @@
 	height: 100vw;
 	width: 100vw;
 }
+.dot {
+    width: 2vw!important;
+    height: 2vw!important;
+}
 .rotational-grid {
 	height: 70vw!important;
 	width: 70vw!important;
@@ -83,6 +87,9 @@
 }
 #navigation {
 	padding: 2vh;
+}
+.nav-item input, .nav-item select {
+	margin-bottom: 24px;
 }
 label[for="nav-trigger"] {
 	top: 2vh;

@@ -23,6 +23,17 @@ input:focus, button:focus{outline:0!important}
 	width: 100%;
 	margin: auto;
 }
+.tile {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
+    text-align: center;
+}
+.dot {
+	border-radius: 50%;
+    background: #333;
+}
 #N-level {
     text-align: center;
 }

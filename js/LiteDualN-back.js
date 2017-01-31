@@ -63,13 +63,25 @@ function Engine(name) {
         type: "range",
         target: "rotation-duration",
         text: "Rotation:",
-        value: 60,
+        value: 30,
         min: 30,
         step: 10,
         MAX: 120,
         char: "s",
         direction: function () {
             return (Math.floor(Math.random() * 2) === 0) ? "-clockwise" : "-anticlockwise";
+        }
+    };
+	this.focusPoint = {
+        type: "range",
+        target: "focus-point",
+        text: "Focus Point:",
+        value: 0,
+        min: 0,
+        step: 1,
+        MAX: 1,
+        change: function (x) {
+            return (x === 1) ? "on" : "off";
         }
     };
     this.audio = {
@@ -221,7 +233,11 @@ Engine.prototype.onSettingChange = function (obj, key) {
             var sel = obj[key].value;
             that.howlerizer(sel, obj[key].selection[sel]);
         });
-    }
+    } else if (key === "focusPoint") {
+		this.onChangeAttacher(el, function () {
+			(obj[key].value === 1) ? $(".tile:eq(4)").append("<div class=\"dot\"></div>") : $(".tile:eq(4)").empty();
+        });
+	}
 };
 Engine.prototype.onChangeAttacher = function (el, foo) {
     $(el).on("change", foo);
@@ -338,6 +354,7 @@ Engine.prototype.markupInit = function () {
 };
 Engine.prototype.eventsInit = function () {
     var that = this;
+	$("#" + this.rotation.target).trigger("change");
     var sel = this.audio.value;
     this.howlerizer(sel, this.audio.selection[sel]);
     this.reset();
