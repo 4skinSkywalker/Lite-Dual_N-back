@@ -11,7 +11,7 @@ function Engine(name) {
         target: "stimulus-time",
         text: "Stimulus:",
         value: 3000,
-        min: 1500,
+        min: 1250,
         step: 250,
         MAX: 4500,
         char: "ms"
@@ -21,9 +21,9 @@ function Engine(name) {
         target: "matching-blocks",
         text: "Matching:",
         value: 6,
-        min: 3,
+        min: 5,
         step: 1,
-        MAX: 9
+        MAX: 20
     };
     this.n = {
         type: "range",
@@ -39,7 +39,7 @@ function Engine(name) {
         target: "success-threshold",
         text: "Threshold:",
         value: 0.8,
-        min: 0.7,
+        min: 0.6,
         step: 0.05,
         MAX: 1.0,
         char: "%",
