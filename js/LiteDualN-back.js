@@ -64,9 +64,9 @@ function Engine(name) {
         target: "rotation-duration",
         text: "Rotation:",
         value: 30,
-        min: 30,
-        step: 10,
-        MAX: 120,
+        min: 5,
+        step: 5,
+        MAX: 90,
         char: "s",
         direction: function () {
             return (Math.floor(Math.random() * 2) === 0) ? "-clockwise" : "-anticlockwise";
