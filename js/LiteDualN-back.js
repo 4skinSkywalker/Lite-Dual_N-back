@@ -63,7 +63,7 @@ function Engine(name) {
         type: "range",
         target: "rotation-duration",
         text: "Rotation:",
-        value: 30,
+        value: 0,
         min: 5,
         step: 5,
         MAX: 90,
