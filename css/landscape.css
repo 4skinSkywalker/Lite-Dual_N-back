@@ -22,24 +22,24 @@
 	font-size: 6.5vh;
 }
 @keyframes blur {
-  0% {
-    filter: blur(0.2vh);
-  }
-  40% {
-    filter: blur(0.2vh);
-  }
-  42% {
-    filter: blur(0);
-  }
-  44% {
-    filter: blur(0.4vh);
-  }
-  46% {
-    filter: blur(0.2vh);
-  }
-  100% {
-    filter: blur(0.2vh);
-  }
+	0% {
+		filter: blur(0.15vh);
+	}
+	40% {
+		filter: blur(0.15vh);
+	}
+	42% {
+		filter: blur(0);
+	}
+	44% {
+		filter: blur(0.3vh);
+	}
+	46% {
+		filter: blur(0.15vh);
+	}
+	100% {
+		filter: blur(0.15vh);
+	}
 }
 #left-stimuli {
     bottom: 4vh;
@@ -152,22 +152,22 @@ input[type=range].slider::-webkit-slider-thumb {
 @media (min-width:961px) {
 	@keyframes blur {
 		0% {
-			filter: blur(0.1vh);
+			filter: blur(0.06vh);
 		}
 		40% {
-			filter: blur(0.1vh);
+			filter: blur(0.06vh);
 		}
 		42% {
 			filter: blur(0);
 		}
 		44% {
-			filter: blur(0.2vh);
+			filter: blur(0.12vh);
 		}
 		46% {
-			filter: blur(0.1vh);
+			filter: blur(0.06vh);
 		}
 		100% {
-			filter: blur(0.1vh);
+			filter: blur(0.06vh);
 		}
 	}
 	.nav-item input, .nav-item select {

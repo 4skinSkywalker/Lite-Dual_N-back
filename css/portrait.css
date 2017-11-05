@@ -25,24 +25,24 @@
 	font-size: 4vh;
 }
 @keyframes blur {
-  0% {
-    filter: blur(0.2vw);
-  }
-  40% {
-    filter: blur(0.2vw);
-  }
-  42% {
-    filter: blur(0);
-  }
-  44% {
-    filter: blur(0.4vw);
-  }
-  46% {
-    filter: blur(0.2vw);
-  }
-  100% {
-    filter: blur(0.2vw);
-  }
+	0% {
+		filter: blur(0.15vw);
+	}
+	40% {
+		filter: blur(0.15vw);
+	}
+	42% {
+		filter: blur(0);
+	}
+	44% {
+		filter: blur(0.3vw);
+	}
+	46% {
+		filter: blur(0.15vw);
+	}
+	100% {
+		filter: blur(0.15vw);
+	}
 }
 #engine-button {
 	top: 2vh;
