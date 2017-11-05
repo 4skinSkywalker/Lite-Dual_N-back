@@ -11,7 +11,7 @@
 	width: 70vh!important;
 }
 #grid td {
-	border: 1vh solid #333;
+	border: 1vh solid rgba(0, 0, 0, 0.5);
 }
 #status-bar * {
 	position: absolute;
@@ -33,8 +33,8 @@
     font-size: 7vh;
     text-align: center;
     height: 10vh;
-    background: #333;
-    color: #111;
+    background: rgba(0, 0, 0, 0.5);
+    color: rgba(255, 255, 255, 0.75);
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -91,7 +91,7 @@
 	padding: 4vh;
 }
 .nav-item input, .nav-item select {
-	margin-bottom: 32px;
+	margin-bottom: 10px;
 }
 label[for="nav-trigger"] {
 	top: 4vh;
@@ -129,20 +129,6 @@ input[type=range].slider::-webkit-slider-thumb {
 	width: 6vh;
 }
 @media (min-width:961px) {
-	.btn-standard:hover {
-		color: #000;
-		background: #604e06;
-	}
-	.btn-popup:hover {
-		color: #604e06;
-	}
-	.btn-popup.reflected:hover {
-		color: #FFD700;
-	}
-	.btn-standard[disabled]:hover {
-		color: #000;
-		background: #111;
-	}
 	.nav-item input, .nav-item select {
 		margin-bottom: 8px;
 	}

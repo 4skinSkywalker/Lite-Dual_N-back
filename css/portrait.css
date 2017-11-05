@@ -11,7 +11,7 @@
 	width: 70vw!important;
 }
 #grid td {
-	border: 1vw solid #333;
+	border: 1vw solid rgba(0, 0, 0, 0.5);
 }
 #status-bar {
 	padding-top: 2vh;
@@ -33,12 +33,11 @@
     text-align: center;
     width: 49.5vw;
     line-height: 100%;
-    background: #333;
-    color: #111;
+    background: rgba(0, 0, 0, 0.5);
+    color: rgba(255, 255, 255, 0.75);
     position: absolute;
     bottom: 0;
     padding: 3vh 0;
-    border: 0.1vw solid #000;
 }
 #eye-btn {
 	left: 0;
@@ -89,7 +88,7 @@
 	padding: 2vh;
 }
 .nav-item input, .nav-item select {
-	margin-bottom: 24px;
+	margin-bottom: 10px;
 }
 label[for="nav-trigger"] {
 	top: 2vh;

@@ -147,7 +147,9 @@ Engine.prototype.getLayoutHTML = function () {
     s += "<ul id=\"navigation\"></ul>";
     s += "<input type=\"checkbox\" id=\"nav-trigger\"/>";
     s += "<label for=\"nav-trigger\"></label>";
-    s += "<div id=\"site-wrap\"></div>";
+    s += "<div id=\"site-wrap\">";
+	s += "<div class=\"kale-ntainer\"><section class=\"sect-1\"></section><section class=\"sect-2\"></section><section class=\"sect-3\"></section><section class=\"sect-4\"></section><section class=\"sect-5\"></section><section class=\"sect-6\"></section><section class=\"sect-7\"></section><section class=\"sect-8\"></section><section class=\"sect-9\"></section><section class=\"sect-10\"></section><section class=\"sect-11\"></section><section class=\"sect-12\"></section></div>";
+	s += "</div>";
     return s;
 };
 Engine.prototype.populateNavigation = function () {
