@@ -160,26 +160,6 @@ label[for="nav-trigger"] {
     opacity: 1;
   }
 }
-@keyframes blur {
-  0% {
-    filter: blur(1px);
-  }
-  40% {
-    filter: blur(1px);
-  }
-  42% {
-    filter: blur(0);
-  }
-  44% {
-    filter: blur(2px);
-  }
-  46% {
-    filter: blur(1px);
-  }
-  100% {
-    filter: blur(1px);
-  }
-}
 .nav-item input, .nav-item select {
 	margin: 8px 0;
 }

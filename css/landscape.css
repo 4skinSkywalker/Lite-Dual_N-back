@@ -21,6 +21,26 @@
 #N-level {
 	font-size: 6.5vh;
 }
+@keyframes blur {
+  0% {
+    filter: blur(0.2vh);
+  }
+  40% {
+    filter: blur(0.2vh);
+  }
+  42% {
+    filter: blur(0);
+  }
+  44% {
+    filter: blur(0.4vh);
+  }
+  46% {
+    filter: blur(0.2vh);
+  }
+  100% {
+    filter: blur(0.2vh);
+  }
+}
 #left-stimuli {
     bottom: 4vh;
     right: 4vh;
@@ -130,6 +150,26 @@ input[type=range].slider::-webkit-slider-thumb {
 	width: 6vh;
 }
 @media (min-width:961px) {
+	@keyframes blur {
+		0% {
+			filter: blur(0.1vh);
+		}
+		40% {
+			filter: blur(0.1vh);
+		}
+		42% {
+			filter: blur(0);
+		}
+		44% {
+			filter: blur(0.2vh);
+		}
+		46% {
+			filter: blur(0.1vh);
+		}
+		100% {
+			filter: blur(0.1vh);
+		}
+	}
 	.nav-item input, .nav-item select {
 		margin-bottom: 8px;
 	}
