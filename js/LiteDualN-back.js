@@ -155,7 +155,7 @@ Engine.prototype.getLayoutHTML = function () {
 Engine.prototype.populateNavigation = function () {
     var s = "";
     s += "<li class=\"nav-item\">";
-    s += "<p id=\"N-level\">N = " + this.n.value + "</p>";
+    s += "<p id=\"N-level\" class=\"neon\">N = " + this.n.value + "</p>";
     s += "</li>";
     $("#navigation").append(s);
     for (var key in this) {
@@ -165,13 +165,13 @@ Engine.prototype.populateNavigation = function () {
                     var ch = (this[key].char) ? this[key].char : "";
                     var txt = (this[key].change) ? this[key].change(this[key].value) + ch : this[key].value + ch;
                     s += "<li class=\"nav-item\">";
-                    s += "<span class=\"range-label\">" + this[key].text + " </span><span id=" + this[key].target + "-span class=\"range-label\">" + txt + "</span>";
-                    s += "<input type=\"range\" class=\"slider\" id=" + this[key].target + " min=" + this[key].min + " max=" + this[key].MAX + " step=" + this[key].step + " value=" + this[key].value + ">";
+                    s += "<span class=\"range-label neon\">" + this[key].text + " </span><span id=" + this[key].target + "-span class=\"range-label neon\">" + txt + "</span>";
+                    s += "<input type=\"range\" class=\"slider neon\" id=" + this[key].target + " min=" + this[key].min + " max=" + this[key].MAX + " step=" + this[key].step + " value=" + this[key].value + ">";
                     s += "</li>";
                 } else if (this[key].type === "selector") {
                     s += "<li class=\"nav-item\">";
-                    s += "<label for=" + this[key].target + ">" + this[key].text + "</label>";
-                    s += "<select class=\"option\" id=" + this[key].target + ">";
+                    s += "<label class=\"neon\" for=" + this[key].target + ">" + this[key].text + "</label>";
+                    s += "<select class=\"option neon\" id=" + this[key].target + ">";
                     for (var subkey in this[key].selection) {
                         s += "<option>" + subkey + "</option>";
                     }
@@ -185,7 +185,7 @@ Engine.prototype.populateNavigation = function () {
         s = "";
     }
     s += "<li class=\"nav-item\">";
-    s += "<p><span style=\"color: #ffd700\">Controls:</span><br>\"A\" key for visual<br>\"L\" key for audio</br></br></p>";
+    s += "<p class=\"neon\"><span style=\"color: #ffd700\">Controls:</span><br>\"A\" key for visual<br>\"L\" key for audio</br></br></p>";
     s += "</li>";
     $("#navigation").append(s);
 };
