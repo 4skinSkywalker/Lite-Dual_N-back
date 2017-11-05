@@ -66,7 +66,7 @@ section {
   transform-origin: 50% 100%;
   background-image: url('https://source.unsplash.com/random/?psychedelic');
   background-size: auto 150%;
-  animation: move-background 36s infinite alternate ease-in-out;
+  animation: move-background 12s infinite alternate ease-in-out;
 }
 .sect-1 {
   transform: translateX(-50%) rotateY(180deg) rotateZ(30deg);
