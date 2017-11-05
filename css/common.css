@@ -370,7 +370,7 @@ input[type=range].slider:focus::-webkit-slider-runnable-track {
   stroke: red;
 }
 .on {
-	background: #fff!important;
+	background: #f09!important;
 }
 .right {
 	background: #0c5a4a!important;
