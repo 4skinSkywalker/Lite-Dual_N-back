@@ -1,7 +1,7 @@
 function Engine(name) {
     this.name = name;
     this.results = new Pop(this.name + ".results", "results");
-    this.progress = new Progress("progress", "1vh", "transparent", "#fff");
+    this.progress = new Progress("progress", "1vh", "rgba(0, 0, 0, 0.33)", "#fff");
     this.chartist = new Pop(this.name + ".chartist", "chart");
     this.runs = 0;
     this.left = 0;

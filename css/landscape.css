@@ -19,7 +19,7 @@
     font-size: 10vh;
 }
 #N-level {
-	font-size: 6vh;
+	font-size: 6.5vh;
 }
 #left-stimuli {
     bottom: 4vh;
@@ -35,6 +35,7 @@
     height: 10vh;
     background: rgba(0, 0, 0, 0.5);
     color: rgba(255, 255, 255, 0.75);
+	border: 1px solid rgba(255, 255, 255, 0.1);
     position: absolute;
     top: 50%;
     transform: translateY(-50%);

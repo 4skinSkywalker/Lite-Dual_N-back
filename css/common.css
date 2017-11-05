@@ -271,6 +271,7 @@ label[for="nav-trigger"] {
 	position: absolute;
     background: rgba(0, 0, 0, 0.5);
     color: rgba(255, 255, 255, 0.75);
+	border: 1px solid rgba(255, 255, 255, 0.1);
     z-index: 10;
     border: 0;
     border-radius: 4px;
@@ -370,16 +371,16 @@ input[type=range].slider:focus::-webkit-slider-runnable-track {
   stroke: red;
 }
 .on {
-	background: #f09!important;
+	background: rgba(255, 0, 153, 0.5)!important;
 }
 .right {
-	background: #0c5a4a!important;
+	background: rgba(12, 90, 74, 0.5)!important;
 }
 .missed {
-	background: #613e05!important;
+	background: rgba(97, 62, 5, 0.5)!important;
 }
 .wrong {
-	background: #662900!important;
+	background: rgba(102, 41, 0, 0.5)!important;
 }
 @keyframes rotating-clockwise {
   from {
