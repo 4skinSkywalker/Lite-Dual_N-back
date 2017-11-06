@@ -64,7 +64,6 @@ section {
   height: 70vmax;
   clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
   transform-origin: 50% 100%;
-  background-image: url('https://source.unsplash.com/random/?psychedelic,fractal');
   background-size: auto 150%;
   animation: move-background 12s infinite alternate ease-in-out;
 }

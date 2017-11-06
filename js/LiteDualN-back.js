@@ -356,6 +356,7 @@ Engine.prototype.markupInit = function () {
 };
 Engine.prototype.eventsInit = function () {
     var that = this;
+	$("section").css('background-image', 'url("img/' + Math.ceil(Math.random() * 3) + '.jpg")');
 	$("#" + this.rotation.target).trigger("change");
     var sel = this.audio.value;
     this.howlerizer(sel, this.audio.selection[sel]);
