@@ -72,6 +72,18 @@ function Engine(name) {
             return (Math.floor(Math.random() * 2) === 0) ? "-clockwise" : "-anticlockwise";
         }
     };
+	this.kaleidoscope = {
+        type: "range",
+        target: "kaleidoscope",
+        text: "Kaleidos:",
+        value: 0,
+        min: 0,
+        step: 1,
+        MAX: 1,
+        change: function (x) {
+            return (x === 1) ? "on" : "off";
+        }
+    };
 	this.focusPoint = {
         type: "range",
         target: "focus-point",
@@ -239,6 +251,15 @@ Engine.prototype.onSettingChange = function (obj, key) {
 		this.onChangeAttacher(el, function () {
 			(obj[key].value === 1) ? $(".tile:eq(4)").append("<div class=\"dot\"></div>") : $(".tile:eq(4)").empty();
         });
+	} else if (key === "kaleidoscope") {
+		this.onChangeAttacher(el, function () {
+			if (obj[key].value === 1) {
+				var rnd = Math.ceil(Math.random() * 3);
+				$("section").css('background-image', 'url("img/' + rnd + '.jpg")');
+			} else {
+				$("section").css('background-image', '');
+			}
+        });
 	}
 };
 Engine.prototype.onChangeAttacher = function (el, foo) {
@@ -356,7 +377,6 @@ Engine.prototype.markupInit = function () {
 };
 Engine.prototype.eventsInit = function () {
     var that = this;
-	$("section").css('background-image', 'url("img/' + Math.ceil(Math.random() * 3) + '.jpg")');
 	$("#" + this.rotation.target).trigger("change");
     var sel = this.audio.value;
     this.howlerizer(sel, this.audio.selection[sel]);

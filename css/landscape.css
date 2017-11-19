@@ -11,7 +11,7 @@
 	width: 70vh!important;
 }
 #grid td {
-	border: 1vh solid rgba(0, 0, 0, 0.5);
+	border: 1vh solid rgba(128, 128, 128, 0.1);
 }
 #status-bar * {
 	position: absolute;
