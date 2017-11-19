@@ -383,7 +383,6 @@ Engine.prototype.eventsInit = function () {
     this.reset();
     var keyAllowed = {};
     $(document).keydown(function (e) {
-        e.preventDefault();
         e.stopPropagation();
         if (keyAllowed[e.which] === false) {
             return;
@@ -406,9 +405,6 @@ Engine.prototype.eventsInit = function () {
     });
     $(document).keyup(function (e) {
         keyAllowed[e.which] = true;
-    });
-    $(document).focus(function (e) {
-        keyAllowed = {};
     });
     document.querySelector("#eye-btn").addEventListener("touchstart", function (e) {
         e.preventDefault();
