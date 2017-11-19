@@ -197,7 +197,7 @@ Engine.prototype.populateNavigation = function () {
         s = "";
     }
     s += "<li class=\"nav-item\">";
-    s += "<p class=\"neon\"><span style=\"color: #ffd700\">Controls:</span><br>\"A\" key for visual<br>\"L\" key for audio</br></br></p>";
+    s += "<p class=\"neon\"><span style=\"color: #ffd700\">Controls:</span><br>\"A\" key for visual<br>\"L\" key for audio</br>\"S\" to start/stop</br></br></p>";
     s += "</li>";
     $("#navigation").append(s);
 };
@@ -396,6 +396,9 @@ Engine.prototype.eventsInit = function () {
             break;
         case 76:
             that.checkBlock.call(that, "audio");
+            break;
+		case 83:
+            $("#engine-button").click();
             break;
         default:
             return;
