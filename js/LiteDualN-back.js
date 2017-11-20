@@ -167,7 +167,7 @@ Engine.prototype.getLayoutHTML = function () {
 Engine.prototype.populateNavigation = function () {
     var s = "";
     s += "<li class=\"nav-item\">";
-    s += "<p id=\"N-level\" class=\"neon\">N = " + this.n.value + "</p>";
+    s += "<p id=\"N-level\">N = " + this.n.value + "</p>";
     s += "</li>";
     $("#navigation").append(s);
     for (var key in this) {
@@ -177,13 +177,13 @@ Engine.prototype.populateNavigation = function () {
                     var ch = (this[key].char) ? this[key].char : "";
                     var txt = (this[key].change) ? this[key].change(this[key].value) + ch : this[key].value + ch;
                     s += "<li class=\"nav-item\">";
-                    s += "<span class=\"range-label neon\">" + this[key].text + " </span><span id=" + this[key].target + "-span class=\"range-label neon\">" + txt + "</span>";
-                    s += "<input type=\"range\" class=\"slider neon\" id=" + this[key].target + " min=" + this[key].min + " max=" + this[key].MAX + " step=" + this[key].step + " value=" + this[key].value + ">";
+                    s += "<span class=\"range-label\">" + this[key].text + " </span><span id=" + this[key].target + "-span class=\"range-label\">" + txt + "</span>";
+                    s += "<input type=\"range\" class=\"slider\" id=" + this[key].target + " min=" + this[key].min + " max=" + this[key].MAX + " step=" + this[key].step + " value=" + this[key].value + ">";
                     s += "</li>";
                 } else if (this[key].type === "selector") {
                     s += "<li class=\"nav-item\">";
-                    s += "<label class=\"neon\" for=" + this[key].target + ">" + this[key].text + "</label>";
-                    s += "<select class=\"option neon\" id=" + this[key].target + ">";
+                    s += "<label for=" + this[key].target + ">" + this[key].text + "</label>";
+                    s += "<select class=\"option\" id=" + this[key].target + ">";
                     for (var subkey in this[key].selection) {
                         s += "<option>" + subkey + "</option>";
                     }
@@ -197,7 +197,7 @@ Engine.prototype.populateNavigation = function () {
         s = "";
     }
     s += "<li class=\"nav-item\">";
-    s += "<p class=\"neon\"><span style=\"color: #ffd700\">Controls:</span><br>\"A\" key for visual<br>\"L\" key for audio</br>\"S\" to start/stop</br></br></p>";
+    s += "<p><span style=\"color: #ffd700\">Controls:</span><br>\"A\" for visual<br>\"L\" for audio</br>\"S\" to start/stop</br></br></p>";
     s += "</li>";
     $("#navigation").append(s);
 };
@@ -397,6 +397,12 @@ Engine.prototype.eventsInit = function () {
             that.checkBlock.call(that, "audio");
             break;
 		case 83:
+			if (that.results.isOpened == 1) {
+				that.results.no();
+			}	
+			if (that.chartist.isOpened == 1) {
+				that.chartist.no();
+			}
             $("#engine-button").click();
             break;
         default:
@@ -655,6 +661,7 @@ Engine.prototype.playBlock = function () {
 
 function Pop(name, innerId) {
     this.name = name;
+	this.isOpened = 0;
     this.id = (this.name + "-popup").replace(/\./g, "-");
     this.innerId = innerId;
 }
@@ -665,6 +672,7 @@ Pop.prototype.yes = function () {
     el.style.width = 100 + "vw";
     var cont = document.getElementById(this.innerId);
     cont.style.display = "block";
+	this.isOpened = 1;
 };
 Pop.prototype.no = function () {
     var el = document.getElementById(this.id);
@@ -674,6 +682,7 @@ Pop.prototype.no = function () {
     var cont = document.getElementById(this.innerId);
     cont.style.display = "none";
     cont.innerHTML = "";
+	this.isOpened = 0;
 };
 Pop.prototype.getPopHTML = function (inStr) {
     var s = "";
