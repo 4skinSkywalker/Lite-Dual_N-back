@@ -260,13 +260,22 @@ input[type=range].slider:focus::-webkit-slider-runnable-track {
 	background: rgba(255, 0, 153, 0.5)!important;
 }
 .right {
-	background: rgba(12, 90, 74, 0.5)!important;
+	background: rgba(12, 190, 74, 0.5)!important;
 }
 .missed {
-	background: rgba(97, 62, 5, 0.5)!important;
+	background: rgba(225, 225, 0, 0.5)!important;
 }
 .wrong {
-	background: rgba(102, 41, 0, 0.5)!important;
+	background: rgba(192, 41, 0, 0.5)!important;
+}
+.right-inverted {
+	background: rgba(243, 65, 181, 0.5)!important;
+}
+.missed-inverted {
+	background: rgba(30, 30, 255, 0.5)!important;
+}
+.wrong-inverted {
+	background: rgba(63, 214, 255, 0.5)!important;
 }
 @keyframes rotating-clockwise {
   from {

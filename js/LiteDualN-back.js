@@ -419,10 +419,10 @@ Engine.prototype.eventsInit = function () {
             that.checkBlock.call(that, "audio");
             break;
 		case 83:
-			if (that.results.isOpened == 1) {
+			if (that.results.isOpened) {
 				that.results.no();
 			}	
-			if (that.chartist.isOpened == 1) {
+			if (that.chartist.isOpened) {
 				that.chartist.no();
 			}
             $("#engine-button").click();
@@ -575,13 +575,21 @@ Engine.prototype.checkBlock = function (c) {
             if (this.currBlock[this.blockCounter][p] === this.currBlock[this.blockCounter - this.n.value][p]) {
                 console.log("%c right " + c, "color: blue");
                 if (this.feedback.value) {
-                    this.wow(e, "right", this.time.value / 6);
+					if (this.invertColor.value) {
+						this.wow(e, "right-inverted", this.time.value / 6);
+					} else {
+						this.wow(e, "right", this.time.value / 6);
+					}
                 }
                 this.userScore[r] += 1;
             } else {
                 console.log("%c wrong " + c, "color: red");
                 if (this.feedback.value) {
-                    this.wow(e, "wrong", this.time.value / 6);
+					if (this.invertColor.value) {
+						this.wow(e, "wrong-inverted", this.time.value / 6);
+					} else {
+						this.wow(e, "wrong", this.time.value / 6);
+					}
                 }
                 this.userScore[w] += 1;
             }
@@ -606,8 +614,13 @@ Engine.prototype.playBlock = function () {
                 if (this.enable[0] < 1 && this.enable[1] < 1) {
                     console.log("%c both cues missed", "color: orange");
                     if (this.feedback.value) {
-                        this.wow("#eye-btn", "missed", this.time.value / 6);
-                        this.wow("#ear-btn", "missed", this.time.value / 6);
+						if (this.invertColor.value) {
+							this.wow("#eye-btn", "missed-inverted", this.time.value / 6);
+							this.wow("#ear-btn", "missed-inverted", this.time.value / 6);
+						} else {
+							this.wow("#eye-btn", "missed", this.time.value / 6);
+							this.wow("#ear-btn", "missed", this.time.value / 6);
+						}
                     }
                     this.userScore[1] += 1;
                     this.userScore[4] += 1;
@@ -616,7 +629,11 @@ Engine.prototype.playBlock = function () {
                 if (this.enable[0] < 1) {
                     console.log("%c visual cue missed", "color: orange");
                     if (this.feedback.value) {
-                        this.wow("#eye-btn", "missed", this.time.value / 6);
+                        if (this.invertColor.value) {
+							this.wow("#eye-btn", "missed-inverted", this.time.value / 6);
+						} else {
+							this.wow("#eye-btn", "missed", this.time.value / 6);
+						}
                     }
                     this.userScore[1] += 1;
                 }
@@ -624,7 +641,11 @@ Engine.prototype.playBlock = function () {
                 if (this.enable[1] < 1) {
                     console.log("%c audio cue missed", "color: orange");
                     if (this.feedback.value) {
-                        this.wow("#ear-btn", "missed", this.time.value / 6);
+                        if (this.invertColor.value) {
+							this.wow("#ear-btn", "missed-inverted", this.time.value / 6);
+						} else {
+							this.wow("#ear-btn", "missed", this.time.value / 6);
+						}
                     }
                     this.userScore[4] += 1;
                 }
