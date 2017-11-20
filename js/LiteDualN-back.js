@@ -96,6 +96,18 @@ function Engine(name) {
             return (x === 1) ? "on" : "off";
         }
     };
+    this.invertColor = {
+        type: "range",
+        target: "invert-color",
+        text: "Invert Color:",
+        value: 0,
+        min: 0,
+        step: 1,
+        MAX: 1,
+        change: function (x) {
+            return (x === 1) ? "on" : "off";
+        }
+    };
     this.audio = {
         type: "selector",
         target: "audio-selection",
@@ -258,6 +270,16 @@ Engine.prototype.onSettingChange = function (obj, key) {
 				$("section").css('background-image', 'url("img/' + rnd + '.jpg")');
 			} else {
 				$("section").css('background-image', '');
+			}
+        });
+	} else if (key === "invertColor") {
+		this.onChangeAttacher(el, function () {
+			if (obj[key].value === 1) {
+				$("#site-wrap").addClass('invert');
+				$('label[for="nav-trigger"]').css('background-image', "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1' x='0px' y='0px' width='30px' height='30px' viewBox='0 0 30 30' enable-background='new 0 0 30 30' xml:space='preserve'><rect fill='rgba(0, 0, 0, 0.75)' width='30' height='6'/><rect fill='rgba(0, 0, 0, 0.75)' y='24' width='30' height='6'/><rect fill='rgba(0, 0, 0, 0.75)' y='12' width='30' height='6'/></svg>\")");
+			} else {
+				$("#site-wrap").removeClass('invert');
+				$('label[for="nav-trigger"]').css('background-image', "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1' x='0px' y='0px' width='30px' height='30px' viewBox='0 0 30 30' enable-background='new 0 0 30 30' xml:space='preserve'><rect fill='rgba(255, 255, 255, 0.75)' width='30' height='6'/><rect fill='rgba(255, 255, 255, 0.75)' y='24' width='30' height='6'/><rect fill='rgba(255, 255, 255, 0.75)' y='12' width='30' height='6'/></svg>\")");
 			}
         });
 	}

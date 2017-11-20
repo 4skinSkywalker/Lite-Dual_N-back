@@ -119,6 +119,9 @@ section {
     background-position: 0% 100%;
   }
 }
+.invert {
+	filter: invert(100%);
+}
 #nav-trigger {
 	position: absolute;
 	clip: rect(0, 0, 0, 0);
