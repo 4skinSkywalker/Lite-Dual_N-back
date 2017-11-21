@@ -3,9 +3,10 @@ function Engine(name) {
     this.results = new Pop(this.name + ".results", "results");
     this.progress = new Progress("progress", "1vh", "rgba(0, 0, 0, 0.33)", "#fff");
     this.chartist = new Pop(this.name + ".chartist", "chart");
-    this.runs = 0;
+	this.version = "DNB_1.0.0.0";
+	this.dataContainer = {};
+	this.today = (new Date).ddmmyy();
     this.left = 0;
-    this.hist = {};
     this.time = {
         type: "range",
         target: "stimulus-time",
@@ -125,19 +126,19 @@ Engine.prototype.drawChart = function () {
     var MAXS = [];
     var avgs = [];
     var mins = [];
-    $.each(this.hist, function (key, value) {
-        if (that.MAX(value) !== undefined) {
-            MAXS.push(that.MAX(value));
+    $.each(this.dataContainer, function (key, value) {
+        if (that.MAX(value.data) !== undefined) {
+            MAXS.push(that.MAX(value.data));
         }
     });
-    $.each(this.hist, function (key, value) {
-        if (that.avg(value) !== undefined) {
-            avgs.push(that.avg(value));
+    $.each(this.dataContainer, function (key, value) {
+        if (that.avg(value.data) !== undefined) {
+            avgs.push(that.avg(value.data));
         }
     });
-    $.each(this.hist, function (key, value) {
-        if (that.min(value) !== undefined) {
-            mins.push(that.min(value));
+    $.each(this.dataContainer, function (key, value) {
+        if (that.min(value.data) !== undefined) {
+            mins.push(that.min(value.data));
         }
     });
     if (avgs.length === 0) {
@@ -318,18 +319,14 @@ Engine.prototype.functionizer = function (e, f, t) {
     $(e).text(t);
 };
 Engine.prototype.load = function () {
-    this.hist = JSON.parse(localStorage["andrey-pozdnyakov-lrdn"]);
+    this.dataContainer = JSON.parse(localStorage[this.version]);
 };
 Engine.prototype.save = function () {
-    localStorage["andrey-pozdnyakov-lrdn"] = JSON.stringify(this.hist);
+    localStorage[this.version] = JSON.stringify(this.dataContainer);
 };
-Engine.prototype.historicize = function (date, n) {
-    if (this.hist[date] !== undefined) {
-        this.hist[date].push(n);
-    } else {
-        this.hist[date] = [];
-        this.hist[date].push(n);
-    }
+Engine.prototype.storeData = function (date, pointer, n) {
+	this.dataContainer[date].runs = pointer;
+	this.dataContainer[date].data.push(n);
 };
 Engine.prototype.MAX = function (array) {
     if (array.length >= 2) {
@@ -382,7 +379,8 @@ Engine.prototype.wow = function (s, c, t) {
     }, t);
 };
 Engine.prototype.savedataInit = function () {
-    if (!localStorage["andrey-pozdnyakov-lrdn"]) {
+    if (!localStorage[this.version]) {
+		this.dataContainer[this.today] = {"runs": 0, "data": []};
         this.save();
     } else {
         this.load();
@@ -607,6 +605,10 @@ Engine.prototype.createBlock = function () {
     console.log(this.currBlock);
     console.log("%c matching blocks: " + blockEval, "color: blue");
 };
+Engine.prototype.updateData = function () {
+	var runs = ++this.dataContainer[this.today].runs;
+	this.storeData(this.today, runs, this.n.value);
+};
 Engine.prototype.playBlock = function () {
     if (++this.blockCounter < this.currBlockLen) {
         if (this.blockCounter > this.n.value) {
@@ -665,7 +667,6 @@ Engine.prototype.playBlock = function () {
         this.playing = setTimeout(this.playBlock.bind(this), this.time.value);
         this.enable = [0, 0];
     } else {
-        var date = new Date();
         this.userScore[1] = this.blocks.value - this.userScore[0];
         this.userScore[4] = this.blocks.value - this.userScore[3];
         var s = "";
@@ -682,7 +683,7 @@ Engine.prototype.playBlock = function () {
         var upperThreshold = Math.ceil(threshold);
         var lowerThreshold = Math.floor(threshold);
         if (incorrectVis <= lowerThreshold && incorrectAud <= lowerThreshold) {
-            this.historicize(date.ddmmyy(), this.n.value);
+			this.updateData();
             $("#results").append("<p class=\"results-text\">N is now:<br>" + ++this.n.value + "</p>");
         } else if (incorrectVis > upperThreshold || incorrectAud > upperThreshold) {
             if (this.n.value !== 1) {
@@ -691,14 +692,13 @@ Engine.prototype.playBlock = function () {
                 $("#results").append("<p class=\"results-text\">N stays: 1<br>Keep trying</p>");
             }
         } else {
-            this.historicize(date.ddmmyy(), this.n.value);
+			this.updateData();
             $("#results").append("<p class=\"results-text\">N stays: " + this.n.value + "<br>Keep trying</p>");
         }
-        this.save();
+		this.save();
         this.stop(this.n.value);
-        this.runs++;
         this.results.yes();
-        this.progress.move(this.runs / 20 * 100);
+        this.progress.move(this.dataContainer[this.today].runs / 20 * 100);
     }
 };
 
