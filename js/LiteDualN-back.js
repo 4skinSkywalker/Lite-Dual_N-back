@@ -324,9 +324,18 @@ Engine.prototype.load = function () {
 Engine.prototype.save = function () {
     localStorage[this.version] = JSON.stringify(this.dataContainer);
 };
-Engine.prototype.storeData = function (date, pointer, n) {
-	this.dataContainer[date].runs = pointer;
-	this.dataContainer[date].data.push(n);
+Engine.prototype.initData = function (date) {
+	if (this.dataContainer[date] === undefined) {
+		this.dataContainer[date] = {"runs": 0, "data": []};
+	}
+	this.save();
+};
+Engine.prototype.updateData = function (go_to, n) {
+	this.dataContainer[this.today].runs = go_to;
+	if (n !== undefined) {
+		this.dataContainer[this.today].data.push(n);
+	}
+	this.save();
 };
 Engine.prototype.MAX = function (array) {
     if (array.length >= 2) {
@@ -380,10 +389,10 @@ Engine.prototype.wow = function (s, c, t) {
 };
 Engine.prototype.savedataInit = function () {
     if (!localStorage[this.version]) {
-		this.dataContainer[this.today] = {"runs": 0, "data": []};
-        this.save();
+		this.initData(this.today);
     } else {
         this.load();
+		this.initData(this.today);
     }
 };
 Engine.prototype.markupInit = function () {
@@ -605,10 +614,6 @@ Engine.prototype.createBlock = function () {
     console.log(this.currBlock);
     console.log("%c matching blocks: " + blockEval, "color: blue");
 };
-Engine.prototype.updateData = function () {
-	var runs = ++this.dataContainer[this.today].runs;
-	this.storeData(this.today, runs, this.n.value);
-};
 Engine.prototype.playBlock = function () {
     if (++this.blockCounter < this.currBlockLen) {
         if (this.blockCounter > this.n.value) {
@@ -682,20 +687,21 @@ Engine.prototype.playBlock = function () {
         var threshold = this.blocks.value * (1 - this.threshold.value);
         var upperThreshold = Math.ceil(threshold);
         var lowerThreshold = Math.floor(threshold);
+		var old_runs = this.dataContainer[this.today].runs;
         if (incorrectVis <= lowerThreshold && incorrectAud <= lowerThreshold) {
-			this.updateData();
-            $("#results").append("<p class=\"results-text\">N is now:<br>" + ++this.n.value + "</p>");
+			this.updateData(++old_runs, ++this.n.value);
+            $("#results").append("<p class=\"results-text\">N is now: " + ++this.n.value + "</p>");
         } else if (incorrectVis > upperThreshold || incorrectAud > upperThreshold) {
+			this.updateData(++old_runs);
             if (this.n.value !== 1) {
-                $("#results").append("<p class=\"results-text\">N is now:<br>" + --this.n.value + "</p>");
+                $("#results").append("<p class=\"results-text\">N is now: " + --this.n.value + "<br>N won't be indexed</p>");
             } else {
-                $("#results").append("<p class=\"results-text\">N stays: 1<br>Keep trying</p>");
+                $("#results").append("<p class=\"results-text\">N stays: 1<br>N won't be indexed<br>Keep trying</p>");
             }
         } else {
-			this.updateData();
+			this.updateData(++old_runs, this.n.value);
             $("#results").append("<p class=\"results-text\">N stays: " + this.n.value + "<br>Keep trying</p>");
         }
-		this.save();
         this.stop(this.n.value);
         this.results.yes();
         this.progress.move(this.dataContainer[this.today].runs / 20 * 100);
