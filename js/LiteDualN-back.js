@@ -123,6 +123,7 @@ function Engine(name) {
 }
 Engine.prototype.drawChart = function () {
     var that = this;
+	this.progress.move(this.dataContainer[this.today].runs / 20 * 100);
     var MAXS = [];
     var avgs = [];
     var mins = [];
@@ -399,6 +400,7 @@ Engine.prototype.markupInit = function () {
     $("body").append(this.getLayoutHTML(), this.results.getPopHTML(), this.chartist.getPopHTML());
     $("#site-wrap").append("<button onclick=" + this.name + ".drawChart() style=\"z-index:50\" class=\"btn-popup reflected\">★</button>");
     $("#" + this.results.id).append(this.progress.getProgressHTML());
+	$("#" + this.chartist.id).append(this.progress.getProgressHTML());
     this.populateSiteWrap();
     this.populateNavigation();
     this.calculateStimuli(this.blocks.value, this.n.value);
@@ -748,8 +750,8 @@ Pop.prototype.getPopHTML = function (inStr) {
 
 function Progress(name, height, background, color) {
     this.name = name;
-    this.progressId = this.name + "-outer";
-    this.barId = this.name + "-inner";
+    this.progressClass = this.name + "-outer";
+    this.barClass= this.name + "-inner";
     this.height = height;
     this.background = background;
     this.color = color;
@@ -757,21 +759,23 @@ function Progress(name, height, background, color) {
 }
 Progress.prototype.getProgressHTML = function () {
     var s = "";
-    s += "<div id=" + this.progressId + " style=\"position:absolute; z-index:40; width:100%; height:" + this.height + "; top:0; left:0; background-color:" + this.background + "\">";
-    s += "<div id=" + this.barId + " style=\"position:absolute; width:0; height:100%; background-color:" + this.color + "\"></div>";
+    s += "<div class=" + this.progressClass + " style=\"position:absolute; z-index:40; width:100%; height:" + this.height + "; top:0; left:0; background-color:" + this.background + "\">";
+    s += "<div class=" + this.barClass + " style=\"position:absolute; width:0; height:100%; background-color:" + this.color + "\"></div>";
     s += "</div>";
     return s;
 };
 Progress.prototype.move = function (curr) {
     this.current = curr;
-    this.el = document.getElementById(this.barId);
-    this.advance = function () {
-        if (this.stored >= this.current) {
-            clearInterval(this.interval);
-        } else {
-            this.stored++;
-            this.el.style.width = this.stored + "%";
-        }
-    }
-    this.interval = setInterval(this.advance.bind(this), 10);
+	that = this;
+	Array.prototype.forEach.call(document.getElementsByClassName(this.barClass), function (item, index) {
+		that.advance = function () {
+			if (that.stored >= that.current) {
+				clearInterval(that.interval);
+			} else {
+				that.stored++;
+				item.style.width = that.stored + "%";
+			}
+		}
+		that.interval = setInterval(that.advance.bind(that), 10);
+	});
 };
