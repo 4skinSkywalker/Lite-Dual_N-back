@@ -691,8 +691,9 @@ Engine.prototype.playBlock = function () {
         var lowerThreshold = Math.floor(threshold);
 		var old_runs = this.dataContainer[this.today].runs;
         if (incorrectVis <= lowerThreshold && incorrectAud <= lowerThreshold) {
-			this.updateData(++old_runs, ++this.n.value);
-            $("#results").append("<p class=\"results-text\">N is now: " + ++this.n.value + "</p>");
+			var n_inc = ++this.n.value;
+			this.updateData(++old_runs, n_inc);
+            $("#results").append("<p class=\"results-text\">N is now: " + n_inc + "</p>");
         } else if (incorrectVis > upperThreshold || incorrectAud > upperThreshold) {
 			this.updateData(++old_runs);
             if (this.n.value !== 1) {
