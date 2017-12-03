@@ -39,7 +39,7 @@ function Engine(name) {
         type: "range",
         target: "success-threshold",
         text: "Threshold:",
-        value: 0.8,
+        value: 0.7,
         min: 0.6,
         step: 0.05,
         MAX: 1.0,
@@ -696,7 +696,7 @@ Engine.prototype.playBlock = function () {
         if (incorrectVis <= lowerThreshold && incorrectAud <= lowerThreshold) {
 			this.updateData(++old_runs, this.n.value);
             $("#results").append("<p class=\"results-text\">N is now: " + ++this.n.value + "</p>");
-        } else if (incorrectVis < upperThreshold || incorrectAud < upperThreshold) {
+        } else if (incorrectVis <= upperThreshold || incorrectAud <= upperThreshold) {
 			this.updateData(++old_runs, this.n.value);
             $("#results").append("<p class=\"results-text\">N stays: " + this.n.value + "<br>Keep trying</p>");
         } else {
