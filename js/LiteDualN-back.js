@@ -696,7 +696,7 @@ Engine.prototype.playBlock = function () {
         if (incorrectVis <= lowerThreshold && incorrectAud <= lowerThreshold) {
 			this.updateData(++old_runs, this.n.value);
             $("#results").append("<p class=\"results-text\">N is now: " + ++this.n.value + "</p>");
-        } else if ((incorrectVis > lowerThreshold && incorrectVis <= upperThreshold) && (incorrectAud > lowerThreshold && incorrectAud <= upperThreshold)) {
+        } else if (incorrectVis < upperThreshold || incorrectAud < upperThreshold) {
 			this.updateData(++old_runs, this.n.value);
             $("#results").append("<p class=\"results-text\">N stays: " + this.n.value + "<br>Keep trying</p>");
         } else {
