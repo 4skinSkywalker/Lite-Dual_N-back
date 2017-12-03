@@ -12,7 +12,7 @@ function Engine(name) {
         target: "stimulus-time",
         text: "Stimulus:",
         value: 3000,
-        min: 1250,
+        min: 1500,
         step: 250,
         MAX: 4500,
         char: "ms"
@@ -21,10 +21,10 @@ function Engine(name) {
         type: "range",
         target: "matching-blocks",
         text: "Matching:",
-        value: 6,
-        min: 5,
+        value: 8,
+        min: 4,
         step: 1,
-        MAX: 20
+        MAX: 12
     };
     this.n = {
         type: "range",
@@ -33,7 +33,7 @@ function Engine(name) {
         value: 2,
         min: 1,
         step: 1,
-        MAX: 9
+        MAX: 10
     };
     this.threshold = {
         type: "range",
@@ -116,7 +116,10 @@ function Engine(name) {
         value: "Natural Numbers",
         selection: {
             "Natural Numbers": [1, 2, 3, 4, 5, 6, 7, 8],
-            "Prime Numbers": [2, 3, 5, 7, 11, 13, 17, 19]
+            "Prime Numbers": [2, 3, 5, 7, 11, 13, 17, 19],
+			"Corsica Letters": ["h", "j", "k", "l", "q", "r", "s", "t"],
+            "Letters": ["c", "h", "k", "l", "q", "r", "s", "t"],
+            "Piano": ["A4", "B4", "C4", "C5", "D4", "E4", "F4", "G4"]
         }
     };
     this.loadedSounds = [];
@@ -693,16 +696,16 @@ Engine.prototype.playBlock = function () {
         if (incorrectVis <= lowerThreshold && incorrectAud <= lowerThreshold) {
 			this.updateData(++old_runs, this.n.value);
             $("#results").append("<p class=\"results-text\">N is now: " + ++this.n.value + "</p>");
-        } else if (incorrectVis > upperThreshold || incorrectAud > upperThreshold) {
+        } else if ((incorrectVis > lowerThreshold && incorrectVis <= upperThreshold) && (incorrectAud > lowerThreshold && incorrectAud <= upperThreshold)) {
+			this.updateData(++old_runs, this.n.value);
+            $("#results").append("<p class=\"results-text\">N stays: " + this.n.value + "<br>Keep trying</p>");
+        } else {
 			this.updateData(++old_runs);
             if (this.n.value !== 1) {
                 $("#results").append("<p class=\"results-text\">N is now: " + --this.n.value + "<br>N won't be indexed</p>");
             } else {
                 $("#results").append("<p class=\"results-text\">N stays: 1<br>N won't be indexed<br>Keep trying</p>");
             }
-        } else {
-			this.updateData(++old_runs, this.n.value);
-            $("#results").append("<p class=\"results-text\">N stays: " + this.n.value + "<br>Keep trying</p>");
         }
         this.stop(this.n.value);
         this.results.yes();
