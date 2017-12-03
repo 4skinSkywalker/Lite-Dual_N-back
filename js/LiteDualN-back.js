@@ -39,7 +39,7 @@ function Engine(name) {
         type: "range",
         target: "success-threshold",
         text: "Threshold:",
-        value: 0.7,
+        value: 0.8,
         min: 0.6,
         step: 0.05,
         MAX: 1.0,
