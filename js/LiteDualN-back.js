@@ -115,9 +115,7 @@ function Engine(name) {
         text: "Audio:",
         value: "Natural Numbers",
         selection: {
-            "Natural Numbers": [1, 2, 3, 4, 5, 6, 7, 8],
-            "Prime Numbers": [2, 3, 5, 7, 11, 13, 17, 19],
-			"Corsica Letters": ["h", "j", "k", "l", "q", "r", "s", "t"],
+            "Numbers": [1, 2, 3, 4, 5, 6, 7, 8],
             "Letters": ["c", "h", "k", "l", "q", "r", "s", "t"],
             "Piano": ["A4", "B4", "C4", "C5", "D4", "E4", "F4", "G4"]
         }
