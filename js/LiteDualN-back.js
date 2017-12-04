@@ -113,7 +113,7 @@ function Engine(name) {
         type: "selector",
         target: "audio-selection",
         text: "Audio:",
-        value: "Natural Numbers",
+        value: "Numbers",
         selection: {
             "Numbers": [1, 2, 3, 4, 5, 6, 7, 8],
             "Letters": ["c", "h", "k", "l", "q", "r", "s", "t"],
