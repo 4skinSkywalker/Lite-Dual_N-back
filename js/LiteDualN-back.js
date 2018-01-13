@@ -120,7 +120,7 @@ function Engine(name) {
             "Piano": ["A4", "B4", "C4", "C5", "D4", "E4", "F4", "G4"]
         }
     };
-    this.colorMap = ["white", "lawngreen ", "red", "aqua", "black", "orange", "yellow", "blue"]
+    this.colorMap = ["white", "lime", "red", "cyan", "black", "orange", "yellow", "blue"]
     this.loadedSounds = [];
 }
 Engine.prototype.drawChart = function () {
@@ -385,7 +385,7 @@ Engine.prototype.howlerizer = function (dir, a) {
     });
 };
 Engine.prototype.wow = function (s, c, t) {
-    if(c.indexOf("_") !== false) {
+    if(c.indexOf("_") > -1) {
       $(s).css("background", c.replace("_", ""));
       setTimeout(function () {
           $(s).removeAttr("style");
