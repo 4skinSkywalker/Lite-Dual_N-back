@@ -120,7 +120,7 @@ function Engine(name) {
             "Piano": ["A4", "B4", "C4", "C5", "D4", "E4", "F4", "G4"]
         }
     };
-    this.colorMap = ["white", "green", "red", "aqua", "black", "orange", "yellow", "blue"]
+    this.colorMap = ["white", "lawngreen ", "red", "aqua", "black", "orange", "yellow", "blue"]
     this.loadedSounds = [];
 }
 Engine.prototype.drawChart = function () {
