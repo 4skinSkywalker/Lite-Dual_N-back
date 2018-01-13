@@ -41,7 +41,7 @@ input:focus, button:focus{outline:0!important}
 	overflow: hidden;
 	min-width: 100vw;
 	min-height: 100vh;
-	background: #000;
+	background: #777;
 	position: relative;
 	top: 0;
 	bottom: 100%;
@@ -237,7 +237,7 @@ input[type=range].slider:focus::-webkit-slider-runnable-track {
 .ct-chart-line{
     overflow:visible!important;
 }
-.ct-grid { 
+.ct-grid {
 	stroke: white;
 }
 .ct-label {

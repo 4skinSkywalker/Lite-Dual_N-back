@@ -120,6 +120,7 @@ function Engine(name) {
             "Piano": ["A4", "B4", "C4", "C5", "D4", "E4", "F4", "G4"]
         }
     };
+    this.colorMap = ["white", "green", "red", "aqua", "black", "orange", "yellow", "blue"]
     this.loadedSounds = [];
 }
 Engine.prototype.drawChart = function () {
@@ -384,10 +385,17 @@ Engine.prototype.howlerizer = function (dir, a) {
     });
 };
 Engine.prototype.wow = function (s, c, t) {
-    $(s).addClass(c);
-    setTimeout(function () {
-        $(s).removeClass(c);
-    }, t);
+    if(c.indexOf("_") !== false) {
+      $(s).css("background", c.replace("_", ""));
+      setTimeout(function () {
+          $(s).removeAttr("style");
+      }, t);
+    } else {
+      $(s).addClass(c);
+      setTimeout(function () {
+          $(s).removeClass(c);
+      }, t);
+    }
 };
 Engine.prototype.savedataInit = function () {
     if (!localStorage[this.version]) {
@@ -431,7 +439,7 @@ Engine.prototype.eventsInit = function () {
 		case 83:
 			if (that.results.isOpened) {
 				that.results.no();
-			}	
+			}
 			if (that.chartist.isOpened) {
 				that.chartist.no();
 			}
@@ -663,7 +671,7 @@ Engine.prototype.playBlock = function () {
         }
         if (this.currBlock[this.blockCounter]) {
             var blockLight = (this.currBlock[this.blockCounter][0] < 5) ? this.currBlock[this.blockCounter][0] - 1 : this.currBlock[this.blockCounter][0];
-            this.wow(".tile:eq(" + blockLight + ")", "on", this.time.value / 6);
+            this.wow(".tile:eq(" + blockLight + ")", "_" + this.colorMap[this.currBlock[this.blockCounter][1] - 1], this.time.value / 6);
             this.loadedSounds[this.currBlock[this.blockCounter][1] - 1].play();
         }
         console.log("%c id : #" + this.blockCounter, "color: black");

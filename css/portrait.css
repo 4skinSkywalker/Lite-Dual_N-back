@@ -11,7 +11,7 @@
 	width: 70vw!important;
 }
 #grid td {
-	border: 1vw solid rgba(128, 128, 128, 0.1);
+	border: 1vw solid rgba(0, 0, 0, 0.1);
 }
 #status-bar {
 	padding-top: 2vh;
@@ -68,7 +68,7 @@
 #ear-btn {
 	right: 0;
 	border-top-left-radius: 4px;
-    border-width: 1px; 
+    border-width: 1px;
 }
 #eye-btn:before {
   content: "Visual";
