@@ -41,7 +41,7 @@ input:focus, button:focus{outline:0!important}
 	overflow: hidden;
 	min-width: 100vw;
 	min-height: 100vh;
-	background: #777;
+	background: #808080;
 	position: relative;
 	top: 0;
 	bottom: 100%;
