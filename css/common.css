@@ -48,80 +48,6 @@ input:focus, button:focus{outline:0!important}
 	left: 0;
 	z-index: 1;
 }
-.kale-ntainer {
-  position: absolute;
-  width: 140vmax;
-  height: 140vmax;
-  top: 50%;
-  left: 50%;
-  animation: spin 60s linear infinite;
-}
-section {
-  position: absolute;
-  left: 50%;
-  bottom: 50%;
-  width: 37.513vmax;
-  height: 70vmax;
-  clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
-  transform-origin: 50% 100%;
-  background-size: auto 150%;
-  animation: move-background 12s infinite alternate ease-in-out;
-}
-.sect-1 {
-  transform: translateX(-50%) rotateY(180deg) rotateZ(30deg);
-}
-.sect-2 {
-  transform: translateX(-50%) rotateZ(60deg);
-}
-.sect-3 {
-  transform: translateX(-50%) rotateY(180deg) rotateZ(90deg);
-}
-.sect-4 {
-  transform: translateX(-50%) rotateZ(120deg);
-}
-.sect-5 {
-  transform: translateX(-50%) rotateY(180deg) rotateZ(150deg);
-}
-.sect-6 {
-  transform: translateX(-50%) rotateZ(180deg);
-}
-.sect-7 {
-  transform: translateX(-50%) rotateY(180deg) rotateZ(210deg);
-}
-.sect-8 {
-  transform: translateX(-50%) rotateZ(240deg);
-}
-.sect-9 {
-  transform: translateX(-50%) rotateY(180deg) rotateZ(270deg);
-}
-.sect-10 {
-  transform: translateX(-50%) rotateZ(300deg);
-}
-.sect-11 {
-  transform: translateX(-50%) rotateY(180deg) rotateZ(330deg);
-}
-.sect-12 {
-  transform: translateX(-50%) rotateZ(360deg);
-}
-@keyframes spin {
-  0% {
-    transform: translateX(-50%) translateY(-50%) rotateZ(0deg);
-  }
-  100% {
-    transform: translateX(-50%) translateY(-50%) rotateZ(-360deg);
-  }
-}
-@keyframes move-background {
-  0% {
-    background-position: 100% 0%;
-  }
-  100% {
-    background-position: 0% 100%;
-  }
-}
-.invert {
-	filter: invert(100%);
-}
 #nav-trigger {
 	position: absolute;
 	clip: rect(0, 0, 0, 0);
@@ -267,15 +193,6 @@ input[type=range].slider:focus::-webkit-slider-runnable-track {
 }
 .wrong {
 	background: rgba(192, 41, 0, 0.5)!important;
-}
-.right-inverted {
-	background: rgba(243, 65, 181, 0.5)!important;
-}
-.missed-inverted {
-	background: rgba(30, 30, 255, 0.5)!important;
-}
-.wrong-inverted {
-	background: rgba(63, 214, 255, 0.5)!important;
 }
 @keyframes rotating-clockwise {
   from {

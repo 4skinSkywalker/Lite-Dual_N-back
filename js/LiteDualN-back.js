@@ -1,11 +1,12 @@
 function Engine(name) {
     this.name = name;
     this.results = new Pop(this.name + ".results", "results");
-    this.progress = new Progress("progress", "1vh", "rgba(0, 0, 0, 0.33)", "#fff");
+    this.progressRes = new Progress("progressRes", "1vh", "rgba(0, 0, 0, 0.33)", "#fff");
     this.chartist = new Pop(this.name + ".chartist", "chart");
-	this.version = "DNB_1.0.0.0";
-	this.dataContainer = {};
-	this.today = (new Date).ddmmyy();
+    this.progressCha = new Progress("progressCha", "1vh", "rgba(0, 0, 0, 0.33)", "#fff");
+    this.version = "DNB_1.0.0.0";
+    this.dataContainer = {};
+    this.today = (new Date).ddmmyy();
     this.left = 0;
     this.time = {
         type: "range",
@@ -44,7 +45,7 @@ function Engine(name) {
         step: 0.05,
         MAX: 1.0,
         char: "%",
-        change: function (x) {
+        change: function(x) {
             return x * 100;
         }
     };
@@ -56,7 +57,7 @@ function Engine(name) {
         min: 0,
         step: 1,
         MAX: 1,
-        change: function (x) {
+        change: function(x) {
             return (x === 1) ? "on" : "off";
         }
     };
@@ -69,23 +70,11 @@ function Engine(name) {
         step: 5,
         MAX: 90,
         char: "s",
-        direction: function () {
+        direction: function() {
             return (Math.floor(Math.random() * 2) === 0) ? "-clockwise" : "-anticlockwise";
         }
     };
-	this.kaleidoscope = {
-        type: "range",
-        target: "kaleidoscope",
-        text: "Kaleidos:",
-        value: 0,
-        min: 0,
-        step: 1,
-        MAX: 1,
-        change: function (x) {
-            return (x === 1) ? "on" : "off";
-        }
-    };
-	this.focusPoint = {
+    this.focusPoint = {
         type: "range",
         target: "focus-point",
         text: "Focus Point:",
@@ -93,19 +82,7 @@ function Engine(name) {
         min: 0,
         step: 1,
         MAX: 1,
-        change: function (x) {
-            return (x === 1) ? "on" : "off";
-        }
-    };
-    this.invertColor = {
-        type: "range",
-        target: "invert-color",
-        text: "Invert Color:",
-        value: 0,
-        min: 0,
-        step: 1,
-        MAX: 1,
-        change: function (x) {
+        change: function(x) {
             return (x === 1) ? "on" : "off";
         }
     };
@@ -123,29 +100,29 @@ function Engine(name) {
     this.colorMap = ["white", "lime", "red", "cyan", "black", "orange", "yellow", "blue"]
     this.loadedSounds = [];
 }
-Engine.prototype.drawChart = function () {
+Engine.prototype.drawChart = function() {
     var that = this;
-	this.progress.move(this.dataContainer[this.today].runs / 20 * 100);
+    this.progressCha.move(this.dataContainer[this.today].runs / 20 * 100);
     var MAXS = [];
     var avgs = [];
     var mins = [];
-    $.each(this.dataContainer, function (key, value) {
+    $.each(this.dataContainer, function(key, value) {
         if (that.MAX(value.data) !== undefined) {
             MAXS.push(that.MAX(value.data));
         }
     });
-    $.each(this.dataContainer, function (key, value) {
+    $.each(this.dataContainer, function(key, value) {
         if (that.avg(value.data) !== undefined) {
             avgs.push(that.avg(value.data));
         }
     });
-    $.each(this.dataContainer, function (key, value) {
+    $.each(this.dataContainer, function(key, value) {
         if (that.min(value.data) !== undefined) {
             mins.push(that.min(value.data));
         }
     });
     if (avgs.length === 0) {
-        setTimeout(function () {
+        setTimeout(function() {
             alert("There are insufficient data to construct the graph.");
         }, 400);
     } else {
@@ -170,17 +147,15 @@ Engine.prototype.drawChart = function () {
         }
     });
 };
-Engine.prototype.getLayoutHTML = function () {
+Engine.prototype.getLayoutHTML = function() {
     var s = "";
     s += "<ul id=\"navigation\"></ul>";
     s += "<input type=\"checkbox\" id=\"nav-trigger\"/>";
     s += "<label for=\"nav-trigger\"></label>";
-    s += "<div id=\"site-wrap\">";
-	s += "<div class=\"kale-ntainer\"><section class=\"sect-1\"></section><section class=\"sect-2\"></section><section class=\"sect-3\"></section><section class=\"sect-4\"></section><section class=\"sect-5\"></section><section class=\"sect-6\"></section><section class=\"sect-7\"></section><section class=\"sect-8\"></section><section class=\"sect-9\"></section><section class=\"sect-10\"></section><section class=\"sect-11\"></section><section class=\"sect-12\"></section></div>";
-	s += "</div>";
+    s += "<div id=\"site-wrap\"></div>";
     return s;
 };
-Engine.prototype.populateNavigation = function () {
+Engine.prototype.populateNavigation = function() {
     var s = "";
     s += "<li class=\"nav-item\">";
     s += "<p id=\"N-level\">N = " + this.n.value + "</p>";
@@ -217,28 +192,28 @@ Engine.prototype.populateNavigation = function () {
     s += "</li>";
     $("#navigation").append(s);
 };
-Engine.prototype.onSettingChange = function (obj, key) {
+Engine.prototype.onSettingChange = function(obj, key) {
     var that = this;
     var el = "#" + obj[key].target;
     if (obj[key].type === "range") {
-        this.onChangeAttacher(el, function () {
+        this.onChangeAttacher(el, function() {
             obj[key].value = Number($("#" + obj[key].target).val());
             $("#" + obj[key].target + "-span").text(obj[key].value);
         });
     } else if (obj[key].type === "selector") {
-        this.onChangeAttacher(el, function () {
+        this.onChangeAttacher(el, function() {
             obj[key].value = $("#" + obj[key].target).val();
         });
     }
     if (obj[key].change || obj[key].char) {
-        this.onChangeAttacher(el, function () {
+        this.onChangeAttacher(el, function() {
             var ch = (obj[key].char) ? obj[key].char : "";
             var txt = (obj[key].change) ? obj[key].change(obj[key].value) + ch : obj[key].value + ch;
             $("#" + obj[key].target + "-span").text(txt);
         });
     }
     if (key === "blocks" || key === "n") {
-        this.onChangeAttacher(el, function () {
+        this.onChangeAttacher(el, function() {
             if (that.running) {
                 that.stop();
             } else {
@@ -246,7 +221,7 @@ Engine.prototype.onSettingChange = function (obj, key) {
             }
         });
     } else if (key === "rotation") {
-        this.onChangeAttacher(el, function () {
+        this.onChangeAttacher(el, function() {
             var grid = $("#grid");
             grid.attr("style", "animation: rotating" + obj[key].direction() + " " + obj[key].value + "s linear infinite;");
             if (obj[key].value === obj[key].min) {
@@ -259,39 +234,20 @@ Engine.prototype.onSettingChange = function (obj, key) {
             }
         });
     } else if (key === "audio") {
-        this.onChangeAttacher(el, function () {
+        this.onChangeAttacher(el, function() {
             var sel = obj[key].value;
             that.howlerizer(sel, obj[key].selection[sel]);
         });
     } else if (key === "focusPoint") {
-		this.onChangeAttacher(el, function () {
-			(obj[key].value === 1) ? $(".tile:eq(4)").append("<div class=\"dot\"></div>") : $(".tile:eq(4)").empty();
+        this.onChangeAttacher(el, function() {
+            (obj[key].value === 1) ? $(".tile:eq(4)").append("<div class=\"dot\"></div>"): $(".tile:eq(4)").empty();
         });
-	} else if (key === "kaleidoscope") {
-		this.onChangeAttacher(el, function () {
-			if (obj[key].value === 1) {
-				var rnd = Math.ceil(Math.random() * 3);
-				$("section").css('background-image', 'url("img/' + rnd + '.jpg")');
-			} else {
-				$("section").css('background-image', '');
-			}
-        });
-	} else if (key === "invertColor") {
-		this.onChangeAttacher(el, function () {
-			if (obj[key].value === 1) {
-				$("#site-wrap").addClass('invert');
-				$('label[for="nav-trigger"]').css('background-image', "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1' x='0px' y='0px' width='30px' height='30px' viewBox='0 0 30 30' enable-background='new 0 0 30 30' xml:space='preserve'><rect fill='rgba(0, 0, 0, 0.75)' width='30' height='6'/><rect fill='rgba(0, 0, 0, 0.75)' y='24' width='30' height='6'/><rect fill='rgba(0, 0, 0, 0.75)' y='12' width='30' height='6'/></svg>\")");
-			} else {
-				$("#site-wrap").removeClass('invert');
-				$('label[for="nav-trigger"]').css('background-image', "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1' x='0px' y='0px' width='30px' height='30px' viewBox='0 0 30 30' enable-background='new 0 0 30 30' xml:space='preserve'><rect fill='rgba(255, 255, 255, 0.75)' width='30' height='6'/><rect fill='rgba(255, 255, 255, 0.75)' y='24' width='30' height='6'/><rect fill='rgba(255, 255, 255, 0.75)' y='12' width='30' height='6'/></svg>\")");
-			}
-        });
-	}
+    }
 };
-Engine.prototype.onChangeAttacher = function (el, foo) {
+Engine.prototype.onChangeAttacher = function(el, foo) {
     $(el).on("change", foo);
 };
-Engine.prototype.populateSiteWrap = function () {
+Engine.prototype.populateSiteWrap = function() {
     var s = "";
     s += "<div id=\"status-bar\">";
     s += "<div id=\"left-stimuli\">" + this.left + "</div>";
@@ -310,64 +266,67 @@ Engine.prototype.populateSiteWrap = function () {
     s += "<div id=\"ear-btn\"></div>";
     $("#site-wrap").append(s);
 };
-Date.prototype.ddmmyy = function () {
+Date.prototype.ddmmyy = function() {
     var dd = this.getDate();
     var mm = this.getMonth() + 1;
     return [
         (dd > 9 ? "" : "0") + dd, (mm > 9 ? "" : "0") + mm, this.getFullYear()
     ].join("/");
 };
-Engine.prototype.functionizer = function (e, f, t) {
+Engine.prototype.functionizer = function(e, f, t) {
     $(e).prop("onclick", null).attr("onclick", f);
     $(e).text(t);
 };
-Engine.prototype.load = function () {
+Engine.prototype.load = function() {
     this.dataContainer = JSON.parse(localStorage[this.version]);
 };
-Engine.prototype.save = function () {
+Engine.prototype.save = function() {
     localStorage[this.version] = JSON.stringify(this.dataContainer);
 };
-Engine.prototype.initData = function (date) {
-	if (this.dataContainer[date] === undefined) {
-		this.dataContainer[date] = {"runs": 0, "data": []};
-	}
-	this.save();
+Engine.prototype.initData = function(date) {
+    if (this.dataContainer[date] === undefined) {
+        this.dataContainer[date] = {
+            "runs": 0,
+            "data": []
+        };
+    }
+    this.save();
 };
-Engine.prototype.updateData = function (go_to, n) {
-	this.dataContainer[this.today].runs = go_to;
-	if (n !== undefined) {
-		this.dataContainer[this.today].data.push(n);
-	}
-	this.save();
+Engine.prototype.updateData = function(go_to, n) {
+    this.dataContainer[this.today].runs = go_to;
+    if (n !== undefined) {
+        this.dataContainer[this.today].data.push(n);
+    }
+    this.save();
 };
-Engine.prototype.MAX = function (array) {
+Engine.prototype.MAX = function(array) {
     if (array.length >= 2) {
-        return array.reduce(function (a, b) {
+        return array.reduce(function(a, b) {
             return (a > b ? a : b);
         });
     } else if (array[0] !== undefined) {
         return array[0];
     }
 };
-Engine.prototype.avg = function (array) {
+Engine.prototype.avg = function(array) {
     if (array.length >= 2) {
-        return array.reduce(function (a, b) {
+        return array.reduce(function(a, b) {
             return a + b;
         }) / array.length;
     } else if (array[0] !== undefined) {
         return array[0];
     }
 };
-Engine.prototype.min = function (array) {
+Engine.prototype.min = function(array) {
     if (array.length >= 2) {
-        return array.reduce(function (a, b) {
+        return array.reduce(function(a, b) {
             return (a < b ? a : b);
         });
     } else if (array[0] !== undefined) {
         return array[0];
     }
 };
-Engine.prototype.update = function (n) {
+Engine.prototype.update = function(n) {
     if (n) {
         $("#" + this.n.target).val(n);
         $("#" + this.n.target + "-span").text(n);
@@ -375,54 +334,54 @@ Engine.prototype.update = function (n) {
     }
     $("#left-stimuli").html(this.left);
 };
-Engine.prototype.howlerizer = function (dir, a) {
+Engine.prototype.howlerizer = function(dir, a) {
     var that = this;
     this.loadedSounds = [];
-    a.forEach(function (el) {
+    a.forEach(function(el) {
         that.loadedSounds.push(new Howl({
             src: ["snd/" + dir.replace(/\s/g, "-") + "/" + el + ".wav"]
         }));
     });
 };
-Engine.prototype.wow = function (s, c, t) {
-    if(c.indexOf("_") > -1) {
-      $(s).css("background", c.replace("_", ""));
-      setTimeout(function () {
-          $(s).removeAttr("style");
-      }, t);
+Engine.prototype.wow = function(s, c, t) {
+    if (c.indexOf("_") > -1) {
+        $(s).css("background", c.replace("_", ""));
+        setTimeout(function() {
+            $(s).removeAttr("style");
+        }, t);
     } else {
-      $(s).addClass(c);
-      setTimeout(function () {
-          $(s).removeClass(c);
-      }, t);
+        $(s).addClass(c);
+        setTimeout(function() {
+            $(s).removeClass(c);
+        }, t);
     }
 };
-Engine.prototype.savedataInit = function () {
+Engine.prototype.savedataInit = function() {
     if (!localStorage[this.version]) {
-		this.initData(this.today);
+        this.initData(this.today);
     } else {
         this.load();
-		this.initData(this.today);
+        this.initData(this.today);
     }
 };
-Engine.prototype.markupInit = function () {
+Engine.prototype.markupInit = function() {
     $("body").append(this.getLayoutHTML(), this.results.getPopHTML(), this.chartist.getPopHTML());
     $("#site-wrap").append("<button onclick=" + this.name + ".drawChart() style=\"z-index:50\" class=\"btn-popup reflected\">★</button>");
-    $("#" + this.results.id).append(this.progress.getProgressHTML());
-	$("#" + this.chartist.id).append(this.progress.getProgressHTML());
+    $("#" + this.results.id).append(this.progressRes.getProgressHTML());
+    $("#" + this.chartist.id).append(this.progressCha.getProgressHTML());
     this.populateSiteWrap();
     this.populateNavigation();
     this.calculateStimuli(this.blocks.value, this.n.value);
     this.functionizer("#engine-button", this.name + ".start()", "Play");
 };
-Engine.prototype.eventsInit = function () {
+Engine.prototype.eventsInit = function() {
     var that = this;
-	$("#" + this.rotation.target).trigger("change");
+    $("#" + this.rotation.target).trigger("change");
     var sel = this.audio.value;
     this.howlerizer(sel, this.audio.selection[sel]);
     this.reset();
     var keyAllowed = {};
-    $(document).keydown(function (e) {
+    $(document).keydown(function(e) {
         e.stopPropagation();
         if (keyAllowed[e.which] === false) {
             return;
@@ -430,46 +389,46 @@ Engine.prototype.eventsInit = function () {
         keyAllowed[e.which] = false;
         var keyCode = e.keyCode || e.which;
         switch (keyCode) {
-        case 65:
-            that.checkBlock.call(that, "visual");
-            break;
-        case 76:
-            that.checkBlock.call(that, "audio");
-            break;
-		case 83:
-			if (that.results.isOpened) {
-				that.results.no();
-			}
-			if (that.chartist.isOpened) {
-				that.chartist.no();
-			}
-            $("#engine-button").click();
-            break;
-        default:
-            return;
+            case 65:
+                that.checkBlock.call(that, "visual");
+                break;
+            case 76:
+                that.checkBlock.call(that, "audio");
+                break;
+            case 83:
+                if (that.results.isOpened) {
+                    that.results.no();
+                }
+                if (that.chartist.isOpened) {
+                    that.chartist.no();
+                }
+                $("#engine-button").click();
+                break;
+            default:
+                return;
         }
     });
-    $(document).keyup(function (e) {
+    $(document).keyup(function(e) {
         keyAllowed[e.which] = true;
     });
-    document.querySelector("#eye-btn").addEventListener("touchstart", function (e) {
+    document.querySelector("#eye-btn").addEventListener("touchstart", function(e) {
         e.preventDefault();
         that.checkBlock.call(that, "visual");
     }, false);
-    document.querySelector("#eye-btn").addEventListener("click", function (e) {
+    document.querySelector("#eye-btn").addEventListener("click", function(e) {
         e.preventDefault();
         that.checkBlock.call(that, "visual");
     }, false);
-    document.querySelector("#ear-btn").addEventListener("touchstart", function (e) {
+    document.querySelector("#ear-btn").addEventListener("touchstart", function(e) {
         e.preventDefault();
         that.checkBlock.call(that, "audio");
     }, false);
-    document.querySelector("#ear-btn").addEventListener("click", function (e) {
+    document.querySelector("#ear-btn").addEventListener("click", function(e) {
         e.preventDefault();
         that.checkBlock.call(that, "audio");
     }, false);
 };
-Engine.prototype.reset = function () {
+Engine.prototype.reset = function() {
     this.running = false;
     this.currBlock = [];
     this.currBlockLen = 0;
@@ -477,27 +436,27 @@ Engine.prototype.reset = function () {
     this.enable = [0, 0];
     this.userScore = [0, 0, 0, 0, 0, 0];
 };
-Engine.prototype.start = function () {
+Engine.prototype.start = function() {
     var that = this;
     this.running = true;
-    this.playing = setTimeout(function () {
+    this.playing = setTimeout(function() {
         that.createBlock.call(that);
         that.playBlock.call(that);
     }, this.time.value / 4);
     this.functionizer("#engine-button", this.name + ".stop()", "Stop");
 };
-Engine.prototype.stop = function (n) {
+Engine.prototype.stop = function(n) {
     n = n || this.n.value;
     clearTimeout(this.playing);
     this.reset();
     this.calculateStimuli(this.blocks.value, n);
     this.functionizer("#engine-button", this.name + ".start()", "Play");
 };
-Engine.prototype.calculateStimuli = function (blocks, n) {
+Engine.prototype.calculateStimuli = function(blocks, n) {
     this.left = blocks * (n + 1);
     this.update(n);
 };
-Engine.prototype.prepareBlock = function (n, left, blocks) {
+Engine.prototype.prepareBlock = function(n, left, blocks) {
     var thisBlock = [];
     for (var i = 0; i < left; i++) {
         thisBlock.push([0, 0]);
@@ -567,7 +526,7 @@ Engine.prototype.prepareBlock = function (n, left, blocks) {
     }
     return thisBlock;
 };
-Engine.prototype.evaluateBlock = function (block, n) {
+Engine.prototype.evaluateBlock = function(block, n) {
     var v = 0;
     var a = 0;
     for (var i = 0; i < block.length; i++) {
@@ -582,7 +541,7 @@ Engine.prototype.evaluateBlock = function (block, n) {
     }
     return [v, a];
 };
-Engine.prototype.checkBlock = function (c) {
+Engine.prototype.checkBlock = function(c) {
     var p = (c === "visual") ? 0 : 1;
     var e = (c === "visual") ? "#eye-btn" : "#ear-btn";
     var r = (c === "visual") ? 0 : 3;
@@ -593,28 +552,24 @@ Engine.prototype.checkBlock = function (c) {
             if (this.currBlock[this.blockCounter][p] === this.currBlock[this.blockCounter - this.n.value][p]) {
                 console.log("%c right " + c, "color: blue");
                 if (this.feedback.value) {
-					if (this.invertColor.value) {
-						this.wow(e, "right-inverted", this.time.value / 6);
-					} else {
-						this.wow(e, "right", this.time.value / 6);
-					}
+
+                    this.wow(e, "right", this.time.value / 6);
+
                 }
                 this.userScore[r] += 1;
             } else {
                 console.log("%c wrong " + c, "color: red");
                 if (this.feedback.value) {
-					if (this.invertColor.value) {
-						this.wow(e, "wrong-inverted", this.time.value / 6);
-					} else {
-						this.wow(e, "wrong", this.time.value / 6);
-					}
+
+                    this.wow(e, "wrong", this.time.value / 6);
+
                 }
                 this.userScore[w] += 1;
             }
         }
     }
 };
-Engine.prototype.createBlock = function () {
+Engine.prototype.createBlock = function() {
     var blockEval = this.evaluateBlock(this.currBlock, this.n.value);
     this.currBlock = this.prepareBlock(this.n.value, this.left, this.blocks.value);
     while (blockEval[0] !== this.blocks.value || blockEval[1] !== this.blocks.value) {
@@ -625,20 +580,17 @@ Engine.prototype.createBlock = function () {
     console.log(this.currBlock);
     console.log("%c matching blocks: " + blockEval, "color: blue");
 };
-Engine.prototype.playBlock = function () {
+Engine.prototype.playBlock = function() {
     if (++this.blockCounter < this.currBlockLen) {
         if (this.blockCounter > this.n.value) {
             if (this.currBlock[this.blockCounter - 1][0] === this.currBlock[this.blockCounter - this.n.value - 1][0] && this.currBlock[this.blockCounter - 1][1] === this.currBlock[this.blockCounter - this.n.value - 1][1]) {
                 if (this.enable[0] < 1 && this.enable[1] < 1) {
                     console.log("%c both cues missed", "color: orange");
                     if (this.feedback.value) {
-						if (this.invertColor.value) {
-							this.wow("#eye-btn", "missed-inverted", this.time.value / 6);
-							this.wow("#ear-btn", "missed-inverted", this.time.value / 6);
-						} else {
-							this.wow("#eye-btn", "missed", this.time.value / 6);
-							this.wow("#ear-btn", "missed", this.time.value / 6);
-						}
+
+                        this.wow("#eye-btn", "missed", this.time.value / 6);
+                        this.wow("#ear-btn", "missed", this.time.value / 6);
+
                     }
                     this.userScore[1] += 1;
                     this.userScore[4] += 1;
@@ -647,11 +599,9 @@ Engine.prototype.playBlock = function () {
                 if (this.enable[0] < 1) {
                     console.log("%c visual cue missed", "color: orange");
                     if (this.feedback.value) {
-                        if (this.invertColor.value) {
-							this.wow("#eye-btn", "missed-inverted", this.time.value / 6);
-						} else {
-							this.wow("#eye-btn", "missed", this.time.value / 6);
-						}
+
+                        this.wow("#eye-btn", "missed", this.time.value / 6);
+
                     }
                     this.userScore[1] += 1;
                 }
@@ -659,11 +609,9 @@ Engine.prototype.playBlock = function () {
                 if (this.enable[1] < 1) {
                     console.log("%c audio cue missed", "color: orange");
                     if (this.feedback.value) {
-                        if (this.invertColor.value) {
-							this.wow("#ear-btn", "missed-inverted", this.time.value / 6);
-						} else {
-							this.wow("#ear-btn", "missed", this.time.value / 6);
-						}
+
+                        this.wow("#ear-btn", "missed", this.time.value / 6);
+
                     }
                     this.userScore[4] += 1;
                 }
@@ -698,15 +646,15 @@ Engine.prototype.playBlock = function () {
         var threshold = this.blocks.value * (1 - this.threshold.value);
         var upperThreshold = Math.ceil(threshold);
         var lowerThreshold = Math.floor(threshold);
-		var old_runs = this.dataContainer[this.today].runs;
+        var old_runs = this.dataContainer[this.today].runs;
         if (incorrectVis <= lowerThreshold && incorrectAud <= lowerThreshold) {
-			this.updateData(++old_runs, this.n.value);
+            this.updateData(++old_runs, this.n.value);
             $("#results").append("<p class=\"results-text\">N is now: " + ++this.n.value + "</p>");
         } else if (incorrectVis <= upperThreshold || incorrectAud <= upperThreshold) {
-			this.updateData(++old_runs, this.n.value);
+            this.updateData(++old_runs, this.n.value);
             $("#results").append("<p class=\"results-text\">N stays: " + this.n.value + "<br>Keep trying</p>");
         } else {
-			this.updateData(++old_runs);
+            this.updateData(++old_runs);
             if (this.n.value !== 1) {
                 $("#results").append("<p class=\"results-text\">N is now: " + --this.n.value + "<br>N won't be indexed</p>");
             } else {
@@ -715,26 +663,26 @@ Engine.prototype.playBlock = function () {
         }
         this.stop(this.n.value);
         this.results.yes();
-        this.progress.move(this.dataContainer[this.today].runs / 20 * 100);
+        this.progressRes.move(this.dataContainer[this.today].runs / 20 * 100);
     }
 };
 
 function Pop(name, innerId) {
     this.name = name;
-	this.isOpened = 0;
+    this.isOpened = 0;
     this.id = (this.name + "-popup").replace(/\./g, "-");
     this.innerId = innerId;
 }
-Pop.prototype.yes = function () {
+Pop.prototype.yes = function() {
     var el = document.getElementById(this.id);
     el.style.opacity = 1;
     el.style.height = 100 + "vh";
     el.style.width = 100 + "vw";
     var cont = document.getElementById(this.innerId);
     cont.style.display = "block";
-	this.isOpened = 1;
+    this.isOpened = 1;
 };
-Pop.prototype.no = function () {
+Pop.prototype.no = function() {
     var el = document.getElementById(this.id);
     el.style.opacity = 0;
     el.style.height = 0;
@@ -742,9 +690,9 @@ Pop.prototype.no = function () {
     var cont = document.getElementById(this.innerId);
     cont.style.display = "none";
     cont.innerHTML = "";
-	this.isOpened = 0;
+    this.isOpened = 0;
 };
-Pop.prototype.getPopHTML = function (inStr) {
+Pop.prototype.getPopHTML = function(inStr) {
     var s = "";
     s += "<div id=" + this.id + " class=\"pop\" style=\"opacity:0; height:0; width:0\">";
     s += "<div id=" + this.innerId + ">";
@@ -760,31 +708,31 @@ Pop.prototype.getPopHTML = function (inStr) {
 function Progress(name, height, background, color) {
     this.name = name;
     this.progressClass = this.name + "-outer";
-    this.barClass= this.name + "-inner";
+    this.barClass = this.name + "-inner";
     this.height = height;
     this.background = background;
     this.color = color;
     this.stored = 0;
 }
-Progress.prototype.getProgressHTML = function () {
+Progress.prototype.getProgressHTML = function() {
     var s = "";
     s += "<div class=" + this.progressClass + " style=\"position:absolute; z-index:40; width:100%; height:" + this.height + "; top:0; left:0; background-color:" + this.background + "\">";
     s += "<div class=" + this.barClass + " style=\"position:absolute; width:0; height:100%; background-color:" + this.color + "\"></div>";
     s += "</div>";
     return s;
 };
-Progress.prototype.move = function (curr) {
+Progress.prototype.move = function(curr) {
     this.current = curr;
-	that = this;
-	Array.prototype.forEach.call(document.getElementsByClassName(this.barClass), function (item, index) {
-		that.advance = function () {
-			if (that.stored >= that.current) {
-				clearInterval(that.interval);
-			} else {
-				that.stored++;
-				item.style.width = that.stored + "%";
-			}
-		}
-		that.interval = setInterval(that.advance.bind(that), 10);
-	});
+    that = this;
+    Array.prototype.forEach.call(document.getElementsByClassName(this.barClass), function(item, index) {
+        that.advance = function() {
+            if (that.stored >= that.current) {
+                clearInterval(that.interval);
+            } else {
+                that.stored++;
+                item.style.width = that.stored + "%";
+            }
+        }
+        that.interval = setInterval(that.advance.bind(that), 10);
+    });
 };
