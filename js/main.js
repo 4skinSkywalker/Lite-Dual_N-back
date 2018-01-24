@@ -85,7 +85,7 @@ var enviroment = {
     onChange("#set-level", function() {
       game.updateParameters();
       var txt = $("#set-level").val();
-      $("#set-level-span").text(text);
+      $("#set-level-span").text(txt);
     });
     onChange("#select-sound", function() {
       game.updateSounds();
