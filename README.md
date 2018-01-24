@@ -7,9 +7,8 @@
 - - - -
 ![screenshot2](https://lh3.googleusercontent.com/-3SUzS0nTTGE/WHikXa6Hp5I/AAAAAAAADl8/k2dIQ7r85a0v_FU4QgwaKoJ-N9eoaknjQCLcB/s1600/ldnb2.png)
 
-### Instant input feedback: 
-* green = correct; 
-* orange = missed; 
+### Instant input feedback:
+* green = correct;
 * red = wrong.
 
 - - - -
@@ -21,6 +20,6 @@
 ![screenshot4](https://lh3.googleusercontent.com/-xHUeBF3ALe0/WHikzpBKXwI/AAAAAAAADmE/-gGMI2U40D0fkJfUfyTGCpRHsRDe8Va0wCLcB/s1600/ldnb5.png)
 
 ### You can open a chart, based on the historical results obtained per day, using the button ★ (star shaped), which describes:
-* green line = maximum N reached; 
-* orange = avarage N; 
+* green line = maximum N reached;
+* orange = avarage N;
 * red = minimum N scored.

@@ -1,28 +1,123 @@
-<!DOCTYPE html>
 <html>
-	<head>
-		<title>Lite Dual N-back</title>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, user-scalable=no">
-		<meta name="mobile-web-app-capable" content="yes">
-		<link rel="icon" type="image/png" href="favicon.png">
-		<script src="js/jquery.min.js"></script>
-		<script src="js/howler.js"></script>
-		<script src="js/chartist.min.js"></script>
-		<script src="js/LiteDualN-back.js"></script>
-		<link rel="stylesheet" href="css/chartist.min.css">
-		<link rel="stylesheet" href="css/common.css">
-		<link rel="stylesheet" media="all and (orientation:portrait)" href="css/portrait.css">
-		<link rel="stylesheet" media="all and (orientation:landscape)" href="css/landscape.css">
-		<script>
-			var GAME = new Engine("GAME");
-			
-			$(document).ready(function() {
-				GAME.savedataInit();
-				GAME.markupInit();
-				GAME.eventsInit();
-			});
-		</script>
-	</head>
-	<body></body>
+
+  <head>
+    <title>Lite Dual N-back</title>
+    <meta charset="UTF-8">
+    <meta name="description" content="Open Source Lite Dual N-back">
+    <meta name="keywords" content="DNB, N-back, WM">
+    <meta name="author" content="4skinSkywalker">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="icon" type="image/png" href="favicon.png">
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/chartist.min.js"></script>
+    <script src="js/howler.min.js"></script>
+
+    <script src="js/popup.js"></script>
+    <script src="js/progress.js"></script>
+    <script src="js/functions.js"></script>
+
+    <link rel="stylesheet" href="css/chartist.min.css">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" media="all and (orientation:portrait)" href="css/portrait.css">
+    <link rel="stylesheet" media="all and (orientation:landscape)" href="css/landscape.css">
+  </head>
+
+  <body>
+
+    <!-- slidemenu start -->
+    <ul id="navigation">
+
+      <!-- an indicator of the level in which you play -->
+      <li class="nav-item">
+        <p id="N-level">N = 2</p>
+      </li>
+
+      <!-- settings start -->
+      <li class="nav-item">
+        <!-- sets the duration of clues -->
+        <span class="range-label">Stimulus time </span>
+        <span id="set-time-span" class="range-label">2500ms</span>
+        <input type="range" class="slider" id="set-time" min="2000" max="3000" step="100" value="2500">
+      </li>
+      <li class="nav-item">
+        <!-- sets the quantity of clues -->
+        <span class="range-label">Matching clues </span>
+        <span id="set-clues-span" class="range-label">8</span>
+        <input type="range" class="slider" id="set-clues" min="6" max="20" step="2" value="8">
+      </li>
+      <li class="nav-item">
+        <!-- sets a level of difficulty -->
+        <span class="range-label">N-back level </span>
+        <span id="set-level-span" class="range-label">2</span>
+        <input type="range" class="slider" id="set-level" min="1" max="10" step="1" value="2">
+      </li>
+      <li class="nav-item">
+        <!-- selects a sound for audio clues -->
+        <label for="select-sound">Sounds</label>
+        <select class="option" id="select-sound">
+               <option>Numbers</option>
+               <option>Letters</option>
+               <option>Piano</option>
+            </select>
+      </li>
+      <li class="nav-item">
+        <!-- do you want feedback? -->
+        <span class="range-label">Response feedback? </span>
+        <span id="feedback-span" class="range-label">on</span>
+        <input type="range" class="slider" id="feedback" min="0" max="1" step="1" value="1">
+      </li>
+      <!-- settings end -->
+
+      <!-- a brief description on how to play -->
+      <li class="nav-item">
+        <p>
+          <span style="color: #ffd700">Controls:</span><br> "A" for visual<br> "L" for audio<br> "S" to start/stop<br>
+          <br>
+        </p>
+      </li>
+    </ul>
+    <!-- slidemenu end -->
+
+    <!-- hamburgher menu invocation button -->
+    <input type="checkbox" id="nav-trigger"><label for="nav-trigger"></label>
+
+    <!-- training-field start -->
+    <div id="site-wrap">
+
+      <!-- a button that shows stats -->
+      <button onclick="enviroment.drawChart()" style="z-index:50" class="btn-popup reflected">★</button>
+
+      <!-- left simuli shown here -->
+      <div id="status-bar">
+        <div id="stimuli-counter">24</div>
+      </div>
+
+      <!-- a button to start/stop the game -->
+      <button onclick="game.start()" id="engine-btn" class="btn-standard">Play</button>
+
+      <!-- the N-back grid -->
+      <table id="grid">
+        <tbody>
+          <tr><td><div class="tile"></div></td><td><div class="tile"></div></td><td><div class="tile"></div></td></tr>
+          <tr><td><div class="tile"></div></td><td><div class="tile"></div></td><td><div class="tile"></div></td></tr>
+          <tr><td><div class="tile"></div></td><td><div class="tile"></div></td><td><div class="tile"></div></td></tr>
+        </tbody>
+      </table>
+
+      <!-- buttons to confirm clues -->
+      <div id="eye-btn"></div>
+      <div id="ear-btn"></div>
+    </div>
+    <!-- training-field end -->
+
+    <script src="js/main.js"></script>
+    <script src="js/game.js"></script>
+    <script>
+      enviroment.init();
+      game.init();
+    </script>
+  </body>
+
 </html>
