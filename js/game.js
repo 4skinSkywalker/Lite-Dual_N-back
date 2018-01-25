@@ -144,8 +144,12 @@ var game = {
       this.buildHTMLReport(
         this.score[1] + this.score[2], // wrongPositions
         this.score[4] + this.score[5], // wrongSounds
-        Math.floor(this.block.length * (1 - 0.8)) // tolleratedErrors
+        Math.floor(this.clues * (1 - 0.8)) // tolleratedErrors
       );
+
+    // updates N level
+    $("#set-level").val(this.n);
+    $("#set-level-span").text(this.n);
 
     // stops the game
     // shows resultsPopup
