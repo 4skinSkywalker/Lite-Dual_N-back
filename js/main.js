@@ -1,25 +1,21 @@
 var enviroment = {
 
-  // a set of variables within the enviroment
-  // name    : name of the enviroment
-  // history : collection of data
-  // sounds  : a map that shows the structure of the "snd/" directory
-  name: "DNB_1.0.0.0",
-  history: {},
+  name: "DNB_1.0.0.0", // name of the enviroment
+  history: {}, // collection of data
   sounds: {
     "Numbers": [1, 2, 3, 4, 5, 6, 7, 8],
     "Letters": ["c", "h", "k", "l", "q", "r", "s", "t"],
     "Piano": ["A4", "B4", "C4", "C5", "D4", "E4", "F4", "G4"]
-  },
+  }, // a map that shows the structure of snd/ directory
 
-  // sets the date for today in ddmmyy format
+  // sets the date for today (day/month/year)
   _setDate: function() {
     this.today = (new Date).ddmmyy();
   },
 
   // makes two popups and a progress bar
-  // appends the popups into the body
-  // appends the progress bar into the resultsPopup
+  // appends those popups into the body
+  // appends progressBar into the resultsPopup
   makePopups: function() {
     this.resultsPopup = new Popup("enviroment.resultsPopup", "results");
     this.chartPopup = new Popup("enviroment.chartPopup", "chart");
@@ -28,23 +24,25 @@ var enviroment = {
     document.getElementById(this.resultsPopup.outerID).innerHTML += this.progressBar.getHTML();
   },
 
+  // checks whether popus are opened, in such case closes them
   closeAllPopups: function() {
     if (this.resultsPopup.isOpen) this.resultsPopup.hide();
     if (this.chartPopup.isOpen) this.chartPopup.hide();
   },
 
-  // updates the number of runs for today
-  // if requested (save === true) it pushes N inside the history for today
-  // then it saves history into localStorage
+  // increments runs of today within history
+  // if requested puts N into data for today, within history
+  // then saves history into localStorage
   saveStats: function(save) {
     this.history[this.today].runs++;
     if (save === true) this.history[this.today].data.push(game.n);
     this.save();
   },
 
-  // if there's no data in history for today it creates the key of today
-  // the value for the key today is initialized to 0 runs and no data
-  // then it saves history into localStorage
+  // if there's no data for today within history
+  // it creates the key of today
+  // the value of the key for today is initialized
+  // then saves history into localStorage
   initHistory: function(date) {
     if (this.history[this.today] === undefined)
       this.history[this.today] = {"runs": 0, "data": []};
@@ -61,16 +59,15 @@ var enviroment = {
     localStorage[this.name] = JSON.stringify(this.history);
   },
 
-  // checks the existence of a savegame within localStorage
-  // if savegame already exist checkData loads it
-  // then initializes today
+  // checks if savegame exists within localStorage
+  // if savegame already exists checkData loads it and initializes for today
   checkData: function() {
     if (localStorage[this.name]) this.load();
-    this.initHistory(this.todayDate);
+    this.initHistory(this.today);
   },
 
   // assigns to each HTML setting element a onChange function
-  // which determines how that setting will influence game variables
+  // which determines how that setting will influence game object variables
   initSettings: function() {
     onChange("#set-time", function() {
       var txt = $("#set-time").val();
@@ -97,7 +94,6 @@ var enviroment = {
   },
 
   // assigns to the required key and buttons specific functions
-  // to be able to play the game properly
   initEvents: function() {
     var keyAllowed = {};
     $(document).keydown(function(e) {
@@ -123,7 +119,8 @@ var enviroment = {
     $(document).keyup(function(e) {
       keyAllowed[e.which] = true;
     });
-    // the following line of code makes things for both click and touch events
+
+    // initializes click and touch events
     document.querySelector("#eye-btn").addEventListener("touchstart", function(e) {
       e.preventDefault();
       game.checkUserInput("position");
@@ -165,14 +162,14 @@ var enviroment = {
       }
     });
 
-    // if avarage of N can be established then show a popup with the chart
+    // if there are sufficient data show the chart
     // otherwise display a warning message
     if (avgs.length !== 0) this.chartPopup.show();
     else setTimeout(function() {
       alert("There are insufficient data to construct the graph.");
     }, 400);
 
-    // produces the graph inside the chartPopup
+    // produces the chart inside the chartPopup
     return new Chartist.Line("#" + this.chartPopup.innerID, {
       series: [maxs, avgs, mins]
     }, {

@@ -1,4 +1,4 @@
-// converts date from computer style into human style
+// converts date from computer style into human style (day/month/year)
 Date.prototype.ddmmyy = function() {
   var dd = this.getDate();
   var mm = this.getMonth()+1;
@@ -7,7 +7,7 @@ Date.prototype.ddmmyy = function() {
 
 // chart-fns start
 
-// if the array has at least two elements it finds its max
+// if the array has at least two elements finds its max
 Array.prototype.max = function() {
   if (this.length >= 2) return this.reduce(function(a, b) {
     return (Math.max(a, b));
@@ -15,7 +15,7 @@ Array.prototype.max = function() {
   else if (this[0] !== undefined) return this[0];
 };
 
-// if the array has at least two elements it finds its avg
+// if the array has at least two elements finds its avg
 Array.prototype.avg = function() {
   if (this.length >= 2) return this.reduce(function(a, b) {
     return a + b;
@@ -23,17 +23,17 @@ Array.prototype.avg = function() {
   else if (this[0] !== undefined) return this[0];
 };
 
-// if the array has at least two elements it finds its min
+// if the array has at least two elements finds its min
 Array.prototype.min = function() {
   if (this.length >= 2) return this.reduce(function(a, b) {
     return (Math.min(a, b));
   });
   else if (this[0] !== undefined) return this[0];
 };
-// chart-fns end 
+// chart-fns end
 
 // adds a class to a HTML element
-// and then removes that class within a certain time
+// and then removes that class after a certain amount of time
 function wow(element, _class, time) {
   $(element).addClass(_class);
   setTimeout(function() {
@@ -41,7 +41,7 @@ function wow(element, _class, time) {
   }, time);
 }
 
-// assigns a function on onChange event of an element
+// assigns a function onChange of an element
 function onChange(element, _function) {
   $(element).on("change", _function);
 };
@@ -52,9 +52,9 @@ function newOnClickFunction(element, newFunction, text) {
   if (text !== undefined) $(element).text(text);
 }
 
-// from folders within "snd/" directory
 // uses an array of filenames of sounds (only .wav accepted)
 // and directory name (no spaces allowed, use - instead)
+// to match the structure of snd/ directory
 // to produce an array of playbale sounds via JS
 function makePlaybleSounds(arrSounds, dirSounds) {
   var playableSounds = [];
@@ -72,8 +72,8 @@ function makePlaybleSounds(arrSounds, dirSounds) {
 
 // block-building-fns start
 
-// produces the number of stimuli and
-// changes the text of the HTML stimuli-counter
+// produces the number of stimuli
+// changes the text of #stimuli-counter
 function calculateStimuli(n, clues) {
   var stimuli = clues * (n + 1)
   $("#stimuli-counter").text(stimuli);
@@ -83,7 +83,7 @@ function calculateStimuli(n, clues) {
 function prepareBlock(n, stimuli, clues) {
 
   // makes an array, also called block, made of empty elements
-  // elements are like this: [num_code_for_position, num_code_for_sound]
+  // [num_code_for_position, num_code_for_sound]
   var block = [];
   for (var i = 0; i < stimuli; i++) block.push([0, 0]);
 
@@ -113,9 +113,9 @@ function prepareBlock(n, stimuli, clues) {
     }
   }
 
-  // fill a hole with a random stimulus
-  // !!! pay attention that the random stimulus may be a clue
-  // this will be fixed with the help of isValidBlock function below !!!
+  // fills a hole with a random stimulus
+  //
+  // you have to pay attention that "a random stimulus" may be also a clue
   function fillHole(stimulus_name, idx) {
     var el = (stimulus_name === "position") ? 0 : 1;
     if (block[idx][el] === 0) {
@@ -130,7 +130,7 @@ function prepareBlock(n, stimuli, clues) {
   rightAmountOf("sounds");
 
   // there are empty spots inside the block of stimuli
-  // therefore it calls fillHole to fill those empty spots
+  // therefore calls fillHole to fill those empty spots
   for (var i = 0; i < block.length; i++) {
     fillHole("position", i);
     fillHole("sound", i);
@@ -138,7 +138,8 @@ function prepareBlock(n, stimuli, clues) {
   return block;
 };
 
-// isValidBlock helps makeBlock to establish if the block made from prepareBlock
+// isValidBlock helps makeBlock
+// to establish if the block made from prepareBlock
 // is made of the same amount of clues for both position and sound
 function isValidBlock(block, n, clues) {
   var positions = 0, sounds = 0;
@@ -150,7 +151,7 @@ function isValidBlock(block, n, clues) {
   return (positions === sounds && positions === clues);
 };
 
-// returns a playble block for the game
+// returns a ready-to-play block for the game object
 function makeBlock(n, stimuli, clues) {
   var block;
   do {
@@ -160,11 +161,13 @@ function makeBlock(n, stimuli, clues) {
 };
 // block-building-fns end
 
-// produces:
-// 2  : the player deserves an increasement in level
-// 1  :                     to stay at the same level
-// 0  :                     a descreasment in level
-// -1 :                     to stay at the same level
+// let pd be what the player deserves
+//
+// judgeResults produces:
+// 2  : pd to proceed to the next in level
+// 1  : pd to stay at the same level
+// 0  : pd to come back to the previous level
+// -1 : pd to stay at the same level (there's no level below 1)
 function judgeResults(wrongPositions, wrongSounds, tolleratedErrors) {
   if (wrongPositions <= tolleratedErrors && wrongSounds <= tolleratedErrors) {
     return 2; // next level

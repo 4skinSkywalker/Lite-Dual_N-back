@@ -1,7 +1,7 @@
 var game = {
 
-  // updates all parameter required
-  // values are taken from HTML settings elements
+  // updates all parameters
+  // values are taken from HTML elements
   updateParameters: function() {
     this.time = Number($("#set-time").val());
     this.clues = Number($("#set-clues").val());
@@ -10,7 +10,7 @@ var game = {
     this.feedback = Number($("#feedback").val());
   },
 
-  // updates sounds whenever the HTML sound selector has changed its value
+  // updates sounds whenever the #select-sound has changed its value
   updateSounds: function() {
     var folder = $("#select-sound").val();
     this.playableSounds = makePlaybleSounds(enviroment.sounds[folder], folder);
@@ -25,7 +25,7 @@ var game = {
   },
 
   // starts the game
-  // changes function to the play button which now is a stop button
+  // changes function to the play button, which now is a stop button
   start: function(n, clues, time) {
     this.running = true;
     this.reset();
@@ -36,7 +36,7 @@ var game = {
   },
 
   // stops the game
-  // changes function to the stop button which now is a start button
+  // changes function to the stop button, which now is a start button
   stop: function() {
     this.running = false;
     this.reset();
@@ -44,7 +44,7 @@ var game = {
     newOnClickFunction("#engine-btn", "game.start()", "Play");
   },
 
-  // resets temporary variables used within the play functions
+  // resets temporary variables used within playBlock
   reset: function() {
     this.updateParameters();
     this.block = makeBlock(this.n, this.stimuli, this.clues);
@@ -91,7 +91,7 @@ var game = {
       }
   },
 
-  // flashes a position within the grid
+  // flashes a position
   flashPosition: function() {
     var light = (this.block[this.idx][0] < 5) ? this.block[this.idx][0] - 1 : this.block[this.idx][0];
     wow(".tile:eq(" + light + ")", "on", this.time / 2);
@@ -105,12 +105,10 @@ var game = {
   // plays the block already created within the game object
   playBlock: function() {
 
-    // if there is a block element
-    // checks for missing inputs
-    // flash a position and play a sound
-    // keep repeting this process until there's no more block elements
-    // then call endBlock
-    if (++this.idx < this.block.length - 1) {
+    // increments idx and checks whether the block is not at its end
+    // in case the block is not at its end plays stimuli
+    // otherwise calls endGame
+    if (++this.idx < this.block.length) {
       this.checkMissingInput("position");
       this.checkMissingInput("sound");
       this.flashPosition();
@@ -132,11 +130,11 @@ var game = {
 
   endBlock: function() {
 
-    // the following piece of code is useful to find missing clues
+    // the following piece of code is useful to calculate missing clues
     this.score[1] = this.clues - this.score[0];
     this.score[4] = this.clues - this.score[3];
 
-    // a simpler alias of enviroment to work with below
+    // a simple alias for enviroment object, used below
     var e = enviroment;
 
     // puts a report into resultsPopup
@@ -147,21 +145,19 @@ var game = {
         Math.floor(this.clues * (1 - 0.8)) // tolleratedErrors
       );
 
-    // updates N level
+    // updates N level of #set-level within the slide menu
     $("#set-level").val(this.n);
     $("#set-level-span").text(this.n);
 
-    // stops the game
-    // shows resultsPopup
-    // move progressBar
+    // stops the game, shows resultsPopup, moves progressBar
     this.stop();
     e.resultsPopup.show();
     e.progressBar.move(e.history[e.today].runs / 20 * 100);
   },
 
-  // .1 builds a HTML report for the suitable for the results popup
-  // .2 saves stats for this game
-  // .3 increases or decreases N level for the next games
+  // builds a HTML report to append within resultsPopup
+  // saves N into data for today, within history
+  // increases or decreases N level for the next game
   buildHTMLReport: function(wrongPositions, wrongSounds, tolleratedErrors) {
     var s = "";
     s += "<table class=\"results-icons\">";
@@ -172,6 +168,7 @@ var game = {
     s += "</table>";
 
     // decides what to do in each case of judgement
+    // see judgeResults within functions.js to know more
     switch (judgeResults(wrongPositions, wrongSounds, tolleratedErrors)) {
       case 2:
         enviroment.saveStats(true);
