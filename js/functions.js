@@ -52,8 +52,8 @@ function newOnClickFunction(element, newFunction, text) {
   if (text !== undefined) $(element).text(text);
 }
 
-// uses an array of filenames of sounds (only .wav accepted)
-// and directory name (no spaces allowed, use - instead)
+// uses an array of filenames of sounds (only .mp3 accepted)
+// and directory name
 // to match the structure of snd/ directory
 // to produce an array of playbale sounds via JS
 function makePlaybleSounds(arrSounds, dirSounds) {
@@ -62,7 +62,7 @@ function makePlaybleSounds(arrSounds, dirSounds) {
     function(element) {
       playableSounds.push(
         new Howl({
-          src: ["snd/" + dirSounds.replace(/\s/g, "-") + "/" + element + ".wav"]
+          src: ["snd/" + dirSounds + "/" + element + ".mp3"]
         })
       );
     }

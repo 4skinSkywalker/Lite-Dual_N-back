@@ -3,9 +3,18 @@ var enviroment = {
   name: "DNB_1.0.0.0", // name of the enviroment
   history: {}, // collection of data
   sounds: {
-    "Numbers": [1, 2, 3, 4, 5, 6, 7, 8],
-    "Letters": ["c", "h", "k", "l", "q", "r", "s", "t"],
-    "Piano": ["A4", "B4", "C4", "C5", "D4", "E4", "F4", "G4"]
+    "Numbers English (USA)": [1, 2, 3, 4, 5, 6, 7, 8],
+    "Numbers English (UK)": [1, 2, 3, 4, 5, 6, 7, 8],
+    "Numbers German": [1, 2, 3, 4, 5, 6, 7, 8],
+    "Numbers Russian": [1, 2, 3, 4, 5, 6, 7, 8],
+    "Numbers Italian": [1, 2, 3, 4, 5, 6, 7, 8],
+    "Letters English (USA)": ["c", "h", "k", "l", "q", "r", "s", "t"],
+    "Letters English (UK)": ["c", "h", "k", "l", "q", "r", "s", "t"],
+    "Letters German": ["c", "h", "k", "l", "q", "r", "s", "t"],
+    "Letters Russian": ["c", "h", "k", "l", "q", "r", "s", "t"],
+    "Letters Italian": ["c", "h", "k", "l", "q", "r", "s", "x"],
+    "Shapes English": ["point", "line", "circle", "triangle", "square", "rectangle", "pentagon", "hexagon"],
+    "Shapes Italian": ["punto", "linea", "cerchio", "triangolo", "quadrato", "rettangolo", "pentagono", "esagono"]
   }, // a map that shows the structure of snd/ directory
 
   // sets the date for today (day/month/year)
@@ -91,6 +100,12 @@ var enviroment = {
       game.feedback = Number($("#feedback").val());
       $("#feedback-span").text(game.feedback === 1 ? "on" : "off");
     });
+
+    // appends sounds keys of enviroment.sound to #select-sound
+    var sounds = this.sounds;
+    for (var key in sounds)
+      if (sounds.hasOwnProperty(key))
+        $("#select-sound").append("<option>" + key + "</option>");
   },
 
   // assigns to the required key and buttons specific functions
