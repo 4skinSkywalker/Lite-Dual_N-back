@@ -84,8 +84,8 @@
 }
 
 .btn-popup.reflected {
-  bottom: 13vh;
-  right: 2vh;
+  top: 13vh;
+  left: 2vh;
 }
 
 #navigation {
