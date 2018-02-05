@@ -162,6 +162,7 @@ label[for="nav-trigger"] {
   background: rgba(255, 255, 255, 0.5);
   color: white;
   text-shadow: 0px 0px 5px white;
+  border-radius: 50%;
 }
 
 .btn-popup.reflected {
