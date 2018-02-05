@@ -148,6 +148,7 @@ var game = {
     // updates N level of #set-level within the slide menu
     $("#set-level").val(this.n);
     $("#set-level-span").text(this.n);
+    $("#N-level").text("N = " + this.n);
 
     // stops the game, shows resultsPopup, moves progressBar
     this.stop();

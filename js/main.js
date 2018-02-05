@@ -92,6 +92,7 @@ var enviroment = {
       game.updateParameters();
       var txt = $("#set-level").val();
       $("#set-level-span").text(txt);
+      $("#N-level").text("N = " + txt);
     });
     onChange("#select-sound", function() {
       game.updateSounds();
