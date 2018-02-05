@@ -24,6 +24,7 @@
 
 #eye-btn,
 #ear-btn {
+  position: fixed;
   font-size: 5vh;
   width: 49.5vw;
   line-height: 100%;
