@@ -59,10 +59,10 @@ function newOnClickFunction(element, newFunction, text) {
 function makePlaybleSounds(arrSounds, dirSounds) {
   var playableSounds = [];
   arrSounds.forEach(
-    function(element) {
+    function(sndFile) {
       playableSounds.push(
         new Howl({
-          src: ["snd/" + dirSounds + "/" + element + ".mp3"]
+          src: ["snd/" + dirSounds + "/" + sndFile]
         })
       );
     }

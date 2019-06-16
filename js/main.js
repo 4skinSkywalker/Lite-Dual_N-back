@@ -1,20 +1,24 @@
+var _numbers = ["1.mp3", "2.mp3", "3.mp3", "4.mp3", "5.mp3", "6.mp3", "7.mp3", "8.mp3"]
+var _letters = ["c.mp3", "h.mp3", "k.mp3", "l.mp3", "q.mp3", "r.mp3", "s.mp3", "t.mp3"]
+
 var enviroment = {
 
   name: "DNB_1.0.0.0", // name of the enviroment
   history: {}, // collection of data
   sounds: {
-    "Numbers English (USA)": [1, 2, 3, 4, 5, 6, 7, 8],
-    "Numbers English (UK)": [1, 2, 3, 4, 5, 6, 7, 8],
-    "Numbers German": [1, 2, 3, 4, 5, 6, 7, 8],
-    "Numbers Russian": [1, 2, 3, 4, 5, 6, 7, 8],
-    "Numbers Italian": [1, 2, 3, 4, 5, 6, 7, 8],
-    "Letters English (USA)": ["c", "h", "k", "l", "q", "r", "s", "t"],
-    "Letters English (UK)": ["c", "h", "k", "l", "q", "r", "s", "t"],
-    "Letters German": ["c", "h", "k", "l", "q", "r", "s", "t"],
-    "Letters Russian": ["c", "h", "k", "l", "q", "r", "s", "t"],
-    "Letters Italian": ["c", "h", "k", "l", "q", "r", "s", "x"],
-    "Shapes English": ["point", "line", "circle", "triangle", "square", "rectangle", "pentagon", "hexagon"],
-    "Shapes Italian": ["punto", "linea", "cerchio", "triangolo", "quadrato", "rettangolo", "pentagono", "esagono"]
+    "Piano": ["A4.wav", "B4.wav", "C4.wav", "C5.wav", "D4.wav", "E4.wav", "F4.wav", "G4.wav"],
+    "Numbers English (USA)": _numbers,
+    "Numbers English (UK)": _numbers,
+    "Numbers German": _numbers,
+    "Numbers Russian": _numbers,
+    "Numbers Italian": _numbers,
+    "Letters English (USA)": _letters,
+    "Letters English (UK)": _letters,
+    "Letters German": _letters,
+    "Letters Russian": _letters,
+    "Letters Italian": ["c.mp3", "h.mp3", "k.mp3", "l.mp3", "q.mp3", "r.mp3", "s.mp3", "x.mp3"],
+    "Shapes English": ["point.mp3", "line.mp3", "circle.mp3", "triangle.mp3", "square.mp3", "rectangle.mp3", "pentagon.mp3", "hexagon.mp3"],
+    "Shapes Italian": ["punto.mp3", "linea.mp3", "cerchio.mp3", "triangolo.mp3", "quadrato.mp3", "rettangolo.mp3", "pentagono.mp3", "esagono.mp3"]
   }, // a map that shows the structure of snd/ directory
 
   // sets the date for today (day/month/year)
