@@ -62,7 +62,8 @@ function makePlaybleSounds(arrSounds, dirSounds) {
     function(sndFile) {
       playableSounds.push(
         new Howl({
-          src: ["snd/" + dirSounds + "/" + sndFile]
+          src: ["snd/" + dirSounds + "/" + sndFile],
+          preload: true
         })
       );
     }

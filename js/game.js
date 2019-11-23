@@ -99,7 +99,21 @@ var game = {
 
   // plays a sound
   playSound: function() {
-    this.playableSounds[this.block[this.idx][1] - 1].play();
+    var soundIndex = (this.block[this.idx][0] < 5) ? this.block[this.idx][0] - 1 : this.block[this.idx][0];
+    var locations = [
+      [-1,-1],[0,-1],[1,-1],
+      [-1,0],null,[1,0],
+      [-1,-1.25],[0,-2],[1,-1.25]
+    ];
+    var mult = 0.3
+    var [x, y] = locations[soundIndex];
+    var sound = this.playableSounds[this.block[this.idx][1] - 1]
+
+    sound.once('play', function () {
+      sound.pos(x * mult, y * mult);
+    });
+
+    sound.play();
   },
 
   // plays the block already created within the game object
