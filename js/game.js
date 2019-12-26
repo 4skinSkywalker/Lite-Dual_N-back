@@ -8,6 +8,7 @@ var game = {
     this.n = Number($("#set-level").val());
     this.stimuli = calculateStimuli(this.n, this.clues);
     this.feedback = Number($("#feedback").val());
+    this.dailyGoal = 10;
   },
 
   // updates sounds whenever the #select-sound has changed its value
@@ -167,7 +168,7 @@ var game = {
     // stops the game, shows resultsPopup, moves progressBar
     this.stop();
     e.resultsPopup.show();
-    e.progressBar.move(e.history[e.today].runs / 20 * 100);
+    e.progressBar.move(e.history[e.today].runs / this.dailyGoal * 100);
   },
 
   // builds a HTML report to append within resultsPopup
