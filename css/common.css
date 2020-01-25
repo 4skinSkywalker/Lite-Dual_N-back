@@ -44,11 +44,11 @@ button:focus {
 }
 
 #grid td div {
-  height: 100%;
-  width: 100%;
+  height: 93%;
+  width: 93%;
   margin: auto;
-  background: #1395BA;
-  transition: background-color 0.5s ease;
+  box-shadow: 0px 0px 8px 2px rgba(0,0,0,0.15);
+  transition: background-color 0.5s ease, box-shadow 0.5s ease;
 }
 
 #grid tr:nth-child(1) td:nth-child(1) div {
@@ -79,8 +79,14 @@ button:focus {
   text-align: center;
 }
 
+.center-tile {
+  background: rgba(0, 0, 0, 0.5)!important;
+  border-radius: 50%;
+  box-shadow: none!important;
+}
+
 #N-level {
-  color: rgba(0, 0, 0, 0.25);
+  color: #fff;
 }
 
 #eye-btn,
@@ -266,13 +272,46 @@ input[type=range].slider:focus::-webkit-slider-runnable-track {
 }
 
 .on {
-  background: #F16C20!important;
+  /* background: #F16C20!important; */
+  box-shadow: 0px 0px 16px 8px rgba(0,0,0,0.15)!important;;
+}
+
+.on-1 {
+  background: #e6194B!important;
+}
+
+.on-2 {
+  background: #f58231!important;
+}
+
+.on-3 {
+  background: #bfef45!important;
+}
+
+.on-4 {
+  background: #3cb44b!important;
+}
+
+.on-5 {
+  background: #42d4f4!important;
+}
+
+.on-6 {
+  background: #4363d8!important;
+}
+
+.on-7 {
+  background: #911eb4!important;
+}
+
+.on-8 {
+  background: #f032e6!important;
 }
 
 .right {
-  background: rgba(12, 190, 74, 0.5)!important;
+  background: rgba(70, 153, 144, 0.5)!important;
 }
 
 .wrong {
-  background: rgba(192, 41, 0, 0.5)!important;
+  background: rgba(128, 0, 0, 0.5)!important;
 }

@@ -96,6 +96,7 @@ var game = {
   flashPosition: function() {
     var light = (this.block[this.idx][0] < 5) ? this.block[this.idx][0] - 1 : this.block[this.idx][0];
     wow(".tile:eq(" + light + ")", "on", this.time / 2);
+    wow(".tile:eq(" + light + ")", "on-" + this.block[this.idx][1], this.time / 2);
   },
 
   // plays a sound
