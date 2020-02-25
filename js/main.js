@@ -185,7 +185,7 @@ var enviroment = {
     }
 
     // find max, avg and min for each day of training in the users's history
-    $.each(last10, function(key, value) {
+    $.each(latestResults, function(key, value) {
       if (value.data.avg() !== undefined) {
         maxs.push(value.data.max());
         avgs.push(value.data.avg());
