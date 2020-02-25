@@ -175,11 +175,13 @@ var enviroment = {
 
     // extract the last 10 games data
     var entries = Object.entries(this.history);
-    var lastIndex = entries.length - 1;
-    var last10 = {};
-    for (var i = lastIndex; i > lastIndex - 10; i--) {
-      var entry = entries[i];
-      last10[entry[0]] = entry[1];
+    var latestResults = this.history;
+    if (entries.length > 9) {
+      latestResults = {};
+      entries = entries.slice(-10);
+      for (var [ key, value ] of entries) {
+        latestResults[key] = value;
+      }
     }
 
     // find max, avg and min for each day of training in the users's history
