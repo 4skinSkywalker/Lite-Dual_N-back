@@ -173,8 +173,17 @@ var enviroment = {
       avgs = [],
       mins = [];
 
+    // extract the last 10 games data
+    var entries = Object.entries(this.history);
+    var lastIndex = entries.length - 1;
+    var last10 = {};
+    for (var i = lastIndex; i > lastIndex - 10; i--) {
+      var entry = entries[i];
+      last10[entry[0]] = entry[1];
+    }
+
     // find max, avg and min for each day of training in the users's history
-    $.each(this.history.slice(-10), function(key, value) {
+    $.each(last10, function(key, value) {
       if (value.data.avg() !== undefined) {
         maxs.push(value.data.max());
         avgs.push(value.data.avg());
