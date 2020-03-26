@@ -91,12 +91,15 @@ function prepareBlock(n, stimuli, clues) {
   // introduces matching stimuli, also called clues, inside the block
   function rightAmountOf(stimulus_name) {
     var el = (stimulus_name === "positions") ? 0 : 1;
+    var rnd = () => (el === 1)
+      ? 1 + Math.floor(Math.random() * 8)
+      : 4 + Math.floor(Math.random() * 3);
     var target, amount = 0;
     while (amount < clues) {
       target = Math.floor(Math.random() * block.length);
       if (block[target + n]) {
         if (block[target][el] === 0 && block[target + n][el] === 0) {
-          block[target][el] = 1 + Math.floor(Math.random() * 8);
+          block[target][el] = rnd();
           block[target + n][el] = block[target][el];
           amount++;
         } else if (block[target][el] !== 0 && block[target + n][el] === 0) {
@@ -119,12 +122,15 @@ function prepareBlock(n, stimuli, clues) {
   // you have to pay attention that "a random stimulus" may be also a clue
   function fillHole(stimulus_name, idx) {
     var el = (stimulus_name === "position") ? 0 : 1;
+    var rnd = () => (el === 1)
+      ? 1 + Math.floor(Math.random() * 8)
+      : 4 + Math.floor(Math.random() * 3);
     if (block[idx][el] === 0) {
-      block[idx][el] = 1 + Math.floor(Math.random() * 8);
-      if (block[idx - n] && block[idx][el] === block[idx - n][el])
-        (block[idx][el] < 8) ? block[idx][el]++ : block[idx][el]--;
-      else if (block[idx + n] && block[idx][el] === block[idx + n][el])
-        (block[idx][el] < 8) ? block[idx][el]++ : block[idx][el]--;
+      block[idx][el] = rnd();
+      if (el && (block[idx - n] && block[idx][el] === block[idx - n][el] || block[idx + n] && block[idx][el] === block[idx + n][el]))
+        (block[idx][el] < 8)
+          ? block[idx][el]++
+          : block[idx][el]--;
     }
   }
   rightAmountOf("positions");
