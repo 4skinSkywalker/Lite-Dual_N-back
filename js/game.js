@@ -94,17 +94,19 @@ var game = {
 
   // flashes a position
   flashPosition: function() {
-    var light = (this.block[this.idx][0] < 5) ? this.block[this.idx][0] - 1 : this.block[this.idx][0];
+    // var light = (this.block[this.idx][0] < 5) ? this.block[this.idx][0] - 1 : this.block[this.idx][0];
+    var light = this.block[this.idx][0] - 1;
     wow(".tile:eq(" + light + ")", "on", this.time / 2);
     wow(".tile:eq(" + light + ")", "on-" + this.block[this.idx][1], this.time / 2);
   },
 
   // plays a sound
   playSound: function() {
-    var soundIndex = (this.block[this.idx][0] < 5) ? this.block[this.idx][0] - 1 : this.block[this.idx][0];
+    // var soundIndex = (this.block[this.idx][0] < 5) ? this.block[this.idx][0] - 1 : this.block[this.idx][0];
+    var soundIndex = this.block[this.idx][0] - 1;
     var locations = [
       [-1,-1],[0,-1],[1,-1],
-      [-1,0],null,[1,0],
+      [-2,0],[0,0],[2,0],
       [-1,-1.25],[0,-1.25],[1,-1.25]
     ];
     var mult = 0.3
