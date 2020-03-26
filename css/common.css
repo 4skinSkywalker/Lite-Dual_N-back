@@ -19,6 +19,10 @@ body {
   background: white;
 }
 
+.hidden {
+  visibility: hidden;
+}
+
 input:focus,
 button:focus {
   outline: 0!important;
@@ -51,23 +55,19 @@ button:focus {
   transition: background-color 0.5s ease, box-shadow 0.5s ease;
 }
 
-#grid tr:nth-child(1) td:nth-child(1) div {
+#grid tr:nth-child(2) td:nth-child(1) div {
   border-top-left-radius: 50%;
 }
 
-#grid tr:nth-child(3) td:nth-child(1) div {
+#grid tr:nth-child(2) td:nth-child(1) div {
   border-bottom-left-radius: 50%;
 }
 
-#grid tr:nth-child(2) td:nth-child(2) div {
-  background: transparent;
-}
-
-#grid tr:nth-child(1) td:nth-child(3) div {
+#grid tr:nth-child(2) td:nth-child(3) div {
   border-top-right-radius: 50%;
 }
 
-#grid tr:nth-child(3) td:nth-child(3) div {
+#grid tr:nth-child(2) td:nth-child(3) div {
   border-bottom-right-radius: 50%;
 }
 
@@ -80,13 +80,11 @@ button:focus {
 }
 
 .center-tile {
-  background: rgba(0, 0, 0, 0.5)!important;
-  border-radius: 50%;
   box-shadow: none!important;
 }
 
 #N-level {
-  color: #fff;
+  color: rgba(0, 0, 0, 0.5);
 }
 
 #eye-btn,
