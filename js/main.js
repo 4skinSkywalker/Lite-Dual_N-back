@@ -122,6 +122,9 @@ var enviroment = {
       keyAllowed[e.which] = false;
       var keyCode = e.keyCode || e.which;
       switch (keyCode) {
+        case 32:
+          event.preventDefault();
+          break;
         case 65:
           game.checkUserInput("position");
           break;
@@ -173,19 +176,8 @@ var enviroment = {
       avgs = [],
       mins = [];
 
-    // extract the last 10 games data
-    var entries = Object.entries(this.history);
-    var latestResults = this.history;
-    if (entries.length > 9) {
-      latestResults = {};
-      entries = entries.slice(-10);
-      for (var [ key, value ] of entries) {
-        latestResults[key] = value;
-      }
-    }
-
     // find max, avg and min for each day of training in the users's history
-    $.each(latestResults, function(key, value) {
+    $.each(this.history, function(key, value) {
       if (value.data.avg() !== undefined) {
         maxs.push(value.data.max());
         avgs.push(value.data.avg());
