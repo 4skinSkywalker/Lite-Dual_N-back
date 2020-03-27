@@ -127,10 +127,15 @@ function prepareBlock(n, stimuli, clues) {
       : 4 + Math.floor(Math.random() * 3);
     if (block[idx][el] === 0) {
       block[idx][el] = rnd();
-      if (el && (block[idx - n] && block[idx][el] === block[idx - n][el] || block[idx + n] && block[idx][el] === block[idx + n][el]))
-        (block[idx][el] < 8)
-          ? block[idx][el]++
-          : block[idx][el]--;
+      if (block[idx - n] && block[idx][el] === block[idx - n][el] || block[idx + n] && block[idx][el] === block[idx + n][el])
+        if (el)
+          (block[idx][el] < 8)
+            ? block[idx][el]++
+            : block[idx][el]--;
+        else 
+          (block[idx][el] < 6)
+            ? block[idx][el]++
+            : block[idx][el]--;
     }
   }
   rightAmountOf("positions");
