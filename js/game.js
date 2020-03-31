@@ -8,7 +8,7 @@ var game = {
     this.n = Number($("#set-level").val());
     this.stimuli = calculateStimuli(this.n, this.clues);
     this.feedback = Number($("#feedback").val());
-    this.dailyGoal = 10;
+    this.dailyGoal = 20;
   },
 
   // updates sounds whenever the #select-sound has changed its value
