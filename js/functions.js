@@ -76,7 +76,7 @@ function makePlaybleSounds(arrSounds, dirSounds) {
 // produces the number of stimuli
 // changes the text of #stimuli-counter
 function calculateStimuli(n, clues) {
-  var stimuli = clues * (n + 1)
+  var stimuli = clues * (2 * n + 1)
   $("#stimuli-counter").text(stimuli);
   return stimuli;
 };
