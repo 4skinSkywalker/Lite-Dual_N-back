@@ -27,7 +27,7 @@ var game = {
 
   // starts the game
   // changes function to the play button, which now is a stop button
-  start: function(n, clues, time) {
+  start: function() {
     this.running = true;
     this.reset();
     this.playing = setTimeout(function() {
@@ -49,9 +49,11 @@ var game = {
   reset: function() {
     this.updateParameters();
     this.block = makeBlock(this.n, this.stimuli, this.clues);
+    this.prevScore = [0, 0, 0, 0, 0, 0];
     this.score = [0, 0, 0, 0, 0, 0];
     this.idx = -1;
     this.enable = [0, 0];
+    this.time = Number($("#set-time").val()); // this changed while in-game
   },
 
   // invoked when a user checks a clue using keys or buttons
@@ -139,6 +141,47 @@ var game = {
       this.stimuli--;
       $("#stimuli-counter").text(this.stimuli);
 
+      // change the stimulus time based on performance
+      let deltaDelay = 0;
+
+      // missed
+      if (this.score[1] !== this.prevScore[1]) {
+        deltaDelay += 100;
+        this.prevScore[1] = this.score[1];
+      }
+      if (this.score[4] !== this.prevScore[4]) {
+        deltaDelay += 100;
+        this.prevScore[4] = this.score[4];
+      }
+
+      // right
+      if (this.score[0] !== this.prevScore[0]) {
+        deltaDelay -= 100;
+        this.prevScore[0] = this.score[0];
+      }
+      if (this.score[3] !== this.prevScore[3]) {
+        deltaDelay -= 100;
+        this.prevScore[3] = this.score[3];
+      }
+
+      // wrong
+      if (this.score[2] !== this.prevScore[2]) {
+        deltaDelay += 100;
+        this.prevScore[2] = this.score[2];
+      }
+      if (this.score[5] !== this.prevScore[5]) {
+        deltaDelay += 100;
+        this.prevScore[5] = this.score[5];
+      }
+
+      // if new stimulus time is within the boundaries, then update it
+      let timeMin = +document.querySelector("#set-time").min;
+      let timeMax = +document.querySelector("#set-time").max;
+      let newTime = this.time + deltaDelay;
+      if (newTime > timeMin && newTime < timeMax) {
+        this.time = newTime;
+      }
+
       this.playing = setTimeout(this.playBlock.bind(this), this.time);
       this.enable = [0, 0];
     } else {
@@ -160,7 +203,7 @@ var game = {
       this.buildHTMLReport(
         this.score[1] + this.score[2], // wrongPositions
         this.score[4] + this.score[5], // wrongSounds
-        Math.floor(this.clues * (1 - 0.8)) // tolleratedErrors
+        Math.floor(this.clues * 0.3) // tolleratedErrors
       );
 
     // updates N level of #set-level within the slide menu

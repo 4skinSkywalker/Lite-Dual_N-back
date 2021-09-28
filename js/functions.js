@@ -183,7 +183,7 @@ function makeBlock(n, stimuli, clues) {
 function judgeResults(wrongPositions, wrongSounds, tolleratedErrors) {
   if (wrongPositions <= tolleratedErrors && wrongSounds <= tolleratedErrors) {
     return 2; // next level
-  } else if (wrongPositions <= (tolleratedErrors+2) || wrongSounds <= (tolleratedErrors+2)) {
+  } else if (wrongPositions <= (tolleratedErrors+3) || wrongSounds <= (tolleratedErrors+3)) {
     return 1; // same level
   } else {
     if (game.n !== 1)
