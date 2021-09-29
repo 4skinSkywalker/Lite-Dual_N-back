@@ -133,10 +133,10 @@ var enviroment = {
           game.checkUserInput("eye-btn");
           break;
         case 75:
-          game.checkUserInput("ear-right-btn");
+          game.checkUserInput("ear-left-btn");
           break;
         case 76:
-          game.checkUserInput("ear-left-btn");
+          game.checkUserInput("ear-right-btn");
           break;
         case 83:
           enviroment.closeAllPopups();

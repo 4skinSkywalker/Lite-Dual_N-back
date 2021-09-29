@@ -203,6 +203,7 @@ var game = {
     // the following piece of code is useful to calculate missing clues
     this.score[1] = this.clues - this.score[0];
     this.score[4] = this.clues - this.score[3];
+    this.score[7] = this.clues - this.score[6];
 
     // a simple alias for enviroment object, used below
     var e = enviroment;
@@ -211,7 +212,7 @@ var game = {
     document.getElementById(e.resultsPopup.innerID).innerHTML =
       this.buildHTMLReport(
         this.score[1] + this.score[2], // wrongPositions
-        this.score[4] + this.score[5], // wrongSounds
+        this.score[4] + this.score[5] + this.score[7] + this.score[8], // wrongSounds
         Math.floor(this.clues * 0.3) // tolleratedErrors
       );
 
@@ -232,10 +233,16 @@ var game = {
   buildHTMLReport: function(wrongPositions, wrongSounds, tolleratedErrors) {
     var s = "";
     s += "<table class=\"results-icons\">";
-    s += "<tr><td colspan=\"2\">Positions</td><td colspan=\"2\">Sounds</td></tr>";
-    s += "<tr><td>☑</td><td>" + this.score[0] + "</td><td>☑</td><td>" + this.score[3] + "</td></tr>";
-    s += "<tr><td>☐</td><td>" + this.score[1] + "</td><td>☐</td><td>" + this.score[4] + "</td></tr>";
-    s += "<tr><td>☒</td><td>" + this.score[2] + "</td><td>☒</td><td>" + this.score[5] + "</td></tr>";
+    s += "<tr><td colspan=\"2\">Pos</td><td colspan=\"2\">Snd L</td><td colspan=\"2\">Snd R</td></tr>";
+    s += "<tr><td>☑</td><td>" + this.score[0] + "</td>"
+       + "<td>☑</td><td>" + this.score[3] + "</td>"
+       + "<td>☑</td><td>" + this.score[5] + "</td></tr>";
+    s += "<tr><td>☐</td><td>" + this.score[1] + "</td>"
+       + "<td>☐</td><td>" + this.score[4] + "</td>"
+       + "<td>☐</td><td>" + this.score[7] + "</td></tr>";
+    s += "<tr><td>☒</td><td>" + this.score[2] + "</td>"
+        + "<td>☒</td><td>" + this.score[5] + "</td>"
+        + "<td>☒</td><td>" + this.score[8] + "</td></tr>";
     s += "</table>";
 
     // decides what to do in each case of judgement
