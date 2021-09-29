@@ -236,7 +236,7 @@ var game = {
     s += "<tr><td colspan=\"2\">Pos</td><td colspan=\"2\">Snd L</td><td colspan=\"2\">Snd R</td></tr>";
     s += "<tr><td>☑</td><td>" + this.score[0] + "</td>"
        + "<td>☑</td><td>" + this.score[3] + "</td>"
-       + "<td>☑</td><td>" + this.score[5] + "</td></tr>";
+       + "<td>☑</td><td>" + this.score[6] + "</td></tr>";
     s += "<tr><td>☐</td><td>" + this.score[1] + "</td>"
        + "<td>☐</td><td>" + this.score[4] + "</td>"
        + "<td>☐</td><td>" + this.score[7] + "</td></tr>";
