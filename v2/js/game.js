@@ -12,18 +12,24 @@ var game = {
     this.dailyGoal = 20;
   },
 
-  // updates sounds whenever the #select-sound has changed its value
-  updateSounds: function() {
-    var folder = $("#select-sound").val();
-    this.playableSoundsLeft = makePlaybleSounds(enviroment.sounds[folder], folder);
-    this.playableSoundsRight = makePlaybleSounds(enviroment.sounds[folder], folder);
+  // updates sounds whenever the #select-sound-left has changed its value
+  updateSoundsLeft: function() {
+    var folder = $("#select-sound-left").val();
+    this.playableSoundsLeft = makePlaybleSounds(enviroment.soundsLeft[folder], folder);
+  },
+
+  // updates sounds whenever the #select-sound-right has changed its value
+  updateSoundsRight: function() {
+    var folder = $("#select-sound-right").val();
+    this.playableSoundsRight = makePlaybleSounds(enviroment.soundsRight[folder], folder);
   },
 
   // ordered procedure to initialize things properly
   init: function() {
     this.running = false;
     this.updateParameters();
-    this.updateSounds();
+    this.updateSoundsLeft();
+    this.updateSoundsRight();
     this.reset();
   },
 

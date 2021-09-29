@@ -5,21 +5,36 @@ var enviroment = {
 
   name: "DNB_2.0.0.0", // name of the enviroment
   history: {}, // collection of data
-  sounds: {
+  soundsLeft: {
+    "Letters English (USA)": _letters,
+    "Letters English (UK)": _letters,
+    "Letters German": _letters,
+    "Letters Russian": _letters,
+    "Letters Italian": ["c.mp3", "h.mp3", "k.mp3", "l.mp3", "q.mp3", "r.mp3", "s.mp3", "x.mp3"],
     "Numbers English (USA)": _numbers,
     "Numbers English (UK)": _numbers,
     "Numbers German": _numbers,
     "Numbers Russian": _numbers,
     "Numbers Italian": _numbers,
     "Piano": ["A4.wav", "B4.wav", "C4.wav", "C5.wav", "D4.wav", "E4.wav", "F4.wav", "G4.wav"],
+    "Shapes English": ["point.mp3", "line.mp3", "circle.mp3", "triangle.mp3", "square.mp3", "rectangle.mp3", "pentagon.mp3", "hexagon.mp3"],
+    "Shapes Italian": ["punto.mp3", "linea.mp3", "cerchio.mp3", "triangolo.mp3", "quadrato.mp3", "rettangolo.mp3", "pentagono.mp3", "esagono.mp3"]
+  }, // ordered structure of snd/ directory for the left ear
+  soundsRight: {
+    "Numbers English (USA)": _numbers,
+    "Numbers English (UK)": _numbers,
+    "Numbers German": _numbers,
+    "Numbers Russian": _numbers,
+    "Numbers Italian": _numbers,
+    "Piano": ["A4.wav", "B4.wav", "C4.wav", "C5.wav", "D4.wav", "E4.wav", "F4.wav", "G4.wav"],
+    "Shapes English": ["point.mp3", "line.mp3", "circle.mp3", "triangle.mp3", "square.mp3", "rectangle.mp3", "pentagon.mp3", "hexagon.mp3"],
+    "Shapes Italian": ["punto.mp3", "linea.mp3", "cerchio.mp3", "triangolo.mp3", "quadrato.mp3", "rettangolo.mp3", "pentagono.mp3", "esagono.mp3"],
     "Letters English (USA)": _letters,
     "Letters English (UK)": _letters,
     "Letters German": _letters,
     "Letters Russian": _letters,
-    "Letters Italian": ["c.mp3", "h.mp3", "k.mp3", "l.mp3", "q.mp3", "r.mp3", "s.mp3", "x.mp3"],
-    "Shapes English": ["point.mp3", "line.mp3", "circle.mp3", "triangle.mp3", "square.mp3", "rectangle.mp3", "pentagon.mp3", "hexagon.mp3"],
-    "Shapes Italian": ["punto.mp3", "linea.mp3", "cerchio.mp3", "triangolo.mp3", "quadrato.mp3", "rettangolo.mp3", "pentagono.mp3", "esagono.mp3"]
-  }, // a map that shows the structure of snd/ directory
+    "Letters Italian": ["c.mp3", "h.mp3", "k.mp3", "l.mp3", "q.mp3", "r.mp3", "s.mp3", "x.mp3"]
+  }, // ordered structure of snd/ directory for the right ear
 
   // sets the date for today (day/month/year)
   _setDate: function() {
@@ -102,19 +117,28 @@ var enviroment = {
       $("#set-level-span").text(txt);
       $("#N-level").text("N = " + txt);
     });
-    onChange("#select-sound", function() {
-      game.updateSounds();
+    onChange("#select-sound-left", function() {
+      game.updateSoundsLeft();
+    });
+    onChange("#select-sound-right", function() {
+      game.updateSoundsRight();
     });
     onChange("#feedback", function() {
       game.feedback = Number($("#feedback").val());
       $("#feedback-span").text(game.feedback === 1 ? "on" : "off");
     });
 
-    // appends sounds keys of enviroment.sound to #select-sound
-    var sounds = this.sounds;
-    for (var key in sounds)
-      if (sounds.hasOwnProperty(key))
-        $("#select-sound").append("<option>" + key + "</option>");
+    // appends sounds keys of enviroment.sound to #select-sound-left&right
+    for (var key in this.soundsLeft) {
+      if (this.soundsLeft.hasOwnProperty(key)) {
+        $("#select-sound-left").append("<option>" + key + "</option>");
+      }
+    }
+    for (var key in this.soundsRight) {
+      if (this.soundsRight.hasOwnProperty(key)) {
+        $("#select-sound-right").append("<option>" + key + "</option>");
+      }
+    }
   },
 
   // assigns to the required key and buttons specific functions
