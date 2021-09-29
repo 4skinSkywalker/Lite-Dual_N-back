@@ -193,11 +193,6 @@ var game = {
 
   endBlock: function() {
 
-    // the following piece of code is useful to calculate missing clues
-    // Math.max() is used because matching stimuli may be in different numbers than expected 
-    this.score[1] = Math.max(this.clues - this.score[0], 0);
-    this.score[4] = Math.max(this.clues - this.score[3], 0);
-
     // a simple alias for enviroment object, used below
     var e = enviroment;
 

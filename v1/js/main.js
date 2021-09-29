@@ -127,7 +127,7 @@ var enviroment = {
       var keyCode = e.keyCode || e.which;
       switch (keyCode) {
         case 32:
-          event.preventDefault();
+          e.preventDefault();
           break;
         case 65:
           game.checkUserInput("position");

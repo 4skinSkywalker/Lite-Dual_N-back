@@ -3,7 +3,7 @@ var _letters = ["c.mp3", "h.mp3", "k.mp3", "l.mp3", "q.mp3", "r.mp3", "s.mp3", "
 
 var enviroment = {
 
-  name: "DNB_1.0.0.0", // name of the enviroment
+  name: "DNB_2.0.0.0", // name of the enviroment
   history: {}, // collection of data
   sounds: {
     "Numbers English (USA)": _numbers,
@@ -127,7 +127,7 @@ var enviroment = {
       var keyCode = e.keyCode || e.which;
       switch (keyCode) {
         case 32:
-          event.preventDefault();
+          e.preventDefault();
           break;
         case 65:
           game.checkUserInput("eye-btn");
