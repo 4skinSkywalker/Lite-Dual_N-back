@@ -1,9 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
 ::-webkit-scrollbar {
   display: none;
 }
 
 body * {
-  font-family: Exo;
   user-select: none;
   -moz-user-select: none;
   -khtml-user-select: none;
@@ -16,6 +17,7 @@ body {
   position: fixed;
   margin: 0;
   height: 100vh;
+  font-family: 'Roboto', sans-serif;
   background: white;
 }
 

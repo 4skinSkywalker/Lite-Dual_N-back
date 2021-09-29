@@ -4,6 +4,7 @@ var game = {
   // values are taken from HTML elements
   updateParameters: function() {
     this.time = Number($("#set-time").val());
+    this.dynamicDelay = Number($("#dynamic-delay").val());
     this.clues = Number($("#set-clues").val());
     this.n = Number($("#set-level").val());
     this.stimuli = calculateStimuli(this.n, this.clues);
@@ -141,45 +142,52 @@ var game = {
       this.stimuli--;
       $("#stimuli-counter").text(this.stimuli);
 
-      // change the stimulus time based on performance
-      let deltaDelay = 0;
+      console.log("Is dynamic delay on?", this.dynamicDelay);
+      console.log("Stimulus time", this.time);
 
-      // missed
-      if (this.score[1] !== this.prevScore[1]) {
-        deltaDelay += 100;
-        this.prevScore[1] = this.score[1];
-      }
-      if (this.score[4] !== this.prevScore[4]) {
-        deltaDelay += 100;
-        this.prevScore[4] = this.score[4];
-      }
+      // if dynamic delay is on, then change the stimulus time based on performance
+      if (this.dynamicDelay) {
 
-      // right
-      if (this.score[0] !== this.prevScore[0]) {
-        deltaDelay -= 100;
-        this.prevScore[0] = this.score[0];
-      }
-      if (this.score[3] !== this.prevScore[3]) {
-        deltaDelay -= 100;
-        this.prevScore[3] = this.score[3];
-      }
+        let deltaDelay = 0;
 
-      // wrong
-      if (this.score[2] !== this.prevScore[2]) {
-        deltaDelay += 100;
-        this.prevScore[2] = this.score[2];
-      }
-      if (this.score[5] !== this.prevScore[5]) {
-        deltaDelay += 100;
-        this.prevScore[5] = this.score[5];
-      }
+        // missed
+        if (this.score[1] !== this.prevScore[1]) {
+          deltaDelay += 100;
+          this.prevScore[1] = this.score[1];
+        }
+        if (this.score[4] !== this.prevScore[4]) {
+          deltaDelay += 100;
+          this.prevScore[4] = this.score[4];
+        }
 
-      // if new stimulus time is within the boundaries, then update it
-      let timeMin = +document.querySelector("#set-time").min;
-      let timeMax = +document.querySelector("#set-time").max;
-      let newTime = this.time + deltaDelay;
-      if (newTime > timeMin && newTime < timeMax) {
-        this.time = newTime;
+        // right
+        if (this.score[0] !== this.prevScore[0]) {
+          deltaDelay -= 100;
+          this.prevScore[0] = this.score[0];
+        }
+        if (this.score[3] !== this.prevScore[3]) {
+          deltaDelay -= 100;
+          this.prevScore[3] = this.score[3];
+        }
+
+        // wrong
+        if (this.score[2] !== this.prevScore[2]) {
+          deltaDelay += 100;
+          this.prevScore[2] = this.score[2];
+        }
+        if (this.score[5] !== this.prevScore[5]) {
+          deltaDelay += 100;
+          this.prevScore[5] = this.score[5];
+        }
+
+        // if new stimulus time is within the boundaries, then update it
+        let timeMin = +document.querySelector("#set-time").min;
+        let timeMax = +document.querySelector("#set-time").max;
+        console.log("Lower and upper boundaries", timeMin, timeMax);
+        let newTime = this.time + deltaDelay;
+        if (newTime > timeMin && newTime < timeMax) {
+          this.time = newTime;
+        }
       }
 
       this.playing = setTimeout(this.playBlock.bind(this), this.time);
