@@ -34,21 +34,6 @@ button:focus {
   color: rgba(0, 0, 0, 0.5);
 }
 
-#grid {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  border-collapse: collapse;
-  background: transparent;
-}
-
-#grid td {
-  vertical-align: middle;
-  height: 33.33333%;
-  width: 33.33333%;
-}
-
 #grid td div {
   height: 100%;
   width: 100%;
@@ -56,11 +41,11 @@ button:focus {
 }
 
 .tile-left {
-  border-right: 1px solid #111!important;
+  border-right: 3px solid #111!important;
 }
 
 .tile-right {
-  border-left: 1px solid #111!important;
+  border-left: 3px solid #111!important;
 }
 
 .tile-left.on, .tile-right.on {
@@ -70,7 +55,7 @@ button:focus {
 .tile {
   display: flex;
   justify-content: center;
-  align-content: center;
+  align-items: center;
   flex-direction: column;
   text-align: center;
 }
@@ -276,7 +261,6 @@ input[type=range].slider:focus::-webkit-slider-runnable-track {
 .on-emotion-5,
 .on-emotion-6,
 .on-emotion-7 {
- background-size: 17em;
  background-position: 50%;
  background-repeat: no-repeat;
 }
@@ -311,17 +295,6 @@ input[type=range].slider:focus::-webkit-slider-runnable-track {
 
 .on-emotion-7 {
   background-image: url("../img/emotions/surprised.png");
-}
-
-.on-letter-0::after,
-.on-letter-1::after,
-.on-letter-2::after,
-.on-letter-3::after,
-.on-letter-4::after,
-.on-letter-5::after,
-.on-letter-6::after,
-.on-letter-7::after {
-  font-size: 16em;
 }
 
 .on-letter-0::after {

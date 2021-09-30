@@ -1,6 +1,45 @@
 #grid {
-  height: 100vh;
-  width: 100vh;
+  position: absolute;
+  top: 10vh;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 50vh;
+  width: 80vh;
+  border-collapse: collapse;
+  background: transparent;
+}
+
+td.heading-td {
+  height: 10vh;
+  width: 40vh;
+}
+
+td.visual-td {
+  height: 40vh;
+  width: 40vh;
+}
+
+.on-emotion-0,
+.on-emotion-1,
+.on-emotion-2,
+.on-emotion-3,
+.on-emotion-4,
+.on-emotion-5,
+.on-emotion-6,
+.on-emotion-7 {
+  background-size: 40vh;
+}
+
+.on-letter-0::after,
+.on-letter-1::after,
+.on-letter-2::after,
+.on-letter-3::after,
+.on-letter-4::after,
+.on-letter-5::after,
+.on-letter-6::after,
+.on-letter-7::after {
+  font-size: 39.9vh;
+  line-height: 1;
 }
 
 #status-bar * {
