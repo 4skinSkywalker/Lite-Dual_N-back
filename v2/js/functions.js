@@ -35,9 +35,10 @@ Array.prototype.min = function() {
 // adds a class to a HTML element
 // and then removes that class after a certain amount of time
 function wow(element, _class, time) {
-  $(element).addClass(_class);
+  let el = document.querySelector(element);
+  el.classList.add(_class);
   setTimeout(function() {
-    $(element).removeClass(_class);
+    el.classList.remove(_class);
   }, time);
 }
 

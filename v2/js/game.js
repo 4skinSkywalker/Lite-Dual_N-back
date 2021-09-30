@@ -125,14 +125,14 @@ var game = {
 
   flashVisualLeft: function() {
     var letterIdx = this.block[this.idx][0] - 1;
-    wow(".tile:eq(2)", "on", this.time / 2);
-    wow(".tile:eq(2)", "on-letter-" + letterIdx, this.time - 50);
+    wow(".tile.tile-left", "on", this.time / 2);
+    wow(".tile.tile-left", "on-letter-" + letterIdx, this.time - 50);
   },
 
   flashVisualRight: function() {
     var emotionIdx = this.block[this.idx][3] - 1;
-    wow(".tile:eq(3)", "on", this.time / 2);
-    wow(".tile:eq(3)", "on-emotion-" + emotionIdx, this.time - 50);
+    wow(".tile.tile-right", "on", this.time / 2);
+    wow(".tile.tile-right", "on-emotion-" + emotionIdx, this.time - 50);
   },
 
   playSoundLeft: function() {
