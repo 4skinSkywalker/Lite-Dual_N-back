@@ -71,15 +71,21 @@
       <li class="nav-item">
         <!-- do you want feedback? -->
         <span class="range-label">Clue feedback? </span>
-        <span id="feedback-span" class="range-label">off</span>
-        <input type="range" class="slider" id="feedback" min="0" max="1" step="1" value="0">
+        <span id="feedback-span" class="range-label">on</span>
+        <input type="range" class="slider" id="feedback" min="0" max="1" step="1" value="1">
       </li>
       <!-- settings end -->
 
       <!-- a brief description on how to play -->
       <li class="nav-item">
         <p>
-          <span style="color: #ffd700">Controls:</span><br> "A" for visual<br> "K" for left audio<br> "L" for right audio<br> "S" to start/stop<br>
+          <span style="color: #ffd700">Controls:</span>
+          <br> "A" for visual left
+          <br> "S" for visual right
+          <br> "K" for left audio
+          <br> "L" for right audio
+          <br> "P" to start/stop
+          <br>
           <br>
         </p>
       </li>
@@ -106,14 +112,38 @@
       <!-- the N-back grid -->
       <table id="grid">
         <tbody>
-          <tr><td><div class="tile hidden"></div></td><td><div class="tile center-tile"><p id="N-level">N = 2</p></div></td><td><div class="tile hidden"></div></td></tr>
-          <tr><td><div class="tile"></div></td><td><div class="tile"></div></td><td><div class="tile"></div></td></tr>
-          <tr><td><div class="tile hidden"></div></td><td><div class="tile hidden"></div></td><td><div class="tile hidden"></div></td></tr>
+          <tr>
+            <td>
+              <div class="tile hidden"></div>
+            </td>
+            <td>
+              <div class="tile center-tile">
+                <p id="N-level">N = 2</p>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="tile tile-left"></div>
+            </td>
+            <td>
+              <div class="tile tile-right"></div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="tile hidden"></div>
+            </td>
+            <td>
+              <div class="tile hidden"></div>
+            </td>
+          </tr>
         </tbody>
       </table>
 
       <!-- buttons to confirm clues -->
-      <div id="eye-btn"></div>
+      <div id="eye-left-btn"></div>
+      <div id="eye-right-btn"></div>
       <div id="ear-left-btn"></div>
       <div id="ear-right-btn"></div>
     </div>

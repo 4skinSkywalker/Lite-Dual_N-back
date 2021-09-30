@@ -56,11 +56,26 @@ var game = {
   // resets temporary variables used within playBlock
   reset: function() {
     this.updateParameters();
-    this.block = makeBlock(this.n, this.stimuli, this.clues);
-    this.prevScore = [0, 0, 0, 0, 0, 0, 0, 0, 0];
-    this.score = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+    this.block = prepareBlock(this.n, this.stimuli, this.clues);
+    this.prevScore = [
+      0, 0, 0, // vis left
+      0, 0, 0, // snd left
+      0, 0, 0, // snd right
+      0, 0, 0  // vis right
+    ];
+    this.score = [
+      0, 0, 0, // vis left
+      0, 0, 0, // snd left
+      0, 0, 0, // snd right
+      0, 0, 0  // vis right
+    ];
     this.idx = -1;
-    this.enable = [0, 0, 0];
+    this.enable = [
+      0, // vis left
+      0, // snd left
+      0, // snd right
+      0  // vis right
+    ];
     this.time = Number($("#set-time").val()); // this changed while in-game
   },
 
@@ -70,7 +85,7 @@ var game = {
   // when feedback is set to 1 it also displays a visual feedback
   checkUserInput: function(stimulus_name) {
 
-    var stimulusButtons = ["eye-btn", "ear-left-btn", "ear-right-btn"];
+    var stimulusButtons = ["eye-left-btn", "ear-left-btn", "ear-right-btn", "eye-right-btn"];
     var el = stimulusButtons.indexOf(stimulus_name);
     // right eye 0, right ear left 3, right ear right 6
     // wrong eye 2, wrong ear left 5, wrong ear right 8
@@ -95,7 +110,7 @@ var game = {
   // keeps track of the user's score
   checkMissingInput: function(stimulus_name) {
 
-    var stimulusButtons = ["eye-btn", "ear-left-btn", "ear-right-btn"];
+    var stimulusButtons = ["eye-left-btn", "ear-left-btn", "ear-right-btn", "eye-right-btn"];
     var el = stimulusButtons.indexOf(stimulus_name);
     // missed eye 1, missed ear left 4, missed ear right 7
 
@@ -108,11 +123,16 @@ var game = {
       }
   },
 
-  // flashes a position
-  flashPosition: function() {
-    var light = this.block[this.idx][0] - 1;
-    wow(".tile:eq(" + light + ")", "on", this.time / 2);
-    wow(".tile:eq(" + light + ")", "on-99", this.time / 2);
+  flashVisualLeft: function() {
+    var letterIdx = this.block[this.idx][0] - 1;
+    wow(".tile:eq(2)", "on", this.time / 2);
+    wow(".tile:eq(2)", "on-letter-" + letterIdx, this.time - 50);
+  },
+
+  flashVisualRight: function() {
+    var emotionIdx = this.block[this.idx][3] - 1;
+    wow(".tile:eq(3)", "on", this.time / 2);
+    wow(".tile:eq(3)", "on-emotion-" + emotionIdx, this.time - 50);
   },
 
   playSoundLeft: function() {
@@ -134,11 +154,13 @@ var game = {
     // in case the block is not at its end plays stimuli
     // otherwise calls endGame
     if (++this.idx < this.block.length) {
-      this.checkMissingInput("eye-btn");
+      this.checkMissingInput("eye-left-btn");
       this.checkMissingInput("ear-left-btn");
       this.checkMissingInput("ear-right-btn");
+      this.checkMissingInput("eye-right-btn");
 
-      this.flashPosition();
+      this.flashVisualLeft();
+      this.flashVisualRight();
       this.playSoundLeft();
       this.playSoundRight();
 
@@ -157,34 +179,58 @@ var game = {
 
         let deltaDelay = 0;
 
-        // missed
-        if (this.score[1] !== this.prevScore[1]) {
-          deltaDelay += 100;
-          this.prevScore[1] = this.score[1];
-        }
-        if (this.score[4] !== this.prevScore[4]) {
-          deltaDelay += 100;
-          this.prevScore[4] = this.score[4];
-        }
-
         // right
         if (this.score[0] !== this.prevScore[0]) {
-          deltaDelay -= 100;
+          deltaDelay -= 25;
           this.prevScore[0] = this.score[0];
         }
         if (this.score[3] !== this.prevScore[3]) {
-          deltaDelay -= 100;
+          deltaDelay -= 25;
           this.prevScore[3] = this.score[3];
+        }
+        if (this.score[9] !== this.prevScore[9]) {
+          deltaDelay -= 25;
+          this.prevScore[9] = this.score[9];
+        }
+        if (this.score[6] !== this.prevScore[6]) {
+          deltaDelay -= 25;
+          this.prevScore[6] = this.score[6];
+        }
+
+        // missed
+        if (this.score[1] !== this.prevScore[1]) {
+          deltaDelay += 25;
+          this.prevScore[1] = this.score[1];
+        }
+        if (this.score[4] !== this.prevScore[4]) {
+          deltaDelay += 25;
+          this.prevScore[4] = this.score[4];
+        }
+        if (this.score[10] !== this.prevScore[10]) {
+          deltaDelay += 25;
+          this.prevScore[10] = this.score[10];
+        }
+        if (this.score[7] !== this.prevScore[7]) {
+          deltaDelay += 25;
+          this.prevScore[7] = this.score[7];
         }
 
         // wrong
         if (this.score[2] !== this.prevScore[2]) {
-          deltaDelay += 100;
+          deltaDelay += 25;
           this.prevScore[2] = this.score[2];
         }
         if (this.score[5] !== this.prevScore[5]) {
-          deltaDelay += 100;
+          deltaDelay += 25;
           this.prevScore[5] = this.score[5];
+        }
+        if (this.score[11] !== this.prevScore[11]) {
+          deltaDelay += 25;
+          this.prevScore[11] = this.score[11];
+        }
+        if (this.score[8] !== this.prevScore[8]) {
+          deltaDelay += 25;
+          this.prevScore[8] = this.score[8];
         }
 
         // if new stimulus time is within the boundaries, then update it
@@ -198,7 +244,7 @@ var game = {
       }
 
       this.playing = setTimeout(this.playBlock.bind(this), this.time);
-      this.enable = [0, 0, 0];
+      this.enable = [0, 0, 0, 0];
     } else {
       this.endBlock();
     }
@@ -212,7 +258,7 @@ var game = {
     // puts a report into resultsPopup
     document.getElementById(e.resultsPopup.innerID).innerHTML =
       this.buildHTMLReport(
-        this.score[1] + this.score[2], // wrongPositions
+        this.score[1] + this.score[2] + this.score[10] + this.score[11], // wrongPositions
         this.score[4] + this.score[5] + this.score[7] + this.score[8], // wrongSounds
         Math.floor(this.clues * 0.3) // tolleratedErrors
       );
@@ -234,14 +280,17 @@ var game = {
   buildHTMLReport: function(wrongPositions, wrongSounds, tolleratedErrors) {
     var s = "";
     s += "<table class=\"results-icons\">";
-    s += "<tr><td colspan=\"2\">Pos</td><td colspan=\"2\">Snd L</td><td colspan=\"2\">Snd R</td></tr>";
+    s += "<tr><td colspan=\"2\">Vis L</td><td colspan=\"2\">Vis R</td><td colspan=\"2\">Snd L</td><td colspan=\"2\">Snd R</td></tr>";
     s += "<tr><td>☑</td><td>" + this.score[0] + "</td>"
+       + "<td>☑</td><td>" + this.score[9] + "</td>"
        + "<td>☑</td><td>" + this.score[3] + "</td>"
        + "<td>☑</td><td>" + this.score[6] + "</td></tr>";
     s += "<tr><td>☐</td><td>" + this.score[1] + "</td>"
+       + "<td>☐</td><td>" + this.score[10] + "</td>"
        + "<td>☐</td><td>" + this.score[4] + "</td>"
        + "<td>☐</td><td>" + this.score[7] + "</td></tr>";
     s += "<tr><td>☒</td><td>" + this.score[2] + "</td>"
+        + "<td>☒</td><td>" + this.score[11] + "</td>"
         + "<td>☒</td><td>" + this.score[5] + "</td>"
         + "<td>☒</td><td>" + this.score[8] + "</td></tr>";
     s += "</table>";

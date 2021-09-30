@@ -84,26 +84,21 @@ function calculateStimuli(n, clues) {
 function prepareBlock(n, stimuli, clues) {
 
   // makes an array, also called block, made of empty elements
-  // [num_code_for_position, num_code_for_left_sound, num_code_for_right_sound]
   var block = [];
-  for (var i = 0; i < stimuli; i++) block.push([0, 0, 0]);
+  for (var i = 0; i < stimuli; i++) block.push([0, 0, 0, 0]);
 
   // introduces matching stimuli, also called clues, inside the block
   function rightAmountOf(stimulus_name) {
 
-    var stimulusButtons = ["eye-btn", "ear-left-btn", "ear-right-btn"];
+    var stimulusButtons = ["eye-left-btn", "ear-left-btn", "ear-right-btn", "eye-right-btn"];
     var el = stimulusButtons.indexOf(stimulus_name);
-
-    var rnd = () => (el > 0)
-      ? 1 + Math.floor(Math.random() * 8)
-      : 4 + Math.floor(Math.random() * 3);
     
     var target, amount = 0;
     while (amount < clues) {
       target = Math.floor(Math.random() * block.length);
       if (block[target + n]) {
         if (block[target][el] === 0 && block[target + n][el] === 0) {
-          block[target][el] = rnd();
+          block[target][el] = Math.floor(Math.random() * 8);
           block[target + n][el] = block[target][el];
           amount++;
         } else if (block[target][el] !== 0 && block[target + n][el] === 0) {
@@ -126,61 +121,34 @@ function prepareBlock(n, stimuli, clues) {
   // you have to pay attention that "a random stimulus" may be also a clue
   function fillHole(stimulus_name, idx) {
     
-    var stimulusButtons = ["eye-btn", "ear-left-btn", "ear-right-btn"];
+    var stimulusButtons = ["eye-left-btn", "ear-left-btn", "ear-right-btn", "eye-right-btn"];
     var el = stimulusButtons.indexOf(stimulus_name);
 
-    var rnd = () => (el > 0)
-      ? 1 + Math.floor(Math.random() * 8)
-      : 4 + Math.floor(Math.random() * 3);
+    // zero is used as the non-initialized stimulus
     if (block[idx][el] === 0) {
-      block[idx][el] = rnd();
+      block[idx][el] = 1 + Math.floor(Math.random() * 8);
       if (block[idx - n] && block[idx][el] === block[idx - n][el] || block[idx + n] && block[idx][el] === block[idx + n][el])
-        if (el)
-          (block[idx][el] < 8)
-            ? block[idx][el]++
-            : block[idx][el]--;
-        else 
-          (block[idx][el] < 6)
-            ? block[idx][el]++
-            : block[idx][el]--;
+        (block[idx][el] < 8)
+          ? block[idx][el]++
+          : block[idx][el]--
     }
   }
-  rightAmountOf("eye-btn");
+  rightAmountOf("eye-left-btn");
   rightAmountOf("ear-left-btn");
   rightAmountOf("ear-right-btn");
+  rightAmountOf("eye-right-btn");
 
   // there are empty spots inside the block of stimuli
   // therefore calls fillHole to fill those empty spots
   for (var i = 0; i < block.length; i++) {
-    fillHole("eye-btn", i);
+    fillHole("eye-left-btn", i);
     fillHole("ear-left-btn", i);
     fillHole("ear-right-btn", i);
+    fillHole("eye-right-btn", i);
   }
+
   return block;
 };
-
-// isValidBlock helps makeBlock
-// to establish if the block made from prepareBlock
-// is made of the same amount of clues for both position and sound
-function isValidBlock(block, n, clues) {
-  var positions = 0, sounds = 0;
-  for (var i = 0; i < block.length; i++)
-    if (block[i - n]) {
-      if (block[i][0] === block[i - n][0]) positions++;
-      if (block[i][1] === block[i - n][1]) sounds++;
-    }
-  return (positions === sounds && positions === clues);
-};
-
-// returns a ready-to-play block for the game object
-function makeBlock(n, stimuli, clues) {
-  var block;
-  do {
-    block = prepareBlock(n, stimuli, clues);
-  } while (!isValidBlock(block, n, clues))
-  return block;
-};
-// block-building-fns end
 
 // let pd be what the player deserves
 //

@@ -154,7 +154,10 @@ var enviroment = {
           e.preventDefault();
           break;
         case 65:
-          game.checkUserInput("eye-btn");
+          game.checkUserInput("eye-left-btn");
+          break;
+        case 83:
+          game.checkUserInput("eye-right-btn");
           break;
         case 75:
           game.checkUserInput("ear-left-btn");
@@ -162,7 +165,7 @@ var enviroment = {
         case 76:
           game.checkUserInput("ear-right-btn");
           break;
-        case 83:
+        case 80:
           enviroment.closeAllPopups();
           $("#engine-btn").click();
           break;
@@ -175,14 +178,24 @@ var enviroment = {
     });
 
     // initializes click and touch events
-    document.querySelector("#eye-btn").addEventListener("touchstart", function(e) {
+    document.querySelector("#eye-left-btn").addEventListener("touchstart", function(e) {
       e.preventDefault();
-      game.checkUserInput("eye-btn");
+      game.checkUserInput("eye-left-btn");
     }, false);
-    document.querySelector("#eye-btn").addEventListener("click", function(e) {
+    document.querySelector("#eye-left-btn").addEventListener("click", function(e) {
       e.preventDefault();
-      game.checkUserInput("eye-btn");
+      game.checkUserInput("eye-left-btn");
     }, false);
+
+    document.querySelector("#eye-right-btn").addEventListener("touchstart", function(e) {
+      e.preventDefault();
+      game.checkUserInput("eye-right-btn");
+    }, false);
+    document.querySelector("#eye-right-btn").addEventListener("click", function(e) {
+      e.preventDefault();
+      game.checkUserInput("eye-right-btn");
+    }, false);
+
     document.querySelector("#ear-left-btn").addEventListener("touchstart", function(e) {
       e.preventDefault();
       game.checkUserInput("ear-left-btn");
@@ -191,6 +204,7 @@ var enviroment = {
       e.preventDefault();
       game.checkUserInput("ear-left-btn");
     }, false);
+
     document.querySelector("#ear-right-btn").addEventListener("touchstart", function(e) {
       e.preventDefault();
       game.checkUserInput("ear-right-btn");

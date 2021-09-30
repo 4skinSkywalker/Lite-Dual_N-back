@@ -22,53 +22,59 @@
   right: 2vh;
 }
 
-#eye-btn {
-  position: absolute;
-  font-size: 5vh;
-  width: 49.5vw;
-  height: 15vh;
-  line-height: 15vh;
-  bottom: 0;
-}
-
+#eye-left-btn,
+#eye-right-btn,
 #ear-left-btn,
 #ear-right-btn {
   position: absolute;
   font-size: 5vh;
   width: 49.5vw;
-  height: 7.25vh;
-  line-height: 7vh;
+  height: 10vh;
+  line-height: 9.5vh;
 }
 
+#eye-right-btn, 
+#eye-left-btn {
+  bottom: 10.65vh;
+}
+
+#ear-left-btn,
 #ear-right-btn {
   bottom: 0;
 }
 
-#ear-left-btn {
-  bottom: 7.75vh;
-}
-
-#eye-btn {
+#eye-left-btn {
   left: 0;
   border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
   border-width: 1px;
 }
 
-#ear-left-btn {
+#eye-right-btn {
   right: 0;
   border-top-left-radius: 4px;
   border-bottom-left-radius: 4px;
   border-width: 1px;
 }
 
+#ear-left-btn {
+  left: 0;
+  border-top-right-radius: 4px;
+  border-width: 1px;
+}
+
 #ear-right-btn {
   right: 0;
   border-top-left-radius: 4px;
   border-width: 1px;
 }
 
-#eye-btn:before {
-  content: "Visual";
+#eye-left-btn:before {
+  content: "Vis Left";
+}
+
+#eye-right-btn:before {
+  content: "Vis Right";
 }
 
 #ear-left-btn:before {
@@ -85,8 +91,8 @@
 
 .results-icons td,
 .results-text {
-  color: white;
-  font-size: 5vh;
+  color: #fffff1;
+  font-size: 4vh;
   padding: 1vh;
 }
 
@@ -148,7 +154,7 @@ label[for="nav-trigger"] {
 .nav-item p,
 .nav-item span.range-label {
   width: 31vh;
-  color: white;
+  color: #fffff1;
   font-size: 3vh;
   font-weight: 700;
 }
