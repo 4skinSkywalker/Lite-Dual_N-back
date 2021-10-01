@@ -102,10 +102,6 @@ var enviroment = {
       game.time = Number(txt);
       $("#set-time-span").text(txt + "ms");
     });
-    onChange("#dynamic-delay", function() {
-      game.dynamicDelay = Number($("#dynamic-delay").val());
-      $("#dynamic-delay-span").text(game.dynamicDelay === 1 ? "on" : "off");
-    });
     onChange("#set-clues", function() {
       game.updateParameters();
       var txt = $("#set-clues").val();
