@@ -201,7 +201,7 @@ var game = {
   buildHTMLReport: function(wrongSounds, tolleratedErrors) {
     var s = "";
     s += "<table class=\"results-icons\">";
-    s += "<tr><td colspan=\"2\">Positions</td><td colspan=\"2\">Sounds</td></tr>";
+    s += "<tr><td colspan=\"2\">Sounds</td></tr>";
     s += "<tr><td>☑</td><td>" + this.score[3] + "</td></tr>";
     s += "<tr><td>☐</td><td>" + this.score[4] + "</td></tr>";
     s += "<tr><td>☒</td><td>" + this.score[5] + "</td></tr>";
