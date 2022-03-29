@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0" id="com.litednb.debug" versionCode="10" version="1.0.0">
+    <name>Lite Dual N-back</name>
+    <description>
+			Open Source Lite Dual N-back
+		</description>
+    <author href="#" email="">
+			4skinSkywalker
+		</author>
+    <preference name="permissions" value="none" />
+    <preference name="fullscreen" value="true" />
+    <preference name="orientation" value="landscape" />
+    <icon src="icon.png" />
+</widget>
