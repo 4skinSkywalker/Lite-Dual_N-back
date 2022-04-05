@@ -179,7 +179,6 @@ var game = {
     // puts a report into resultsPopup
     document.getElementById(e.resultsPopup.innerID).innerHTML =
       this.buildHTMLReport(
-        this.score[1] + this.score[2], // wrongPositions
         this.score[4] + this.score[5], // wrongSounds
         Math.floor(this.clues * 0.3) // tolleratedErrors
       );
