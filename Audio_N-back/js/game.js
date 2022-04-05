@@ -2,14 +2,33 @@ var game = {
 
   // updates all parameters
   // values are taken from HTML elements
-  updateParameters: function() {
+  updateParameters: function(init) {
     this.time = Number($("#set-time").val());
     this.dynamicDelay = Number($("#dynamic-delay").val());
     this.clues = Number($("#set-clues").val());
-    this.n = Number($("#set-level").val());
+
+    console.log(init);
+
+    // if the game is initializing, then try to retrieve N from LS
+    const defaultN = Number($("#set-level").val());
+    let LSEntry = localStorage.getItem(enviroment.name);
+    let savedN;
+    if (init && LSEntry) {
+      LSEntry = JSON.parse(LSEntry);
+      const entries = Object.entries(JSON.parse(localStorage.getItem("DNB_1.0.0.0")));
+      const sorted = entries.sort((a, b) =>
+        Number(b[0].split("/").reverse().join("")) - Number(a[0].split("/").reverse().join(""))
+      );
+      savedN = sorted[0][1].data.pop();
+    }
+    this.n = savedN || defaultN;
+    $("#set-level").val(this.n);
+    $("#set-level-span").text(this.n);
+    $("#N-level").text("N = " + this.n);
+    
     this.stimuli = calculateStimuli(this.n, this.clues);
     this.feedback = Number($("#feedback").val());
-    this.dailyGoal = 20;
+    this.dailyGoal = 7;
   },
 
   // updates sounds whenever the #select-sound has changed its value
@@ -21,9 +40,9 @@ var game = {
   // ordered procedure to initialize things properly
   init: function() {
     this.running = false;
-    this.updateParameters();
+    this.updateParameters(true);
     this.updateSounds();
-    this.reset();
+    this.reset(true);
   },
 
   // starts the game
@@ -47,8 +66,8 @@ var game = {
   },
 
   // resets temporary variables used within playBlock
-  reset: function() {
-    this.updateParameters();
+  reset: function(init) {
+    this.updateParameters(init);
     this.block = makeBlock(this.n, this.stimuli, this.clues);
     this.prevScore = [0, 0, 0, 0, 0, 0];
     this.score = [0, 0, 0, 0, 0, 0];
