@@ -144,34 +144,27 @@ var game = {
 
         let deltaDelay = 0;
 
-        // missed
-        if (this.score[1] !== this.prevScore[1]) {
+        
+        if (this.score[1] !== this.prevScore[1]) { // missed
           deltaDelay += 100;
           this.prevScore[1] = this.score[1];
-        }
-        if (this.score[4] !== this.prevScore[4]) {
+        } else if (this.score[4] !== this.prevScore[4]) {
           deltaDelay += 100;
           this.prevScore[4] = this.score[4];
-        }
-
-        // right
-        if (this.score[0] !== this.prevScore[0]) {
+        } else if (this.score[0] !== this.prevScore[0]) { // right
           deltaDelay -= 100;
           this.prevScore[0] = this.score[0];
-        }
-        if (this.score[3] !== this.prevScore[3]) {
+        } else if (this.score[3] !== this.prevScore[3]) {
           deltaDelay -= 100;
           this.prevScore[3] = this.score[3];
-        }
-
-        // wrong
-        if (this.score[2] !== this.prevScore[2]) {
+        } else if (this.score[2] !== this.prevScore[2]) { // wrong
           deltaDelay += 100;
           this.prevScore[2] = this.score[2];
-        }
-        if (this.score[5] !== this.prevScore[5]) {
+        } else if (this.score[5] !== this.prevScore[5]) {
           deltaDelay += 100;
           this.prevScore[5] = this.score[5];
+        } else { //default
+          deltaDelay -= 5;
         }
 
         // if new stimulus time is within the boundaries, then update it
