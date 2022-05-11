@@ -123,7 +123,7 @@ function prepareBlock(n, stimuli, clues) {
   function fillHole(stimulus_name, idx) {
     var el = (stimulus_name === "position") ? 0 : 1;
     var rnd = () => (el === 1)
-      ? 1 + Math.floor(Math.random() * 8)
+      ? 1 + Math.floor(Math.random() * 3)
       : 4 + Math.floor(Math.random() * 3);
     if (block[idx][el] === 0) {
       block[idx][el] = rnd();
