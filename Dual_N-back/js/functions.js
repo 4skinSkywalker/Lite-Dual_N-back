@@ -93,7 +93,7 @@ function prepareBlock(n, stimuli, clues) {
     var el = (stimulus_name === "positions") ? 0 : 1;
     var rnd = () => (el === 1)
       ? 1 + Math.floor(Math.random() * 3)
-      : 4 + Math.floor(Math.random() * 3);
+      : 1 + Math.floor(Math.random() * 3);
     var target, amount = 0;
     while (amount < clues) {
       target = Math.floor(Math.random() * block.length);
@@ -124,7 +124,7 @@ function prepareBlock(n, stimuli, clues) {
     var el = (stimulus_name === "position") ? 0 : 1;
     var rnd = () => (el === 1)
       ? 1 + Math.floor(Math.random() * 3)
-      : 4 + Math.floor(Math.random() * 3);
+      : 1 + Math.floor(Math.random() * 3);
     if (block[idx][el] === 0) {
       block[idx][el] = rnd();
       if (block[idx - n] && block[idx][el] === block[idx - n][el] || block[idx + n] && block[idx][el] === block[idx + n][el])
