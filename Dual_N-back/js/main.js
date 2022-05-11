@@ -16,9 +16,9 @@ var enviroment = {
     "Letters English (UK)": _letters,
     "Letters German": _letters,
     "Letters Russian": _letters,
-    "Letters Italian": ["c.mp3", "q.mp3", "x.mp3"]; // ["c.mp3", "h.mp3", "k.mp3", "l.mp3", "q.mp3", "r.mp3", "s.mp3", "x.mp3"],
-    "Shapes English": ["point.mp3", "line.mp3", "circle.mp3"]; //, "triangle.mp3", "square.mp3", "rectangle.mp3", "pentagon.mp3", "hexagon.mp3"],
-    "Shapes Italian": ["punto.mp3", "linea.mp3", "cerchio.mp3"]; //, "triangolo.mp3", "quadrato.mp3", "rettangolo.mp3", "pentagono.mp3", "esagono.mp3"]
+    "Letters Italian": ["c.mp3", "q.mp3", "x.mp3"], // ["c.mp3", "h.mp3", "k.mp3", "l.mp3", "q.mp3", "r.mp3", "s.mp3", "x.mp3"],
+    "Shapes English": ["point.mp3", "line.mp3", "circle.mp3"], //, "triangle.mp3", "square.mp3", "rectangle.mp3", "pentagon.mp3", "hexagon.mp3"],
+    "Shapes Italian": ["punto.mp3", "linea.mp3", "cerchio.mp3"] //, "triangolo.mp3", "quadrato.mp3", "rettangolo.mp3", "pentagono.mp3", "esagono.mp3"]
   }, // a map that shows the structure of snd/ directory
 
   // sets the date for today (day/month/year)
