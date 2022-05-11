@@ -277,35 +277,15 @@ input[type=range].slider:focus::-webkit-slider-runnable-track {
 }
 
 .on-1 {
-  background: #e6194B!important;
+  background: #549!important;
 }
 
 .on-2 {
-  background: #f58231!important;
+  background: #d63!important;
 }
 
 .on-3 {
-  background: #bfef45!important;
-}
-
-.on-4 {
-  background: #3cb44b!important;
-}
-
-.on-5 {
-  background: #42d4f4!important;
-}
-
-.on-6 {
-  background: #4363d8!important;
-}
-
-.on-7 {
-  background: #911eb4!important;
-}
-
-.on-8 {
-  background: #f032e6!important;
+  background: #fe4!important;
 }
 
 .right {
