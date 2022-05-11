@@ -6,7 +6,7 @@ var enviroment = {
   name: "DNB_1.0.0.0", // name of the enviroment
   history: {}, // collection of data
   sounds: {
-    "Piano": ["A4.wav", "C4.wav", "D4.wav", "F4.wav"]; // ["A4.wav", "B4.wav", "C4.wav", "C5.wav", "D4.wav", "E4.wav", "F4.wav", "G4.wav"],
+    "Piano": ["A4.wav", "C4.wav", "D4.wav", "F4.wav"], // ["A4.wav", "B4.wav", "C4.wav", "C5.wav", "D4.wav", "E4.wav", "F4.wav", "G4.wav"],
     "Numbers English (USA)": _numbers,
     "Numbers English (UK)": _numbers,
     "Numbers German": _numbers,
