@@ -92,7 +92,7 @@ function prepareBlock(n, stimuli, clues) {
   function rightAmountOf(stimulus_name) {
     var el = (stimulus_name === "positions") ? 0 : 1;
     var rnd = () => (el === 1)
-      ? 1 + Math.floor(Math.random() * 8)
+      ? 1 + Math.floor(Math.random() * 3)
       : 4 + Math.floor(Math.random() * 3);
     var target, amount = 0;
     while (amount < clues) {
