@@ -155,22 +155,17 @@ var game = {
 
         let deltaDelay = 0;
 
-        // missed
         if (this.score[4] !== this.prevScore[4]) {
           deltaDelay += 100;
           this.prevScore[4] = this.score[4];
-        }
-
-        // right
-        if (this.score[3] !== this.prevScore[3]) {
+        } else if (this.score[3] !== this.prevScore[3]) {
           deltaDelay -= 100;
           this.prevScore[3] = this.score[3];
-        }
-
-        // wrong
-        if (this.score[5] !== this.prevScore[5]) {
+        } else if (this.score[5] !== this.prevScore[5]) {
           deltaDelay += 100;
           this.prevScore[5] = this.score[5];
+        } else { //default
+          deltaDelay -= 5;
         }
 
         // if new stimulus time is within the boundaries, then update it
