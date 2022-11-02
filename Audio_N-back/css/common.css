@@ -211,7 +211,7 @@ input[type=range].slider:focus::-webkit-slider-runnable-track {
   left: 0;
   text-align: center;
   transition: opacity .4s ease-in-out;
-  background: rgba(0, 0, 0, .5);
+  background: rgba(0, 0, 0, .75);
 }
 
 #results,

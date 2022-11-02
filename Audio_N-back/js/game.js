@@ -27,7 +27,8 @@ var game = {
     
     this.stimuli = calculateStimuli(this.n, this.clues);
     this.feedback = Number($("#feedback").val());
-    this.dailyGoal = 7;
+    this.levelUp = Number($("#level-up").val());
+    this.dailyGoal = 10;
   },
 
   // updates sounds whenever the #select-sound has changed its value
@@ -186,6 +187,11 @@ var game = {
     s += "<tr><td>☐</td><td>" + this.score[4] + "</td></tr>";
     s += "<tr><td>☒</td><td>" + this.score[5] + "</td></tr>";
     s += "</table>";
+
+    if (!this.levelUp) {
+      s += "<p class=\"results-text\">Level up is off<br>N stays: " + this.n;
+      return s;
+    }
 
     // decides what to do in each case of judgement
     // see judgeResults within functions.js to know more

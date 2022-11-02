@@ -109,6 +109,10 @@ var enviroment = {
       game.feedback = Number($("#feedback").val());
       $("#feedback-span").text(game.feedback === 1 ? "on" : "off");
     });
+    onChange("#level-up", function() {
+      game.levelUp = Number($("#level-up").val());
+      $("#level-up-span").text(game.levelUp === 1 ? "on" : "off");
+    });
 
     // appends sounds keys of enviroment.sound to #select-sound
     var sounds = this.sounds;
