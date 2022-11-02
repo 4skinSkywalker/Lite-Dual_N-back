@@ -4,7 +4,6 @@ var game = {
   // values are taken from HTML elements
   updateParameters: function(init) {
     this.time = Number($("#set-time").val());
-    this.dynamicDelay = Number($("#dynamic-delay").val());
     this.clues = Number($("#set-clues").val());
 
     console.log(init);
@@ -147,36 +146,7 @@ var game = {
       this.stimuli--;
       $("#stimuli-counter").text(this.stimuli);
 
-      console.log("Is dynamic delay on?", this.dynamicDelay);
       console.log("Stimulus time", this.time);
-
-      // if dynamic delay is on, then change the stimulus time based on performance
-      if (this.dynamicDelay) {
-
-        let deltaDelay = 0;
-
-        if (this.score[4] !== this.prevScore[4]) {
-          deltaDelay += 100;
-          this.prevScore[4] = this.score[4];
-        } else if (this.score[3] !== this.prevScore[3]) {
-          deltaDelay -= 100;
-          this.prevScore[3] = this.score[3];
-        } else if (this.score[5] !== this.prevScore[5]) {
-          deltaDelay += 100;
-          this.prevScore[5] = this.score[5];
-        } else { //default
-          deltaDelay -= 5;
-        }
-
-        // if new stimulus time is within the boundaries, then update it
-        let timeMin = +document.querySelector("#set-time").min;
-        let timeMax = +document.querySelector("#set-time").max;
-        console.log("Lower and upper boundaries", timeMin, timeMax);
-        let newTime = this.time + deltaDelay;
-        if (newTime > timeMin && newTime < timeMax) {
-          this.time = newTime;
-        }
-      }
 
       this.playing = setTimeout(this.playBlock.bind(this), this.time);
       this.enable = [0, 0];
