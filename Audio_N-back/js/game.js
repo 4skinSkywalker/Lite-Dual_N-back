@@ -162,10 +162,7 @@ var game = {
 
     // puts a report into resultsPopup
     document.getElementById(e.resultsPopup.innerID).innerHTML =
-      this.buildHTMLReport(
-        this.score[4] + this.score[5], // wrongSounds
-        Math.floor(this.clues * 0.3) // tolleratedErrors
-      );
+      this.buildHTMLReport(this.score[4] + this.score[5]);
 
     // updates N level of #set-level within the slide menu
     $("#set-level").val(this.n);
@@ -181,7 +178,7 @@ var game = {
   // builds a HTML report to append within resultsPopup
   // saves N into data for today, within history
   // increases or decreases N level for the next game
-  buildHTMLReport: function(wrongSounds, tolleratedErrors) {
+  buildHTMLReport: function(wrongSounds) {
     var s = "";
     s += "<table class=\"results-icons\">";
     s += "<tr><td colspan=\"2\">Sounds</td></tr>";
@@ -192,7 +189,7 @@ var game = {
 
     // decides what to do in each case of judgement
     // see judgeResults within functions.js to know more
-    switch (judgeResults(wrongSounds, tolleratedErrors)) {
+    switch (judgeResults(wrongSounds, this.clues)) {
       case 2:
         enviroment.saveStats(true);
         s += "<p class=\"results-text\">N is now: " + ++this.n + "</p>";

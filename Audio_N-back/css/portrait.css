@@ -32,14 +32,14 @@
   top: 58%;
   left: 50%;
   transform: translate(-50%, -50%);
-  padding: 33vh 28vw;
+  padding: clamp(3ch, 20vh, 9ch) clamp(3ch, 30vw, 6ch);
   border-radius: 1rem 1rem 3rem 3rem;
   box-shadow: inset 0 -1rem 1rem 3rem #fff6,
                     0 1rem 1rem 0.1rem #0003;
 }
 
 #confirm-btn:before {
-  content: "Match";
+  content: "Push\ato\aMatch";
 }
 
 #progress-outer {
