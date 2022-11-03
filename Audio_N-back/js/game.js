@@ -189,6 +189,7 @@ var game = {
     s += "</table>";
 
     if (!this.levelUp) {
+      enviroment.saveStats(true);
       s += "<p class=\"results-text\">Level up is off<br>N stays: " + this.n;
       return s;
     }
