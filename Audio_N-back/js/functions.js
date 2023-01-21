@@ -180,17 +180,15 @@ function makeBlock(n, stimuli, clues) {
 // 1  : pd to stay at the same level
 // 0  : pd to come back to the previous level
 // -1 : pd to stay at the same level (there's no level below 1)
-function judgeResults(wrongSounds, numOfMatchingStimuli) {
+function judgeResults(correctSounds, wrongSounds, numOfMatchingStimuli) {
 
-  const errorThreshold = 1 - (game.levelDownThreshold / 100);
-  if ((wrongSounds / numOfMatchingStimuli) >= errorThreshold)
+  if ((wrongSounds / numOfMatchingStimuli) >= (1 - (game.levelDownThreshold / 100)))
     if (game.n === 1)
       return -1;
     else
       return 0;
 
-  const correctSounds = Math.max(0, (numOfMatchingStimuli - wrongSounds));
-  if ((correctSounds / numOfMatchingStimuli) >= game.levelUpThreshold)
+  if ((correctSounds / numOfMatchingStimuli) >= (game.levelUpThreshold / 100))
     return 2;
 
   return 1;
