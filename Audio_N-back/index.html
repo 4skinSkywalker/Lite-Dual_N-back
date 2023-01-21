@@ -34,19 +34,19 @@
         <!-- sets the duration of clues -->
         <span class="range-label">Stimulus time </span>
         <span id="set-time-span" class="range-label">2000ms</span>
-        <input type="range" class="slider" id="set-time" min="625" max="2500" step="125" value="2000">
+        <input type="range" class="slider" id="set-time" min="750" max="2500" step="125" value="2000">
       </li>
       <li class="nav-item">
         <!-- sets the quantity of clues -->
         <span class="range-label">Matching clues </span>
-        <span id="set-clues-span" class="range-label">6</span>
-        <input type="range" class="slider" id="set-clues" min="4" max="12" step="1" value="6">
+        <span id="set-clues-span" class="range-label">10</span>
+        <input type="range" class="slider" id="set-clues" min="6" max="20" step="2" value="10">
       </li>
       <li class="nav-item">
         <!-- sets a level of difficulty -->
         <span class="range-label">N-back level </span>
         <span id="set-level-span" class="range-label">2</span>
-        <input type="range" class="slider" id="set-level" min="1" max="12" step="1" value="2">
+        <input type="range" class="slider" id="set-level" min="1" max="9" step="1" value="2">
       </li>
       <li class="nav-item">
         <!-- selects a sound for audio clues -->
@@ -66,6 +66,16 @@
         <span class="range-label">Auto level up? </span>
         <span id="level-up-span" class="range-label">on</span>
         <input type="range" class="slider" id="level-up" min="0" max="1" step="1" value="1">
+      </li>
+      <li class="nav-item">
+        <span class="range-label">Level up, &ge; </span>
+        <span id="level-up-threshold-span" class="range-label">80%</span>
+        <input type="range" class="slider" id="level-up-threshold" min="40%" max="100%" step="5" value="80">
+      </li>
+      <li class="nav-item">
+        <span class="range-label">Level down, &le; </span>
+        <span id="level-down-threshold-span" class="range-label">40%</span>
+        <input type="range" class="slider" id="level-down-threshold" min="20" max="80" step="5" value="40">
       </li>
       <!-- settings end -->
 

@@ -113,6 +113,16 @@ var enviroment = {
       game.levelUp = Number($("#level-up").val());
       $("#level-up-span").text(game.levelUp === 1 ? "on" : "off");
     });
+    onChange("#level-up-threshold", function() {
+      game.updateParameters();
+      var txt = $("#level-up-threshold").val();
+      $("#level-up-threshold-span").text(txt + "%");
+    });
+    onChange("#level-down-threshold", function() {
+      game.updateParameters();
+      var txt = $("#level-down-threshold").val();
+      $("#level-down-threshold-span").text(txt + "%");
+    });
 
     // appends sounds keys of enviroment.sound to #select-sound
     var sounds = this.sounds;

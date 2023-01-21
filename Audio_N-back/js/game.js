@@ -3,8 +3,12 @@ var game = {
   // updates all parameters
   // values are taken from HTML elements
   updateParameters: function(init) {
+
     this.time = Number($("#set-time").val());
     this.clues = Number($("#set-clues").val());
+
+    this.levelUpThreshold = Number($("#level-up-threshold").val());
+    this.levelDownThreshold = Number($("#level-down-threshold").val());
 
     console.log(init);
 
@@ -209,7 +213,10 @@ var game = {
         enviroment.saveStats();
         s += "<p class=\"results-text\">N is now: " + --this.n + "<br>N won't be saved</p>";
         break;
-      default: s += "<p class=\"results-text\">N stays: 1<br>N won't be saved<br>Keep trying</p>";
+      case -1:
+        enviroment.saveStats();
+        s += "<p class=\"results-text\">N stays: 1<br>N won't be saved<br>Keep trying</p>";
+        break;
     }
     return s;
   }

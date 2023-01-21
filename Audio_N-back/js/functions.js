@@ -181,14 +181,17 @@ function makeBlock(n, stimuli, clues) {
 // 0  : pd to come back to the previous level
 // -1 : pd to stay at the same level (there's no level below 1)
 function judgeResults(wrongSounds, numOfMatchingStimuli) {
-  if (wrongSounds <= numOfMatchingStimuli * 0.2) {
-    return 2; // next level
-  } else if (wrongSounds <= numOfMatchingStimuli * 0.5) {
-    return 1; // same level
-  } else {
-    if (game.n !== 1)
-      return 0; // previous level
+
+  const correctSounds = Math.max(0, numOfMatchingStimuli - wrongSounds);
+
+  if (correctSounds / numOfMatchingStimuli >= this.levelUpThreshold)
+    return 2;
+
+  if (correctSounds / numOfMatchingStimuli <= this.levelDownThreshold)
+    if (game.n === 1)
+      return -1;
     else
-      return -1; // level 1 failed, same level
-  }
+      return 0;
+  
+  return 1;
 }
