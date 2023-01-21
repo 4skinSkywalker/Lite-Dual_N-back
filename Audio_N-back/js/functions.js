@@ -182,7 +182,7 @@ function makeBlock(n, stimuli, clues) {
 // -1 : pd to stay at the same level (there's no level below 1)
 function judgeResults(correctSounds, wrongSounds, numOfMatchingStimuli) {
 
-  if ((wrongSounds / numOfMatchingStimuli) >= (1 - (game.levelDownThreshold / 100)))
+  if ((wrongSounds / numOfMatchingStimuli) >= (game.levelDownThreshold / 100))
     if (game.n === 1)
       return -1;
     else

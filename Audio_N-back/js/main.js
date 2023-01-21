@@ -116,12 +116,12 @@ var enviroment = {
     onChange("#level-up-threshold", function() {
       game.updateParameters();
       var txt = $("#level-up-threshold").val();
-      $("#level-up-threshold-span").text(txt + "%");
+      $("#level-up-threshold-span").text(txt + "% correct");
     });
     onChange("#level-down-threshold", function() {
       game.updateParameters();
       var txt = $("#level-down-threshold").val();
-      $("#level-down-threshold-span").text(txt + "%");
+      $("#level-down-threshold-span").text(txt + "% error");
     });
 
     // appends sounds keys of enviroment.sound to #select-sound
