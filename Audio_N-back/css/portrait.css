@@ -27,15 +27,13 @@
 }
 
 #confirm-btn {
-  position: absolute;
+  display: grid;
+  place-items: center;
   font-size: 10vw;
-  top: 58%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: clamp(3ch, 20vh, 9ch) clamp(3ch, 30vw, 6ch);
-  border-radius: 1rem 1rem 3rem 3rem;
-  box-shadow: inset 0 -1rem 1rem 3rem #fff6,
-                    0 1rem 1rem 0.1rem #0003;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
 }
 
 #confirm-btn:before {
@@ -59,6 +57,7 @@
 
 .btn-standard {
   font-size: 4vh;
+  min-width: 100px;
   padding: 1vh 1.5vh;
 }
 
@@ -76,7 +75,7 @@
 .btn-popup.reflected {
   top: 11vh;
   left: 50%;
-  transform: translateX(-14vh);
+  transform: translateX(-13vh);
 }
 
 #navigation {

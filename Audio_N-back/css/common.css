@@ -91,9 +91,9 @@ button:focus {
 
 #confirm-btn {
   text-align: center;
-  background: rgba(0, 0, 0, 0.5);
-  color: white;
+  color: rgba(0, 0, 0, 0.5);
   position: absolute;
+  z-index: -1;
 }
 
 #site-wrap {
@@ -147,27 +147,22 @@ label[for="nav-trigger"] {
 }
 
 .btn-standard {
-  border-style: none;
+  background: #0000;
+  border: 2px solid;
+  border-radius: 5px;
+  color: rgba(0, 0, 0, 0.5);
   position: absolute;
-  background: rgba(0, 0, 0, 0.5);
-  color: white;
   z-index: 10;
-  border-radius: 4px;
-}
-
-.btn-standard:disabled {
-  background: #111;
 }
 
 .btn-popup {
-  position: absolute;
+  background: #0000;
+  border: 2px solid;
+  border-radius: 50%;
+  color: white;
   line-height: 100%;
   padding: 0;
-  border: 0;
-  background: rgba(255, 255, 255, 0.5);
-  color: white;
-  text-shadow: 0px 0px 5px white;
-  border-radius: 50%;
+  position: absolute;
 }
 
 .btn-popup.reflected {
@@ -308,9 +303,11 @@ input[type=range].slider:focus::-webkit-slider-runnable-track {
 }
 
 .right {
-  background: rgba(70, 153, 144, 0.5)!important;
+  background: rgba(70, 153, 144, 0.5) !important;
+  color: #fff;
 }
 
 .wrong {
-  background: rgba(128, 0, 0, 0.5)!important;
+  background: rgba(128, 0, 0, 0.5) !important;
+  color: #fff;
 }
