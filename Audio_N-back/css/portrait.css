@@ -40,10 +40,6 @@
   content: "Push\ato\aMatch";
 }
 
-#progress-outer {
-  height: 1vh!important;
-}
-
 .results-icons td,
 .results-text {
   color: white;

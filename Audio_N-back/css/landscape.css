@@ -41,10 +41,6 @@
   content: "Spacebar to Match";
 }
 
-#progress-outer {
-  height: 2vh!important;
-}
-
 .results-icons td,
 .results-text {
   color: white;

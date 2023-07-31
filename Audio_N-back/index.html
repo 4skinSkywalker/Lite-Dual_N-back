@@ -15,7 +15,6 @@
     <script src="js/howler.min.js"></script>
 
     <script src="js/popup.js"></script>
-    <script src="js/progress.js"></script>
     <script src="js/functions.js"></script>
 
     <link rel="stylesheet" href="css/chartist.min.css">
@@ -25,6 +24,10 @@
   </head>
 
   <body>
+
+    <div class="progress">
+      <div class="progress__bar"></div>
+    </div>
 
     <!-- slide-menu start -->
     <ul id="navigation">
@@ -96,7 +99,7 @@
     <div id="site-wrap">
 
       <!-- a button that shows stats -->
-      <button onclick="enviroment.drawChart()" style="z-index:50" class="btn-popup reflected">★</button>
+      <button onclick="environment.drawChart()" style="z-index:50" class="btn-popup reflected">★</button>
 
       <!-- left simuli shown here -->
       <div id="status-bar">
@@ -116,7 +119,7 @@
     <script src="js/main.js"></script>
     <script src="js/game.js"></script>
     <script>
-      enviroment.init();
+      environment.init();
       game.init();
     </script>
   </body>

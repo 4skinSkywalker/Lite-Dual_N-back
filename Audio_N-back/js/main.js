@@ -1,9 +1,13 @@
 var _numbers = ["1.mp3", "2.mp3", "3.mp3", "4.mp3", "5.mp3", "6.mp3", "7.mp3", "8.mp3"]
 var _letters = ["c.mp3", "h.mp3", "k.mp3", "l.mp3", "q.mp3", "r.mp3", "s.mp3", "t.mp3"]
 
-var enviroment = {
+var environment = {
 
-  name: "DNB_1.0.0.0", // name of the enviroment
+  name: "DNB_1.0.0.0", // name of the environment
+  time: { // both measured in minutes
+    elapsed: 0,
+    expected: 20
+  },
   history: {}, // collection of data
   sounds: {
     "Letters English (USA)": _letters,
@@ -26,15 +30,11 @@ var enviroment = {
     this.today = (new Date).ddmmyy();
   },
 
-  // makes two popups and a progress bar
-  // appends those popups into the body
-  // appends progressBar into the resultsPopup
+  // makes two popups and appends those popups into the body
   makePopups: function() {
-    this.resultsPopup = new Popup("enviroment.resultsPopup", "results");
-    this.chartPopup = new Popup("enviroment.chartPopup", "chart");
-    this.progressBar = new Progress("enviroment.progressBar", "1vh", "rgba(0, 0, 0, 0.33)", "white");
+    this.resultsPopup = new Popup("environment.resultsPopup", "results");
+    this.chartPopup = new Popup("environment.chartPopup", "chart");
     document.body.innerHTML += this.resultsPopup.getHTML() + this.chartPopup.getHTML();
-    document.getElementById(this.resultsPopup.outerID).innerHTML += this.progressBar.getHTML();
   },
 
   // checks whether popus are opened, in such case closes them
@@ -124,7 +124,7 @@ var enviroment = {
       $("#level-down-threshold-span").text(txt + "% error");
     });
 
-    // appends sounds keys of enviroment.sound to #select-sound
+    // appends sounds keys of environment.sound to #select-sound
     var sounds = this.sounds;
     for (var key in sounds)
       if (sounds.hasOwnProperty(key))
@@ -145,7 +145,7 @@ var enviroment = {
           game.checkUserInput("sound");
           break;
         case 83:
-          enviroment.closeAllPopups();
+          environment.closeAllPopups();
           $("#engine-btn").click();
           break;
         default:

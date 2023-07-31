@@ -1,5 +1,25 @@
 var game = {
 
+  progressManager: {
+    intervals: [],
+    startTick: function() {
+      game.progressManager.intervals.push(
+        setInterval(() =>
+          {
+            environment.time.elapsed += 1 / 60;
+            const progressBar = document.querySelector(".progress__bar");
+            const newWidth = (100 * environment.time.elapsed / environment.time.expected);
+            progressBar.style.width = Math.min(Math.max(0, newWidth), 100) + "%";
+          },
+          1000
+        )
+      );
+    },
+    stopTick: function() {
+      game.progressManager.intervals.forEach(i => clearInterval(i));
+    }
+  },
+
   // updates all parameters
   // values are taken from HTML elements
   updateParameters: function(init) {
@@ -10,11 +30,9 @@ var game = {
     this.levelUpThreshold = Number($("#level-up-threshold").val());
     this.levelDownThreshold = Number($("#level-down-threshold").val());
 
-    console.log(init);
-
     // if the game is initializing, then try to retrieve N from LS
     const defaultN = Number($("#set-level").val());
-    let LSEntry = localStorage.getItem(enviroment.name);
+    let LSEntry = localStorage.getItem(environment.name);
     let savedN;
     if (init && LSEntry) {
       LSEntry = JSON.parse(LSEntry);
@@ -38,7 +56,7 @@ var game = {
   // updates sounds whenever the #select-sound has changed its value
   updateSounds: function() {
     var folder = $("#select-sound").val();
-    this.playableSounds = makePlaybleSounds(enviroment.sounds[folder], folder);
+    this.playableSounds = makePlaybleSounds(environment.sounds[folder], folder);
   },
 
   // ordered procedure to initialize things properly
@@ -52,6 +70,9 @@ var game = {
   // starts the game
   // changes function to the play button, which now is a stop button
   start: function() {
+
+    this.progressManager.startTick();
+
     this.running = true;
     this.reset();
     this.playing = setTimeout(function() {
@@ -63,6 +84,9 @@ var game = {
   // stops the game
   // changes function to the stop button, which now is a start button
   stop: function() {
+
+    this.progressManager.stopTick();
+
     this.running = false;
     this.reset();
     clearTimeout(this.playing);
@@ -162,8 +186,8 @@ var game = {
 
   endBlock: function() {
 
-    // a simple alias for enviroment object, used below
-    var e = enviroment;
+    // a simple alias for environment object, used below
+    var e = environment;
 
     // puts a report into resultsPopup
     document.getElementById(e.resultsPopup.innerID).innerHTML =
@@ -174,10 +198,9 @@ var game = {
     $("#set-level-span").text(this.n);
     $("#N-level").text("N = " + this.n);
 
-    // stops the game, shows resultsPopup, moves progressBar
+    // stops the game and shows resultsPopup
     this.stop();
     e.resultsPopup.show();
-    e.progressBar.move(e.history[e.today].runs / this.dailyGoal * 100);
   },
 
   // builds a HTML report to append within resultsPopup
@@ -193,7 +216,7 @@ var game = {
     s += "</table>";
 
     if (!this.levelUp) {
-      enviroment.saveStats(true);
+      environment.saveStats(true);
       s += "<p class=\"results-text\">Level up is off<br>N stays: " + this.n;
       return s;
     }
@@ -202,19 +225,19 @@ var game = {
     // see judgeResults within functions.js to know more
     switch (judgeResults(correctSounds, wrongSounds, this.clues)) {
       case 2:
-        enviroment.saveStats(true);
+        environment.saveStats(true);
         s += "<p class=\"results-text\">N is now: " + ++this.n + "</p>";
         break;
       case 1:
-        enviroment.saveStats(true);
+        environment.saveStats(true);
         s += "<p class=\"results-text\">N stays: " + this.n + "<br>Keep trying</p>";
         break;
       case 0:
-        enviroment.saveStats();
+        environment.saveStats();
         s += "<p class=\"results-text\">N is now: " + --this.n + "<br>N won't be saved</p>";
         break;
       case -1:
-        enviroment.saveStats();
+        environment.saveStats();
         s += "<p class=\"results-text\">N stays: 1<br>N won't be saved<br>Keep trying</p>";
         break;
     }
