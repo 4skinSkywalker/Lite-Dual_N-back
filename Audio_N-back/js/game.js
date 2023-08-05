@@ -9,7 +9,11 @@ var game = {
             environment.time.elapsed += 1 / 60;
             const progressBar = document.querySelector(".progress__bar");
             const newWidth = (100 * environment.time.elapsed / environment.time.expected);
-            progressBar.style.width = Math.min(Math.max(0, newWidth), 100) + "%";
+            const percentage = Math.min(Math.max(0, newWidth), 100);
+            progressBar.style.width = percentage + "%";
+            if (percentage > 99.9) {
+              progressBar.style.backgroundColor = "#f88";
+            }
           },
           1000
         )

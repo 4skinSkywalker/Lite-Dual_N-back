@@ -42,9 +42,10 @@ button:focus {
 }
 
 .progress__bar {
-  background: #888;
+  background-color: #888;
   width: 0%;
   height: 100%;
+  transition: background-color 1s ease;
 }
 
 #status-bar * {
