@@ -171,8 +171,6 @@ var game = {
       this.stimuli--;
       $("#stimuli-counter").text(this.stimuli);
 
-      console.log("Stimulus time", this.time);
-
       this.playing = setTimeout(
         this.playBlock.bind(this),
         this.time + (this.playableSounds.averageDuration || 800)
