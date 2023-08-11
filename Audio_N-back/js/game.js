@@ -4,12 +4,22 @@ var game = {
     intervals: [],
     startTick: function() {
       game.progressManager.intervals.push(
-        setInterval(() =>
-          {
-            environment.time.elapsed += 1 / 60;
+        setInterval(
+          () => {
+
+            const sessionTimeIndicator = $("#session-time-indicator");
             const progressBar = document.querySelector(".progress__bar");
+
+            environment.time.elapsed += 1 / 60;
+
+            const timeDiff = environment.time.expected - environment.time.elapsed;
+            const remaining = Math.max(0, Math.floor(timeDiff));
+
+            sessionTimeIndicator.text(remaining + "m");
+
             const newWidth = (100 * environment.time.elapsed / environment.time.expected);
             const percentage = Math.min(Math.max(0, newWidth), 100);
+
             progressBar.style.width = percentage + "%";
             if (percentage > 99.9) {
               progressBar.style.backgroundColor = "#f88";
