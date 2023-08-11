@@ -54,7 +54,6 @@ var game = {
     this.stimuli = calculateStimuli(this.n, this.clues);
     this.feedback = Number($("#feedback").val());
     this.levelUp = Number($("#level-up").val());
-    this.dailyGoal = 10;
   },
 
   // updates sounds whenever the #select-sound has changed its value
@@ -79,9 +78,12 @@ var game = {
 
     this.running = true;
     this.reset();
-    this.playing = setTimeout(function() {
-      game.playBlock.call(game);
-    }, this.time / 4);
+    this.playing = setTimeout(
+      function() {
+        game.playBlock.call(game);
+      },
+      this.time
+    );
     newOnClickFunction("#engine-btn", "game.stop()", "Stop");
   },
 
@@ -105,7 +107,6 @@ var game = {
     this.score = [0, 0, 0, 0, 0, 0];
     this.idx = -1;
     this.enable = [0, 0];
-    this.time = Number($("#set-time").val()); // this changed while in-game
   },
 
   // invoked when a user checks a clue using keys or buttons
@@ -122,11 +123,11 @@ var game = {
         if (this.block[this.idx][el] === this.block[this.idx - this.n][el]) {
           console.log("%c right " + stimulus_name, "color: green");
           this.score[isPosition ? 0 : 3]++;
-          if (this.feedback) wow(btn, "right", this.time / 6);
+          if (this.feedback) wow(btn, "right", this.time);
         } else {
           console.log("%c wrong " + stimulus_name, "color: red");
           this.score[isPosition ? 2 : 5]++;
-          if (this.feedback) wow(btn, "wrong", this.time / 6);
+          if (this.feedback) wow(btn, "wrong", this.time);
         }
     }
   },
@@ -146,19 +147,11 @@ var game = {
       }
   },
 
-  // flashes a position
-  flashPosition: function() {
-    var light = this.block[this.idx][0] - 1;
-    wow(".tile:eq(" + light + ")", "on", this.time / 2);
-    wow(".tile:eq(" + light + ")", "on-" + this.block[this.idx][1], this.time / 2);
-  },
-
   // plays a sound
   playSound: function() {
-    var soundIndex = this.block[this.idx][0] - 1;
-    console.log(soundIndex);
-    var sound = this.playableSounds[this.block[this.idx][1] - 1];
-    setTimeout(() => sound.play(), 50);
+    var sounds = this.playableSounds.sounds;
+    var sound = sounds[this.block[this.idx][1] - 1];
+    sound.play();
   },
 
   // plays the block already created within the game object
@@ -169,7 +162,6 @@ var game = {
     // otherwise calls endGame
     if (++this.idx < this.block.length) {
       this.checkMissingInput("sound");
-      this.flashPosition();
       this.playSound();
 
       console.log("%c id : #" + this.idx, "color: black");
@@ -181,7 +173,10 @@ var game = {
 
       console.log("Stimulus time", this.time);
 
-      this.playing = setTimeout(this.playBlock.bind(this), this.time);
+      this.playing = setTimeout(
+        this.playBlock.bind(this),
+        this.time + (this.playableSounds.averageDuration || 800)
+      );
       this.enable = [0, 0];
     } else {
       this.endBlock();

@@ -57,6 +57,8 @@ function newOnClickFunction(element, newFunction, text) {
 // to match the structure of snd/ directory
 // to produce an array of playbale sounds via JS
 function makePlaybleSounds(arrSounds, dirSounds) {
+
+  // Make an array of playable Howl sounds
   var playableSounds = [];
   arrSounds.forEach(
     function(sndFile) {
@@ -68,7 +70,23 @@ function makePlaybleSounds(arrSounds, dirSounds) {
       );
     }
   );
-  return playableSounds;
+
+  var objectToReturn = { averageDuration: 0, sounds: playableSounds };
+
+  // When sounds are ready calculate average duration
+  var interval = setInterval(
+    () => {
+      var ready = playableSounds.every(s => s._state === "loaded");
+      if (ready) {
+        var sumOfDurations = playableSounds.reduce((a, b) => a + b._duration, 0);
+        objectToReturn.averageDuration = 1000 * sumOfDurations / playableSounds.length;
+      }
+      clearInterval(interval);
+    },
+    100
+  );
+
+  return objectToReturn;
 };
 
 // block-building-fns start

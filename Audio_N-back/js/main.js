@@ -85,7 +85,7 @@ var environment = {
     onChange("#set-time", function() {
       var txt = $("#set-time").val();
       game.time = Number(txt);
-      $("#set-time-span").text(txt + "ms");
+      $("#set-time-span").text((txt / 1000) + "s");
     });
     onChange("#dynamic-delay", function() {
       game.dynamicDelay = Number($("#dynamic-delay").val());
