@@ -105,7 +105,7 @@ label[for="nav-trigger"] {
 
 .nav-item label,
 .nav-item p,
-.nav-item span.range-label {
+.nav-item .range-label {
   width: 31vh;
   color: white;
   font-size: 3vh;

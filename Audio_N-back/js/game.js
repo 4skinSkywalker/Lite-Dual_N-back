@@ -13,7 +13,7 @@ var game = {
             environment.time.elapsed += 1 / 60;
 
             const timeDiff = environment.time.expected - environment.time.elapsed;
-            const remaining = Math.max(0, Math.floor(timeDiff));
+            const remaining = Math.max(0, Math.ceil(timeDiff));
 
             sessionTimeIndicator.text(remaining + "m");
 
@@ -42,7 +42,9 @@ var game = {
     this.clues = Number($("#set-clues").val());
 
     this.levelUpThreshold = Number($("#level-up-threshold").val());
-    this.levelDownThreshold = Number($("#level-down-threshold").val());
+    this.levelDownA = Number($("#level-down-a").val());
+    this.levelDownB = Number($("#level-down-b").val());
+    this.levelDownC = Number($("#level-down-c").val());
 
     // if the game is initializing, then try to retrieve N from LS
     const defaultN = Number($("#set-level").val());
@@ -242,10 +244,6 @@ var game = {
       case 0:
         environment.saveStats();
         s += "<p class=\"results-text\">N is now: " + --this.n + "<br>N won't be saved</p>";
-        break;
-      case -1:
-        environment.saveStats();
-        s += "<p class=\"results-text\">N stays: 1<br>N won't be saved<br>Keep trying</p>";
         break;
     }
     return s;

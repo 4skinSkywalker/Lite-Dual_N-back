@@ -108,7 +108,7 @@ label[for="nav-trigger"] {
 
 .nav-item label,
 .nav-item p,
-.nav-item span.range-label {
+.nav-item .range-label {
   width: 55vh;
   color: white;
   font-size: 5vh;
@@ -148,7 +148,7 @@ input[type=range].slider::-webkit-slider-thumb {
   }
   .nav-item label,
   .nav-item p,
-  .nav-item span.range-label {
+  .nav-item .range-label {
     width: 23vh;
     font-size: 2.5vh;
   }
