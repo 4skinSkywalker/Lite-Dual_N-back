@@ -202,15 +202,15 @@ function judgeResults(correctSounds, wrongSounds, numOfMatchingStimuli) {
   var missedSounds = numOfMatchingStimuli - correctSounds - wrongSounds;
 
   // Come back to the previous level
-  if (wrongSounds / numOfMatchingStimuli >= game.levelDownA / 100) {
+  if (wrongSounds / numOfMatchingStimuli > game.levelDownA / 100) {
     if (game.n !== 1) return 0;
   }
 
-  if (missedSounds / numOfMatchingStimuli >= game.levelDownB / 100) {
+  if (missedSounds / numOfMatchingStimuli > game.levelDownB / 100) {
     if (game.n !== 1) return 0;
   }
 
-  if ((wrongSounds + missedSounds) / numOfMatchingStimuli >= game.levelDownC / 100) {
+  if ((wrongSounds + missedSounds) / numOfMatchingStimuli > game.levelDownC / 100) {
     if (game.n !== 1) return 0;
   }
 

@@ -6,7 +6,7 @@ var environment = {
   name: "DNB_1.0.0.0", // name of the environment
   time: { // both measured in minutes
     elapsed: 0,
-    expected: 20
+    expected: 15
   },
   history: {}, // collection of data
   sounds: {
