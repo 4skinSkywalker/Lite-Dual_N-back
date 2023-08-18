@@ -197,21 +197,22 @@ function makeBlock(n, stimuli, clues) {
 // 2  : pd to proceed to the next in level
 // 1  : pd to stay at the same level
 // 0  : pd to come back to the previous level
-function judgeResults(correctSounds, wrongSounds, numOfMatchingStimuli) {
-
-  var missedSounds = numOfMatchingStimuli - correctSounds - wrongSounds;
+function judgeResults(correctSounds, missedSounds, wrongSounds, numOfMatchingStimuli) {
 
   // Come back to the previous level
-  if (wrongSounds / numOfMatchingStimuli > game.levelDownA / 100) {
-    if (game.n !== 1) return 0;
-  }
+  if (game.n !== 1) {
 
-  if (missedSounds / numOfMatchingStimuli > game.levelDownB / 100) {
-    if (game.n !== 1) return 0;
-  }
-
-  if ((wrongSounds + missedSounds) / numOfMatchingStimuli > game.levelDownC / 100) {
-    if (game.n !== 1) return 0;
+    if (wrongSounds / numOfMatchingStimuli > game.levelDownA / 100) {
+      return 0;
+    }
+  
+    if (missedSounds / numOfMatchingStimuli > game.levelDownB / 100) {
+      return 0;
+    }
+  
+    if ((wrongSounds + missedSounds) / numOfMatchingStimuli > game.levelDownC / 100) {
+      return 0;
+    }
   }
 
   // Proceed to the next level
