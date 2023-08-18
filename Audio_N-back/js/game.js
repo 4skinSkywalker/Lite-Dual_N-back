@@ -183,9 +183,13 @@ var game = {
       this.stimuli--;
       $("#stimuli-counter").text(this.stimuli);
 
+      const playSoundDelay = this.time + (this.playableSounds.averageDuration || 800);
+      const randomTime = Math.random() * (this.time / 4) * (Math.random() > 0.5 ? -1 : 1);
+      console.log("randomTime", randomTime);
+      
       this.playing = setTimeout(
         this.playBlock.bind(this),
-        this.time + (this.playableSounds.averageDuration || 800)
+        playSoundDelay + randomTime
       );
       this.enable = [0, 0];
     } else {
