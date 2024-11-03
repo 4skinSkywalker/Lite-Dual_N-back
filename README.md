@@ -1,4 +1,5 @@
-Try different versions at the following links:
- - [Audio N-back](https://4skinskywalker.github.io/Lite-Dual_N-back/Audio_N-back)
- - [Dichotic Dual N-back](https://4skinskywalker.github.io/Lite-Dual_N-back/Dichotic_Dual_N-back)
- - [Dual N-back](https://4skinskywalker.github.io/Lite-Dual_N-back/Dual_N-back)
+# Inactive repo
+This repo is inactive, the apps that were once here have been moved/removed:
+ - Audio N-back has been removed
+ - [Dichotic Dual N-back](https://4skinskywalker.github.io/Dichotic-Dual-N-back)
+ - [Dual N-back](https://4skinskywalker.github.io/Dual-N-back)
